@@ -1,0 +1,5 @@
+text_speed:0.08
+bgm_volume:0.6733848
+bgs_volume:0
+chs_volume:0.04667498
+gms_volume:0.3
