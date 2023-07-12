@@ -2,7 +2,7 @@
 
 ## Program Architecture
 
-![VNFramework_Struct](./Docs/img/VNFramework_Struct.svg)
+![VNFramework_Struct](./docs/img/VNFramework_Struct.svg)
 
 
 
