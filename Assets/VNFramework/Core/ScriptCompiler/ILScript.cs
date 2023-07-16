@@ -140,6 +140,9 @@ namespace VNFramework.ScriptCompiler
             else if (unit.CommandName == "finish")
             {
                 ret.Add("gm finish");
+                ret.Add("bgm stop");
+                ret.Add("bgs stop");
+                ret.Add("chs stop");
             }
 
             return ret;
