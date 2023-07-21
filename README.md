@@ -2,9 +2,7 @@
 
 ## Program Architecture
 
-![VNFramework_Struct](./docs/img/VNFramework_Struct.svg)
-
-
+![VNFrameworkStructure](./docs/img/VNFramework_Struct.svg)
 
 ## VNScript Syntax
 
@@ -18,7 +16,7 @@
 
 为了达到以上三点要求，剧本格式我采用了标记语言的形式，以下是剧本格式的一段样例。
 
-```vnscript
+```
 # 播放背景音乐，音乐名称 the_rain_of_night
 [ bgm_play: the_rain_of_night ]
 
@@ -34,7 +32,7 @@
 # 停止播放背景音乐
 [ bgm_stop ]
 # 设置背景音乐音量，然后播放新的背景音乐
-[ bgm_vol: 70 ] [ bgm_play: goodbye_black_bird ]
+[ bgm_vol: 0.4 ] [ bgm_play: goodbye_black_bird ]
 ```
 
 #### 对话语句
@@ -94,18 +92,40 @@
 [ bgm_play : audio_name]
 
 # 使用两个参数的函数
-[ role: pos, pic_name]
+[ role_pic: pos, pic_name]
 ```
 
 在剧本中可使用的命令可以参照ILScript中列出的命令
 
+常用的命令有以下几种
 
+```
+# 显示角色立绘语法
+# pos : left / mid / right
+# mode : fading / immediate
+[ role_pic: pos, pic_name, mode ]
 
+# 播放背景音乐语法
+[ bgm: audio_name ]
 
+# 设置音量语法
+# 音量大小在 0 ~ 1 之间
+# bgm_vol: 背景音乐音量
+# bgs_vol: 背景音效音量
+# role_vol: 角色语音音量
+# 在ILCommand中，role_vol被简写为chs_vol，意为character sound volume
+[ bgm_vol: vol_value ]
+[ bgs_vol: vol_value ]
+[ role_vol: vol_value ]
+```
 
 ### IL Command
 
-ILScript (Intermediate Language Script) 是去除了 VNScript (Visual Novel Script) 所有语法糖之后的真正的剧本，它由IL Command 组成，IL; Command 将 VNScript 剧本中所有的句子都转换为了具有明确意义的命令。
+一条VNScript对应一条或多条ILCommand
+
+VNScript中的空白将默认解释为 `[ clear_dialogue ]` 与 `[ clear_name ]` 两条命令。
+
+若空白多行连续，则会忽略多余的空白。
 
 以下是 IL Command 的列表。
 
@@ -139,10 +159,9 @@ ILScript (Intermediate Language Script) 是去除了 VNScript (Visual Novel Scri
 ILScript会被转换为Asm Command，程序为每一个 Asm Command 生成一个 Hash table，然后交给 Performance Controller 执行。
 
 
-
 ### Asm Command
 
-Asm Command 是游戏引擎最小的解析单元，命令的基本格式为 **对象 操作 参数（可选）**
+Asm Command 是剧本最小的执行单元，命令的基本格式为 **对象 操作 参数（可选）**
 
 主要的对象主要有以下十一个
 
@@ -160,128 +179,37 @@ Asm Command 是游戏引擎最小的解析单元，命令的基本格式为 **�
 
 IL Command 与 Asm 的对应关系如下图
 
-| IL Command                                     | Asm                                                          |
-| ---------------------------------------------- | ------------------------------------------------------------ |
-| [ dialogue: dialogue_content ]                 | name clear<br>dialogue clear<br>dialogue append dialogue_content<br>gm stop |
+| IL Command                                     | Asm                                                                                       |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| [ dialogue: dialogue_content ]                 | name clear<br>dialogue clear<br>dialogue append dialogue_content<br>gm stop               |
 | [ role_dialogue: role_name, dialogue_content ] | name clear<br>dialogue clear<br>name append role_name<br>dialogue append dialogue_content |
-| [ dialogue_append: dialogue_content ]          | dialogue append dialogue_content                             |
-| [ dialogue_newline ]                           | dialogue newline                                             |
-| [ clear_dialogue ]                             | dialogue clear                                               |
-| [ name: role_name]                             | name append role_name                                        |
-| [ clear_name ]                                 | name clear                                                   |
-| [ bgp: pic_name, mode]                         | bgp set pic_name mode                                        |
-| [ bgp_hide: mode ]                             | bgp hide mode                                                |
-| [ role_pic: pos, pic_name , mode ]             | ch_pos set pic_name mode                                     |
-| [ role_pic_hide: pos, mode ]                   | ch_pos hide mode                                             |
-| [ role_act: pos, mode ]                        | ch_pos act mode                                              |
-| [ bgm_play: audio_name ]                       | bgm play audio_name                                          |
-| [ bgm_stop ]                                   | bgm stop                                                     |
-| [ bgm_continue ]                               | bgm continue                                                 |
-| [ bgm_vol: audio_vol ]                         | bgm vol audio_vol                                            |
-| [ bgs_play: audio_name]                        | bgs play audio_name                                          |
-| [ bgs_stop ]                                   | bgs stop                                                     |
-| [ gms_play: audio_name ]                       | gms play audio_name                                          |
-| [ gms_stop ]                                   | gms stop                                                     |
-| [ role_say: audio_name ]                       | chs play audio_name                                          |
-| [ role_vol: audio_vol ]                        | chs vol audio_vol                                            |
-
-
-
-## GameState
-
-游戏的演出控制器和游戏组件之间使用GameState进行通信，如果游戏组件需要参数调用，则使用Hash table 进行赋值。
-
-### DialogueChanged(Hashtable hash)
-
-```csharp
-VNutils.Hash(
-    "action", "append",
-	"dialogue",dialogue_content
-)
-
-VNutils.Hash(
-    "action", "clear"
-)
-
-VNutils.Hash(
-	"action", "newline"
-)
-
-```
-
-### NameChanged(Hashtable hash)
-
-```csharp
-VNutils.Hash(
-    "action", "append",
-	"name",role_name
-)
-
-VNutils.Hash(
-    "action", "clear",
-)
-```
-
-### AudioSourceChanged(Hashtable hash)
-
-```csharp
-VNutils.Hash(
-    "object", "bgm",
-    "action", "play",
-	"audio_name",audio_name
-)
-
-VNutils.Hash(
-    "object", "bgm",
-    "action", "stop"
-)
-
-VNutils.Hash(
-    "object", "bgm",
-    "action", "continue"
-)
-
-VNutils.Hash(
-    "object", "bgm",
-    "action", "vol"
-    "volume", volume
-)
-
-VNutils.Hash(
-    "object", "bgm",
-    "action", "loop"
-    "is_loop", boolen
-)
-```
-
-### CharacterSpriteChanged(Hashtable hash)
-
-```csharp
-VNutils.Hash(
-	"action", "set"
-    "pos",ch_pos
-    "sprite_name",sprite_name
-    "mode",fading
-)
-
-VNutils.Hash(
-	"action", "hide"
-    "pos",ch_pos
-    "mode",fading
-)
-
-VNutils.Hash(
-	"action", "shake"
-)
-```
-
+| [ dialogue_append: dialogue_content ]          | dialogue append dialogue_content                                                          |
+| [ dialogue_newline ]                           | dialogue newline                                                                          |
+| [ clear_dialogue ]                             | dialogue clear                                                                            |
+| [ name: role_name]                             | name append role_name                                                                     |
+| [ clear_name ]                                 | name clear                                                                                |
+| [ bgp: pic_name, mode]                         | bgp set pic_name mode                                                                     |
+| [ bgp_hide: mode ]                             | bgp hide mode                                                                             |
+| [ role_pic: pos, pic_name , mode ]             | ch_pos set pic_name mode                                                                  |
+| [ role_pic_hide: pos, mode ]                   | ch_pos hide mode                                                                          |
+| [ role_act: pos, mode ]                        | ch_pos act mode                                                                           |
+| [ bgm_play: audio_name ]                       | bgm play audio_name                                                                       |
+| [ bgm_stop ]                                   | bgm stop                                                                                  |
+| [ bgm_continue ]                               | bgm continue                                                                              |
+| [ bgm_vol: audio_vol ]                         | bgm vol audio_vol                                                                         |
+| [ bgs_play: audio_name]                        | bgs play audio_name                                                                       |
+| [ bgs_stop ]                                   | bgs stop                                                                                  |
+| [ gms_play: audio_name ]                       | gms play audio_name                                                                       |
+| [ gms_stop ]                                   | gms stop                                                                                  |
+| [ role_say: audio_name ]                       | chs play audio_name                                                                       |
+| [ role_vol: audio_vol ]                        | chs vol audio_vol                                                                         |
 
 
 ## Game Config
 
 ### file: chapter_info
 
-`chapter_info.txt` 用于声明视觉小说中会用到的剧本的信息，程序会按照顺序加载
+`chapter_info.txt` 用于声明视觉小说中会用到的剧本的信息，当前版本的 VNFramework 会将`chapter_info` 中的顺序当作是剧本的顺序
 
 ```
 <|
@@ -298,99 +226,6 @@ VNutils.Hash(
     [ resume_pic: xxxxxx ]
 |>
 ```
-
-
-
-解析`chapter_info`
-
-```csharp
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
-
-namespace TestCSharp
-{
-    public class ChapterInfo
-    {
-        public string ChapterName { get; set; }
-        public string FileName { get; set; }
-        public string Resume { get; set; }
-        public string ResumePic { get; set; }
-
-        public void Print()
-        {
-            Console.WriteLine("chapter_name : " + ChapterName);
-            Console.WriteLine("file_name : " + FileName);
-            Console.WriteLine("resume: " + Resume);
-            Console.WriteLine("resume_pic: " + ResumePic);
-        }
-    }
-
-    public class ParameterExtractor
-    {
-        public static List<ChapterInfo> ExtractParameters(string filePath)
-        {
-            string content = File.ReadAllText(filePath);
-
-            string pattern = @"<\|\s*(\[.*?\])\s*\|>";
-            MatchCollection matches = Regex.Matches(content, pattern, RegexOptions.Singleline);
-
-            List<ChapterInfo> parameterLists = new();
-
-            foreach (Match match in matches)
-            {
-                string blockContent = match.Groups[1].Value;
-
-                var para =  ExtractParametersFromBlock(blockContent);
-                parameterLists.Add(para);
-            }
-
-            return parameterLists;
-        }
-
-        private static ChapterInfo ExtractParametersFromBlock(string blockContent)
-        {
-            string pattern = @"\[\s*(chapter_name|file_name|resume|resume_pic)\s*:\s*(.*?)\s*\]";
-            MatchCollection matches = Regex.Matches(blockContent, pattern, RegexOptions.Singleline);
-
-            ChapterInfo parameter = new();
-
-            foreach (Match match in matches)
-            {
-                string key = match.Groups[1].Value;
-                string value = match.Groups[2].Value;
-
-                switch (key)
-                {
-                    case "chapter_name": parameter.ChapterName = value; break;
-                    case "file_name": parameter.FileName = value; break;
-                    case "resume": parameter.Resume = value; break;
-                    case "resume_pic": parameter.ResumePic = value; break;
-                }
-            }
-
-            return parameter;
-        }
-    }
-
-    class Program
-    {
-        public static void Main(string[] args)
-        {
-            var filePath = @"C:\Users\ryouji\Desktop\test_chapter_list.txt";
-            var large = ParameterExtractor.ExtractParameters(filePath);
-
-            foreach (var block in large)
-            {
-                block.Print();
-            }
-        }
-    }
-}
-```
-
-
 
 ### file: chapter_record
 
@@ -402,3 +237,12 @@ namespace TestCSharp
 [ chapter_name:  chapter_03 ]
 ```
 
+### file: game_info
+
+`game_info` 用于简化定制视觉小说UI的步骤
+
+```
+title: VN Framework
+start_view_bgm: 月姬
+start_view_bgp: white
+```
