@@ -440,10 +440,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 744889728}
     m_Modifications:
-    - target: {fileID: 2997192326545872801, guid: 12ad471eab76f89418836a244c2e0b29, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 3386480848843043943, guid: 12ad471eab76f89418836a244c2e0b29, type: 3}
       propertyPath: m_Name
       value: TitleView
@@ -531,26 +527,6 @@ PrefabInstance:
     - target: {fileID: 3386480848843043944, guid: 12ad471eab76f89418836a244c2e0b29, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3650373345760578333, guid: 12ad471eab76f89418836a244c2e0b29, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3979982600575199113, guid: 12ad471eab76f89418836a244c2e0b29, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5870624494578306183, guid: 12ad471eab76f89418836a244c2e0b29, type: 3}
-      propertyPath: m_Name
-      value: TitleText
-      objectReference: {fileID: 0}
-    - target: {fileID: 6411447344092908929, guid: 12ad471eab76f89418836a244c2e0b29, type: 3}
-      propertyPath: m_Name
-      value: TitleBgp
-      objectReference: {fileID: 0}
-    - target: {fileID: 7326436911234528252, guid: 12ad471eab76f89418836a244c2e0b29, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12ad471eab76f89418836a244c2e0b29, type: 3}

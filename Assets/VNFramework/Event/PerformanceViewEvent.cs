@@ -13,4 +13,14 @@ namespace VNFramework
     {
         
     }
+
+    struct ShowPerformanceViewEvent
+    {
+
+    }
+
+    struct HidePerformanceViewEvent
+    {
+        
+    }
 }

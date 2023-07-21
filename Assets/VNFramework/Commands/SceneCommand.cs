@@ -13,7 +13,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Game");
+            SceneManager.LoadScene("Game");
         }
     }
 }

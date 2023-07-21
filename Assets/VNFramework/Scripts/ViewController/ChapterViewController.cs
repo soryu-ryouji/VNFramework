@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 namespace VNFramework
 {
@@ -32,9 +33,16 @@ namespace VNFramework
             _ResumeText = transform.Find("ResumeText").GetComponent<TMP_Text>();
             _backChapterBtn = transform.Find("BackButton").GetComponent<Button>();
             _loadChapterBtn = transform.Find("LoadChapterButton").GetComponent<Button>();
-            
+
             _backChapterBtn.onClick.AddListener(this.SendCommand<HideChapterViewCommand>);
-            _loadChapterBtn.onClick.AddListener(this.SendCommand<LoadGameSceneCommand>);
+            _loadChapterBtn.onClick.AddListener(() =>
+            {
+                if (SceneManager.GetActiveScene().name == "Game")
+                {
+                    this.SendCommand<HidePerformanceViewCommand>();
+                }
+                this.SendCommand<LoadGameSceneCommand>();
+            });
 
             var firstChapter = _chapterModel.ChapterInfoList[0];
             _resumePic.sprite = this.GetUtility<GameDataStorage>().LoadSprite(firstChapter.ResumePic);

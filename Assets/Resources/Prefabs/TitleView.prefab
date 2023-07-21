@@ -827,7 +827,7 @@ GameObject:
   - component: {fileID: 7634578472114989350}
   - component: {fileID: 5657335080769661955}
   m_Layer: 5
-  m_Name: Title
+  m_Name: TitleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1097,7 +1097,7 @@ GameObject:
   - component: {fileID: 509278044316663624}
   - component: {fileID: 1443545302226764765}
   m_Layer: 5
-  m_Name: StartUpBgp
+  m_Name: TitleBgp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

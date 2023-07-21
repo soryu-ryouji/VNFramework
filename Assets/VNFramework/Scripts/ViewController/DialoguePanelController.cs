@@ -6,7 +6,7 @@ namespace VNFramework
 {
     public class DialoguePanelController : MonoBehaviour, IController
     {
-        // Name BOX
+        // Name Box
         private GameObject _nameBox;
         private TMP_Text _nameText;
         private string _currentName;
@@ -36,15 +36,20 @@ namespace VNFramework
             _dialogueBox = transform.Find("DialogueBox").gameObject;
             _dialogueText = transform.Find("DialogueBox/Text").GetComponent<TMP_Text>();
 
-            this.RegisterEvent<ShowDialoguePanelEvent>(_ => ShowDialoguePanel());
-            this.RegisterEvent<HideDialoguePanelEvent>(_ => HideDialoguePanel());
-            this.RegisterEvent<ToggleDialoguePanelEvent>(_ => ToggleDialoguePanel());
+            this.RegisterEvent<ShowDialoguePanelEvent>(_ => ShowDialoguePanel())
+                .UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<HideDialoguePanelEvent>(_ => HideDialoguePanel())
+                .UnRegisterWhenGameObjectDestroyed(gameObject);;
+            this.RegisterEvent<ToggleDialoguePanelEvent>(_ => ToggleDialoguePanel())
+                .UnRegisterWhenGameObjectDestroyed(gameObject);;
 
             _textSpeed = this.GetModel<ConfigModel>().TextSpeed;
-            this.RegisterEvent<ConfigChangedEvent>(_ => _textSpeed = this.GetModel<ConfigModel>().TextSpeed);
+            this.RegisterEvent<ConfigChangedEvent>(_ => _textSpeed = this.GetModel<ConfigModel>().TextSpeed)
+                .UnRegisterWhenGameObjectDestroyed(gameObject);
 
             // NameBox
-            this.RegisterEvent<ChangeNameEvent>(_ => {
+            this.RegisterEvent<ChangeNameEvent>(_ =>
+            {
                 if (_dialogueModel.CurrentName == "")
                 {
                     _nameText.text = "";
@@ -55,37 +60,42 @@ namespace VNFramework
                     _nameBox.SetActive(true);
                     _nameText.text = _dialogueModel.CurrentName;
                 }
-            });
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
             // Dialogue Box
             this.RegisterEvent<AppendDialogueEvent>(_ =>
             {
                 _currentDialogue = _dialogueModel.CurrentDialogue;
                 ChangeDisplay();
-            });
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);;
 
             this.RegisterEvent<ClearDialogueEvent>(_ =>
             {
                 _currentDialogue = "";
                 _currentDialogueIndex = 0;
                 _dialogueText.text = "";
-            });
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);;
 
             this.RegisterEvent<AppendNewLineToDialogueEvent>(_ =>
             {
                 _currentDialogue = _dialogueModel.CurrentDialogue;
                 _currentDialogueIndex += 4;
                 _dialogueText.text = _currentDialogue;
-            });
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);;
+
             this.RegisterEvent<StopDialogueAnimEvent>(_ =>
             {
                 StopCharacterAnimation();
-            });
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);;
         }
 
         private void OnDestroy()
         {
-            StopAllCoroutines();
+            if (_animationCoroutine != null)
+            {
+                StopCoroutine(_animationCoroutine);
+                _animationCoroutine = null;
+            }
         }
 
         # region DialoguePanel Active
