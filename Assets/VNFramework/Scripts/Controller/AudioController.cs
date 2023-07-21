@@ -6,28 +6,43 @@ namespace VNFramework
 {
     public class AudioController : MonoBehaviour, IController
     {
-        public AudioHandler bgm;
-        public AudioHandler bgs;
-        public AudioHandler gms;
-        public AudioHandler chs;
+
+        private static bool _audioControllerIsCreated = false;
+        private AudioHandler bgm;
+        private AudioHandler bgs;
+        private AudioHandler gms;
+        private AudioHandler chs;
+
         private ConfigModel _configModel;
         private PerformingModel _performingModel;
 
-        private void Start()
+        private void Awake()
         {
-            DontDestroyOnLoad(gameObject);
+            GameState.AudioChanged += OnAudioChanged;
 
-            _configModel = this.GetModel<ConfigModel>();
-            _performingModel = this.GetModel<PerformingModel>();
+            if (!_audioControllerIsCreated)
+            {
+                DontDestroyOnLoad(gameObject);
+                _audioControllerIsCreated = true;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
 
             bgm = transform.Find("BGM").GetComponent<AudioHandler>();
             bgs = transform.Find("BGS").GetComponent<AudioHandler>();
             gms = transform.Find("GMS").GetComponent<AudioHandler>();
             chs = transform.Find("CHS").GetComponent<AudioHandler>();
+        }
+        private void Start()
+        {
+            _configModel = this.GetModel<ConfigModel>();
+            _performingModel = this.GetModel<PerformingModel>();
 
-            GameState.AudioChanged += OnAudioChanged;
             this.RegisterEvent<PerformingModelChangedEvent>(_ => UpdateAudioVolume());
             this.RegisterEvent<ConfigChangedEvent>(_ => UpdateAudioVolume());
+            UpdateAudioVolume();
         }
 
         private void OnDestroy()
@@ -61,7 +76,7 @@ namespace VNFramework
                 case "play": bgm.PlayAudio((string)hash["audio_name"]); break;
                 case "stop": bgm.StopAudio(); break;
                 case "continue": bgm.Continue(); break;
-                case "vol": _performingModel.BgmVolume =  Convert.ToSingle(hash["volume"]); break;
+                case "vol": _performingModel.BgmVolume = Convert.ToSingle(hash["volume"]); break;
                 case "loop": bgm.SetLoop((string)hash["is_loop"]); break;
             }
         }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using System.Linq;
@@ -14,12 +15,12 @@ namespace VNFramework
 
     class ChapterModel : AbstractModel
     {
-        private string[] _unlockedChapterList;
+        private List<string> _unlockedChapterList;
         private ChapterInfo[] _chapterInfoList;
 
         private string mCurrentChapter;
 
-        public string[] UnlockedChapterList { get => _unlockedChapterList; set => _unlockedChapterList = value; }
+        public List<string> UnlockedChapterList { get => _unlockedChapterList; set => _unlockedChapterList = value; }
         public ChapterInfo[] ChapterInfoList { get => _chapterInfoList; set => _chapterInfoList = value; }
         public string CurrentChapter { get => mCurrentChapter; set => mCurrentChapter = value; }
 
@@ -35,6 +36,13 @@ namespace VNFramework
             ChapterInfo chapterInfo = ChapterInfoList.FirstOrDefault(info => info.ChapterName == chapterName);
 
             return chapterInfo;
+        }
+
+        public void AddUnlockedChapter(string chapterName)
+        {
+            _unlockedChapterList.Add(chapterName);
+            // 更新本地记录
+            this.GetUtility<GameDataStorage>().SaveUnlockedChapterList();
         }
 
         public void PrintChapterInfoList()
@@ -65,11 +73,8 @@ resume : {info.ResumePic}\n");
 
         protected override void OnInit()
         {
-            _unlockedChapterList = this.GetUtility<GameDataStorage>().LoadUnlockedChapterList();
+            _unlockedChapterList = new(this.GetUtility<GameDataStorage>().LoadUnlockedChapterList());
             _chapterInfoList = this.GetUtility<GameDataStorage>().LoadChapterInfoList();
-
-            PrintChapterInfoList();
-            PrintUnlockedChapterList();
         }
     }
 }

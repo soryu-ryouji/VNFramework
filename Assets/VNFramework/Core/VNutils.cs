@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace VNFramework
 {
-    public class VNutils
+    public static class VNutils
     {
         public static Hashtable Hash(params object[] args)
         {

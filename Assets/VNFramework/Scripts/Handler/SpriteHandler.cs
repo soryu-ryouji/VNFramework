@@ -4,33 +4,55 @@ using UnityEngine.UI;
 
 namespace VNFramework
 {
-    public class SpriteHandler : MonoBehaviour,ICanGetUtility
+    public class SpriteHandler : MonoBehaviour, ICanGetUtility
     {
         public float fadeDuration = 0.5f;
         private readonly float staticAlpha = 1.0f;
         private readonly float intermediateAlpha = 0.0f;
-        private Image image;
-
+        private SpriteRenderer _image;
         public string SpriteName
         {
-            get { return image.sprite.name; }
+            get { return _image.sprite.name; }
         }
 
         public Color SpriteColor
         {
-            get { return image.color; }
+            get { return _image.color; }
         }
 
         private void Awake()
         {
-            image = GetComponent<Image>();
+            _image = GetComponent<SpriteRenderer>();
         }
 
         private Coroutine fadingCoroutine;
 
         public void OnSpriteChanged(Hashtable hash)
         {
-
+            var action = (string)hash["action"];
+            var mode = (string)hash["mode"];
+            if (action == "set")
+            {
+                if (mode == "fading")
+                {
+                    FadingChangeSprite((string)hash["sprite_name"]);
+                }
+                else if (mode == "immediate")
+                {
+                    ShowSprite((string)hash["sprite_name"]);
+                }
+            }
+            else if (action == "hide")
+            {
+                if (mode == "fading")
+                {
+                    FadingHideSprite();
+                }
+                else if (mode == "immediate")
+                {
+                    HideSprite();
+                }
+            }
         }
 
         /// <summary>
@@ -39,9 +61,9 @@ namespace VNFramework
         /// <param name="newAlpha"></param>
         private void SetAlpha(float newAlpha)
         {
-            var oldColor = image.color;
+            var oldColor = _image.color;
             oldColor.a = newAlpha;
-            image.color = oldColor;
+            _image.color = oldColor;
         }
 
         private void Fade(float fromAlpha, float toAlpha, float time)
@@ -85,15 +107,15 @@ namespace VNFramework
             var sprite = this.GetUtility<GameDataStorage>().LoadSprite(spriteName);
             if (sprite != null)
             {
-                image.sprite = sprite;
+                _image.sprite = sprite;
             }
 
             // 如果图像的 alpha 为透明状态，则重新将其显示
-            if (image.color.a != staticAlpha)
+            if (_image.color.a != staticAlpha)
             {
-                var color = image.color;
+                var color = _image.color;
                 color.a = staticAlpha;
-                image.color = color;
+                _image.color = color;
             }
         }
 
@@ -102,23 +124,23 @@ namespace VNFramework
         /// </summary>
         public void HideSprite()
         {
-            var color = image.color;
+            var color = _image.color;
             color.a = 0;
-            image.color = color;
+            _image.color = color;
         }
 
         private IEnumerator FadingDisplay(Sprite sprite)
         {
             // 当 sprite 的 alpha 值不为0时，先将alpha值过度到0
-            if (image.sprite != null)
+            if (_image.sprite != null)
             {
-                Fade(fromAlpha: image.color.a, toAlpha: intermediateAlpha, fadeDuration);
+                Fade(fromAlpha: _image.color.a, toAlpha: intermediateAlpha, fadeDuration);
                 yield return new WaitForSeconds(fadeDuration);
             }
             // 将 sprite 赋值给图像框
-            if (sprite != null) image.sprite = sprite;
+            if (sprite != null) _image.sprite = sprite;
 
-            if (image.color.a != staticAlpha)
+            if (_image.color.a != staticAlpha)
             {
                 Fade(fromAlpha: intermediateAlpha, toAlpha: staticAlpha, fadeDuration);
             }
@@ -127,22 +149,22 @@ namespace VNFramework
         private IEnumerator FadingHide()
         {
             // 当 image 的 alpha 不为 0 时，将其渐变归零
-            if (image.color.a != 0)
+            if (_image.color.a != 0)
             {
-                Fade(fromAlpha: image.color.a, toAlpha: intermediateAlpha, fadeDuration);
+                Fade(fromAlpha: _image.color.a, toAlpha: intermediateAlpha, fadeDuration);
                 yield return new WaitForSeconds(fadeDuration);
             }
         }
 
         private IEnumerator FadingChange(Sprite sprite)
         {
-            if (image.sprite != null)
+            if (_image.sprite != null)
             {
                 Fade(staticAlpha, intermediateAlpha, fadeDuration);
                 yield return new WaitForSeconds(fadeDuration);
             }
 
-            image.sprite = sprite;
+            _image.sprite = sprite;
 
             if (sprite != null)
             {

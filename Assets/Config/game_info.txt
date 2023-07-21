@@ -1,6 +1,0 @@
-game_title:
-start_view_bgm:
-start_view_bgp:
-
-config_view_bgp:
-dialogue_box_bgp:

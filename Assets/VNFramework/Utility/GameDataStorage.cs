@@ -102,8 +102,7 @@ text_speed : {systemConfigModel.TextSpeed}";
 
         public ChapterInfo[] LoadChapterInfoList()
         {
-            var filePath = Path.Combine(Application.dataPath, "Config", "chapter_info.txt");
-            string content = File.ReadAllText(filePath);
+            string content = Resources.Load<TextAsset>("ProjectData/chapter_info").text;
 
             string pattern = @"<\|\s*(\[.*?\])\s*\|>";
             MatchCollection matches = Regex.Matches(content, pattern, RegexOptions.Singleline);
@@ -157,6 +156,23 @@ text_speed : {systemConfigModel.TextSpeed}";
             }
 
             return chapterInfo;
+        }
+
+        public void LoadProjectConfig()
+        {
+            var configFile = Resources.Load<TextAsset>("ProjectData/game_info").text.Split('\n');
+            string[] configList = configFile.Select(str => str.TrimEnd('\r', '\n')).ToArray();
+
+            var projectModel = this.GetModel<ProjectModel>();
+            foreach (var config in configList.Select(ch => ch.Split(":").Select(str => str.Trim())))
+            {
+                string key = config.ElementAtOrDefault(0);
+                string value = config.ElementAtOrDefault(1);
+
+                if (key == "title") projectModel.Title = value;
+                else if (key == "start_view_bgm") projectModel.TitleBgm = value;
+                else if (key == "start_view_bgp") projectModel.TitleBgp = value;
+            }
         }
 
         public IArchitecture GetArchitecture()

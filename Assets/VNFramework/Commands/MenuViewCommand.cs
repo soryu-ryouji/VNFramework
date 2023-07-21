@@ -1,4 +1,5 @@
 using UnityEngine;
+
 namespace VNFramework
 {
     class ShowMenuViewCommand : AbstractCommand

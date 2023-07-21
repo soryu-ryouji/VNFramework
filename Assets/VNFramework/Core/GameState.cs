@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace VNFramework
 {
-    public class GameState
+    public static class GameState
     {
         public static UnityAction<Hashtable> AudioChanged;
         public static UnityAction<Hashtable> BgpChanged;

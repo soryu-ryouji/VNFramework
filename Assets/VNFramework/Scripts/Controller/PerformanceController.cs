@@ -39,6 +39,7 @@ namespace VNFramework
             _performingModel = this.GetModel<PerformingModel>();
 
             this.RegisterEvent<LoadNextPerformanceEvent>(_ => NextPerformance());
+            NextPerformance();
         }
 
         private void OnDestroy()
@@ -161,6 +162,8 @@ namespace VNFramework
             if ((string)hash["action"] == "finish")
             {
                 Debug.Log("Finish");
+                this.SendCommand(new UnlockedChapterCommand(this.GetModel<ChapterModel>().CurrentChapter));
+                this.SendCommand<ShowChapterViewCommand>();
             }
         }
 

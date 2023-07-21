@@ -1,2 +1,3 @@
-[ chapter_name : Chapter00：序 ]
-[ chapter_name : Chapter01：合肥尖沙咀 ]
+[ chapter_name : 第一章：永远记得我 ]
+[ chapter_name : 第二章：死 ]
+[ chapter_name : 第三章：黑暗中 ]

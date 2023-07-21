@@ -95,7 +95,7 @@ namespace VNFramework.ScriptCompiler
             }
             else if (unit.CommandName == "role_pic_hide")
             {
-                ret.Add($"ch_{unit.Parameters[0]} hide {unit.Parameters[1]} {unit.Parameters[2]}");
+                ret.Add($"ch_{unit.Parameters[0]} hide {unit.Parameters[1]}");
             }
             else if (unit.CommandName == "role_act")
             {

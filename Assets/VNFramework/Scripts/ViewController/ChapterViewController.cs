@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 namespace VNFramework
 {
@@ -42,7 +43,7 @@ namespace VNFramework
             GenerateChapterList(_chapterModel.UnlockedChapterList);
         }
 
-        public void GenerateChapterList(string[] chapterNameList)
+        public void GenerateChapterList(List<string> chapterNameList)
         {
             foreach (var chapterName in chapterNameList)
             {

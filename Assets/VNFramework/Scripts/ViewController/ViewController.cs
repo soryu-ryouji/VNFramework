@@ -3,6 +3,7 @@ using VNFramework;
 
 public class ViewController : MonoBehaviour, IController
 {
+    private static bool _viewControllerIsCreated = false;
     private GameObject _configViewPrefab;
     private GameObject _chapterViewPrefab;
     private GameObject _menuViewPrefab;
@@ -12,7 +13,18 @@ public class ViewController : MonoBehaviour, IController
     private GameObject _chapterView;
     private GameObject _menuView;
     private GameObject _backlogView;
-
+    private void Awake()
+    {
+        if (!_viewControllerIsCreated)
+        {
+            DontDestroyOnLoad(gameObject);
+            _viewControllerIsCreated = true;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
