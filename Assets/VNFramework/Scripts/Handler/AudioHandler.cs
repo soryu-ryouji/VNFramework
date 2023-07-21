@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace VNFramework
 {
-    public class AudioHandler : MonoBehaviour
+    public class AudioHandler : MonoBehaviour, ICanGetUtility
     {
         private string _currentAudioName;
         private float _currentVolume;
@@ -63,8 +61,13 @@ namespace VNFramework
 
         private AudioClip GetAudioClip(string audioName)
         {
-            var audio = AssetsManager.LoadSound(audioName);
+            var audio = this.GetUtility<GameDataStorage>().LoadSound(audioName);
             return audio;
+        }
+
+        public IArchitecture GetArchitecture()
+        {
+            return VNFrameworkProj.Interface;
         }
     }
 }

@@ -2,69 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 using VNFramework.ScriptCompiler;
 
 namespace VNFramework
 {
-    public class PerformanceController : MonoBehaviour
+    public class PerformanceController : MonoBehaviour, IController
     {
-        public List<string> vnScript;
-
-        public string vnScriptName;
-
-        public int vnScriptIndex;
+        private DialoguePanelController _dialoguePanelController;
+        private List<string> _vnScript;
+        private string _vnScriptName;
+        private int _scriptIndex;
         private int _vnScriptCount;
-
-        public bool autoExecuteCommand;
-
+        private bool _autoExecuteCommand;
         private UnityAction<Hashtable> executeCommand;
 
-        public string VNScriptFileName
+        private PerformingModel _performingModel;
+
+        private void Start()
         {
-            get { return vnScriptName; }
-            set
-            {
-                vnScriptName = value;
-                vnScript = VNScript.ParseVNScriptToIL(AssetsManager.LoadVNScript(value).ToArray());
-                _vnScriptCount = vnScript.Count;
-            }
-        }
-
-        private void Awake()
-        {
-            GameState.NextCommand += NextILCommand;
-
-            executeCommand += ExecuteBgmCommand;
-            executeCommand += ExecuteBgsCommand;
-            executeCommand += ExecuteChsCommand;
-            executeCommand += ExecuteGmsCommand;
-
+            executeCommand += ExecuteAudioCommand;
             executeCommand += ExecuteBgpCommand;
             executeCommand += ExecuteChlpCommand;
             executeCommand += ExecuteChmpCommand;
             executeCommand += ExecuteChrpCommand;
             executeCommand += ExecuteNameCommand;
             executeCommand += ExecuteDialogueCommand;
-
             executeCommand += ExecuteGmCommand;
 
-            VNScriptFileName = AssetsManager.GetFileNameFromChapterName(ConfigController.CurrentChapterName);
-        }
+            _dialoguePanelController = transform.Find("DialoguePanel").GetComponent<DialoguePanelController>();
 
-        private void Start()
-        {
-            NextILCommand();
+            var chapterModel = this.GetModel<ChapterModel>();
+            string fileName = chapterModel.GetFileName(chapterModel.CurrentChapter);
+            _vnScript = VNScript.ParseVNScriptToIL(this.GetUtility<GameDataStorage>().LoadVNScript(fileName));
+            _vnScriptCount = _vnScript.Count;
+
+            _performingModel = this.GetModel<PerformingModel>();
+
+            this.RegisterEvent<LoadNextPerformanceEvent>(_ => NextPerformance());
         }
 
         private void OnDestroy()
         {
-            GameState.NextCommand -= NextILCommand;
-
-            executeCommand -= ExecuteBgmCommand;
-            executeCommand -= ExecuteBgsCommand;
-            executeCommand -= ExecuteChsCommand;
-            executeCommand -= ExecuteGmsCommand;
+            executeCommand -= ExecuteAudioCommand;
 
             executeCommand -= ExecuteBgpCommand;
             executeCommand -= ExecuteChlpCommand;
@@ -76,18 +55,23 @@ namespace VNFramework
             executeCommand -= ExecuteGmCommand;
         }
 
-        public void NextILCommand()
+        private void NextPerformance()
         {
-            autoExecuteCommand = true;
-            if (GameState.IsDialogueTyping.Invoke())
+            NextILCommand();
+        }
+
+        private void NextILCommand()
+        {
+            _autoExecuteCommand = true;
+            if (_dialoguePanelController.IsAnimating)
             {
-                GameState.DialogueStop();
+                this.SendCommand<StopDialogueAnimCommand>();
                 return;
             }
 
-            while (autoExecuteCommand && vnScriptIndex < _vnScriptCount)
+            while (_autoExecuteCommand && _scriptIndex < _vnScriptCount)
             {
-                var commands = ILScript.ParseILToAsm(vnScript[vnScriptIndex]);
+                var commands = ILScript.ParseILToAsm(_vnScript[_scriptIndex]);
 
                 foreach (var command in commands)
                 {
@@ -95,7 +79,7 @@ namespace VNFramework
                     ExecuteAsmCommand(command);
                 }
 
-                vnScriptIndex++;
+                _scriptIndex++;
             }
         }
 
@@ -105,64 +89,66 @@ namespace VNFramework
             executeCommand(asmHash);
         }
 
-        #region Execute Picturebox Command
+        #region Execute Picture box Command
         private void ExecuteBgpCommand(Hashtable hash)
         {
-            if ((string)hash["object"] == "bgp") GameState.BgpChanged(hash);
+            if ((string)hash["object"] != "bgp") return;
+
+            GameState.BgpChanged(hash);
         }
 
         private void ExecuteChlpCommand(Hashtable hash)
         {
-            if ((string)hash["object"] == "ch_left") GameState.ChlpChanged(hash);
+            if ((string)hash["object"] != "ch_left") return;
+
+            GameState.ChlpChanged(hash);
         }
 
         private void ExecuteChmpCommand(Hashtable hash)
         {
-            if ((string)hash["object"] == "ch_mid") GameState.ChmpChanged(hash);
+            if ((string)hash["object"] != "ch_mid") return;
+            GameState.ChmpChanged(hash);
         }
 
         private void ExecuteChrpCommand(Hashtable hash)
         {
-            if ((string)hash["object"] == "ch_right") GameState.ChrpChanged(hash);
+            if ((string)hash["object"] != "ch_right") return;
+
+            GameState.ChrpChanged(hash);
         }
         #endregion
 
-        #region Execute Textbox Command
+        #region Execute Text box Command
         private void ExecuteNameCommand(Hashtable hash)
         {
-            if ((string)hash["object"] == "name") GameState.NameChanged(hash);
+            if ((string)hash["object"] != "name") return;
+
+            var action = (string)hash["action"];
+
+            if (action == "append") this.SendCommand(new ChangeNameCommand((string)hash["name"]));
+            else if (action == "clear") this.SendCommand(new ChangeNameCommand(""));
+            else Debug.LogWarning("Name Command Not Found");
         }
 
         private void ExecuteDialogueCommand(Hashtable hash)
         {
-            if ((string)hash["object"] == "dialogue")
-            {
-                GameState.DialogueChanged(hash);
-            }
+            if ((string)hash["object"] != "dialogue") return;
+
+            var action = (string)hash["action"];
+
+            if (action == "append") this.SendCommand(new AppendDialogueCommand((string)hash["dialogue"]));
+            else if (action == "clear") this.SendCommand<ClearDialogueCommand>();
+            else if (action == "newline") this.SendCommand<AppendNewlineToDialogueCommand>();
+            else Debug.LogWarning("Dialogue Command Not Found");
         }
         #endregion
 
-        #region Execute Audio Command
-        private void ExecuteBgmCommand(Hashtable hash)
+        private void ExecuteAudioCommand(Hashtable hash)
         {
-            if( (string)hash["object"] == "bgm" ) GameState.AudioChanged(hash);
-        }
+            string obj = (string)hash["object"];
 
-        private void ExecuteBgsCommand(Hashtable hash)
-        {
-            if( (string)hash["object"] == "bgs" ) GameState.AudioChanged(hash);
+            if (obj == "bgm" || obj == "bgs" || obj == "chs" || obj == "gms") GameState.AudioChanged(hash);
         }
-
-        private void ExecuteChsCommand(Hashtable hash)
-        {
-            if( (string)hash["object"] == "chs" ) GameState.AudioChanged(hash);
-        }
-
-        private void ExecuteGmsCommand(Hashtable hash)
-        {
-            if( (string)hash["object"] == "gms" ) GameState.AudioChanged(hash);
-        }
-        #endregion
 
         private void ExecuteGmCommand(Hashtable hash)
         {
@@ -170,13 +156,17 @@ namespace VNFramework
 
             if ((string)hash["action"] == "stop")
             {
-                autoExecuteCommand = false;
+                _autoExecuteCommand = false;
             }
-            if ((string)hash["action"] == "finish") {
+            if ((string)hash["action"] == "finish")
+            {
                 Debug.Log("Finish");
-                AssetsManager.SaveChapterRecord();
-                GameState.UIChanged(VNutils.Hash("object", "chapter", "action", "show"));
             }
+        }
+
+        public IArchitecture GetArchitecture()
+        {
+            return VNFrameworkProj.Interface;
         }
     }
 }

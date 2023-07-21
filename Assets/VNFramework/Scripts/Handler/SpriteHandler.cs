@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace VNFramework
 {
-    public class SpriteHandler : MonoBehaviour
+    public class SpriteHandler : MonoBehaviour,ICanGetUtility
     {
         public float fadeDuration = 0.5f;
         private readonly float staticAlpha = 1.0f;
@@ -61,7 +61,7 @@ namespace VNFramework
         /// <param name="spriteName"></param>
         public void FadingDisplaySprite(string spriteName)
         {
-            var sprite = AssetsManager.LoadSprite(spriteName);
+            var sprite = this.GetUtility<GameDataStorage>().LoadSprite(spriteName);
             fadingCoroutine = StartCoroutine(FadingDisplay(sprite));
         }
 
@@ -72,7 +72,7 @@ namespace VNFramework
 
         public void FadingChangeSprite(string spriteName)
         {
-            var sprite = AssetsManager.LoadSprite(spriteName);
+            var sprite = this.GetUtility<GameDataStorage>().LoadSprite(spriteName);
             fadingCoroutine = StartCoroutine(FadingChange(sprite));
         }
 
@@ -82,7 +82,7 @@ namespace VNFramework
         /// <param name="spriteName"></param>
         public void ShowSprite(string spriteName)
         {
-            var sprite = AssetsManager.LoadSprite(spriteName);
+            var sprite = this.GetUtility<GameDataStorage>().LoadSprite(spriteName);
             if (sprite != null)
             {
                 image.sprite = sprite;
@@ -152,6 +152,11 @@ namespace VNFramework
             {
                 SetAlpha(staticAlpha);
             }
+        }
+
+        public IArchitecture GetArchitecture()
+        {
+            return VNFrameworkProj.Interface;
         }
     }
 }

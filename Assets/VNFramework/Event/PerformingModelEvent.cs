@@ -1,0 +1,7 @@
+namespace VNFramework
+{
+    struct PerformingModelChangedEvent
+    {
+
+    }
+}
