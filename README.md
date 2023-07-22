@@ -1,6 +1,6 @@
 # VNFramework
 
-![Logo](./Docs/Img/logo.png)
+![Logo](./docs/img/logo.png)
 
 ## Program Architecture
 
