@@ -4,6 +4,19 @@
 
 ![VNFrameworkStructure](./docs/img/VNFramework_Struct.svg)
 
+## Todo List
+
+- [x] 基础的VNScript语法解释器
+- [x] 实现VNFramework的基础UI
+- [x] ChapterView的章节加载
+- [x] 引入QFramework，将框架转换为MVC架构
+- [x] 视觉小说资源的AB包加载
+- [ ] 窗口多分辨率切换
+- [ ] 为 VSCode 编写 VNScript 语法检查插件
+- [ ] `game_info` 增加更多自定义属性
+- [ ] Dialogue Box 中，对话中的英文单词在行末自动添加换行符
+- [ ] 剧情的多分支支持
+
 ## VNScript Syntax
 
 ### Script Syntax Design
