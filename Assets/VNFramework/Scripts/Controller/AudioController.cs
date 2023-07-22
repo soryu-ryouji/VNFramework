@@ -6,8 +6,6 @@ namespace VNFramework
 {
     public class AudioController : MonoBehaviour, IController
     {
-
-        private static bool _audioControllerIsCreated = false;
         private AudioHandler bgm;
         private AudioHandler bgs;
         private AudioHandler gms;
@@ -20,28 +18,29 @@ namespace VNFramework
         {
             GameState.AudioChanged += OnAudioChanged;
 
-            if (!_audioControllerIsCreated)
-            {
-                DontDestroyOnLoad(gameObject);
-                _audioControllerIsCreated = true;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            // if (!_audioControllerIsCreated)
+            // {
+            //     DontDestroyOnLoad(gameObject);
+            //     _audioControllerIsCreated = true;
+            // }
+            // else
+            // {
+            //     Destroy(gameObject);
+            // }
 
             bgm = transform.Find("BGM").GetComponent<AudioHandler>();
             bgs = transform.Find("BGS").GetComponent<AudioHandler>();
             gms = transform.Find("GMS").GetComponent<AudioHandler>();
             chs = transform.Find("CHS").GetComponent<AudioHandler>();
-        }
-        private void Start()
-        {
+
             _configModel = this.GetModel<ConfigModel>();
             _performingModel = this.GetModel<PerformingModel>();
 
-            this.RegisterEvent<PerformingModelChangedEvent>(_ => UpdateAudioVolume());
-            this.RegisterEvent<ConfigChangedEvent>(_ => UpdateAudioVolume());
+            this.RegisterEvent<PerformingModelChangedEvent>(_ => UpdateAudioVolume()).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<ConfigChangedEvent>(_ => UpdateAudioVolume()).UnRegisterWhenGameObjectDestroyed(gameObject);
+        }
+        private void Start()
+        {
             UpdateAudioVolume();
         }
 

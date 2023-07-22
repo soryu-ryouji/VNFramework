@@ -67,7 +67,8 @@ namespace VNFramework
 
         public void SaveSystemConfig()
         {
-            var configFilePath = Path.Combine(Application.dataPath, "Config", "game_config.txt");
+            var configFolderPath = Path.Combine(Application.dataPath, "Config");
+            var configFilePath = Path.Combine(configFolderPath, "game_config.txt");
 
             var systemConfigModel = this.GetModel<ConfigModel>();
             var configStr = @$"bgm_volume : {systemConfigModel.BgmVolume}
@@ -76,6 +77,13 @@ chs_volume : {systemConfigModel.ChsVolume}
 gms_volume : {systemConfigModel.GmsVolume}
 text_speed : {systemConfigModel.TextSpeed}";
 
+            // Create the directory if it does not exist
+            if (!Directory.Exists(configFolderPath))
+            {
+                Directory.CreateDirectory(configFolderPath);
+            }
+
+            // Save the configuration to the file
             using (StreamWriter sw = new StreamWriter(configFilePath))
             {
                 sw.Write(configStr);
@@ -139,6 +147,11 @@ text_speed : {systemConfigModel.TextSpeed}";
                 sb.Append($"[ chapter_name : {chapterName} ]\n");
             }
 
+            if (File.Exists(unlockConfigPath))
+            {
+                File.CreateText(unlockConfigPath);
+            }
+
             using (StreamWriter sw = new StreamWriter(unlockConfigPath))
             {
                 sw.Write(sb);
@@ -200,9 +213,9 @@ text_speed : {systemConfigModel.TextSpeed}";
         {
             string resPath = Application.streamingAssetsPath + "/";
 
+            abDic.Add("vnscripts", AssetBundle.LoadFromFile(resPath + "vnscripts"));
             abDic.Add("sounds", AssetBundle.LoadFromFile(resPath + "sounds"));
             abDic.Add("sprites", AssetBundle.LoadFromFile(resPath + "sprites"));
-            abDic.Add("vnscripts", AssetBundle.LoadFromFile(resPath + "vnscripts"));
             abDic.Add("game_data", AssetBundle.LoadFromFile(resPath + "game_data"));
             abDic.Add("prefabs", AssetBundle.LoadFromFile(resPath + "prefabs"));
         }
