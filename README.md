@@ -4,7 +4,7 @@
 
 ## Program Architecture
 
-![VNFrameworkStructure](./Docs/Img/VNFramework_Struct.svg)
+![VNFrameworkStructure](./docs/img/VNFramework_Struct.svg)
 
 ## Todo List
 
@@ -23,9 +23,9 @@
 
 由于没有美术，所以当前版本的界面比较丑，请见谅。。。
 
-![screenshot01](./Docs/Img/screenshot01.png)
-![screenshot02](./Docs/Img/screenshot02.png)
-![screenshot03](./Docs/Img/screenshot03.png)
+![screenshot01](./docs/img/screenshot01.png)
+![screenshot02](./docs/img/screenshot02.png)
+![screenshot03](./docs/img/screenshot03.png)
 
 ## VNScript Syntax
 
