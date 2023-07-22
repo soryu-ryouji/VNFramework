@@ -49,6 +49,7 @@ namespace VNFramework
             _ResumeText.text = firstChapter.Resume;
 
             GenerateChapterList(_chapterModel.UnlockedChapterList);
+            _buttonListScrollbar.value = 1;
         }
 
         public void GenerateChapterList(List<string> chapterNameList)

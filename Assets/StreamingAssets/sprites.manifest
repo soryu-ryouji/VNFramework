@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3233319962
+CRC: 2570641963
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3d160912e5a5c1415b2816da856ea383
+    Hash: dcfeda6fdaa6429f77d9ba2e41a4a177
   TypeTreeHash:
     serializedVersion: 2
     Hash: c21d61fe394c58399df3c6fb5c7c99b3
@@ -16,6 +16,8 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - "Assets/VNFramework/Resources/Sprites/\u56F0\u60D1_01.png"
+- Assets/VNFramework/Resources/Sprites/urban.jpg
+- Assets/VNFramework/Resources/Sprites/flower_street.jpg
 - "Assets/VNFramework/Resources/Sprites/\u5915\u9633_0.jpg"
 - Assets/VNFramework/Resources/Sprites/MENU_Button_Small.png
 - Assets/VNFramework/Resources/Sprites/Backlog_Button_Large.png
@@ -32,6 +34,8 @@ Assets:
 - Assets/VNFramework/Resources/Sprites/Menu_View.png
 - Assets/VNFramework/Resources/Sprites/white.png
 - "Assets/VNFramework/Resources/Sprites/\u5FAE\u7B11_01.png"
+- Assets/VNFramework/Resources/Sprites/black_city.jpg
+- Assets/VNFramework/Resources/Sprites/railway.jpg
 - Assets/VNFramework/Resources/Sprites/Backlog_Button_Small.png
 - Assets/VNFramework/Resources/Sprites/title_background.png
 Dependencies: []

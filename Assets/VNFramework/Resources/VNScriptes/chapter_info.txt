@@ -9,7 +9,7 @@
     [ chapter_name: 第二章：死 ]
     [ file_name: Chapter02 ]
     [ resume: 死并非生的对立面，而作为生的一部分永存。 ]
-    [ resume_pic: 夕阳_0 ]
+    [ resume_pic: black_city ]
 |>
 
 <|
@@ -20,10 +20,10 @@
 |>
 
 <|
-    [ chapter_name: 第四章：奇特的邂逅 ]
+    [ chapter_name: 第四章：奇特的相遇 ]
     [ file_name: Chapter01 ]
-    [ resume: 这是第二章的Resume ]
-    [ resume_pic: 夕阳_0 ]
+    [ resume: 我在新宿简单吃了早餐，进电话亭给小林绿子打个电话。<br>我以为她今天仍一个人看守电话，但呼叫了十五次也没人接。 ]
+    [ resume_pic: urban ]
 |>
 
 <|
@@ -50,8 +50,8 @@
 <|
     [ chapter_name: 第八章：开放型女郎 ]
     [ file_name: Chapter01 ]
-    [ resume: 这是第二章的Resume ]
-    [ resume_pic: 夕阳_0 ]
+    [ resume: 门悄然合上时，我瞥见初美正拿起听筒<br>——那是我见到她的最后姿影。 ]
+    [ resume_pic: flower_street ]
 |>
 
 <|
@@ -78,6 +78,6 @@
 <|
     [ chapter_name: 第十二章：告别之夜 ]
     [ file_name: Chapter01 ]
-    [ resume: 这是第二章的Resume ]
-    [ resume_pic: 夕阳_0 ]
+    [ resume: “能忠告的，我都忠告给你了，再没有什么可说的了。”<br>“祝你幸福地活下去，把我这份和直子那份都补偿回来。” ]
+    [ resume_pic: railway ]
 |>
