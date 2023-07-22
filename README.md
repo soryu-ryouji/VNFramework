@@ -274,4 +274,4 @@ start_view_bgp: white
 
 本项目基于MIT许可证
 
-![MIT](./Docs/Img/MIT_logo.svg)
+![MIT](./docs/img/MIT_logo.svg)
