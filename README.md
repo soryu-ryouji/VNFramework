@@ -1,8 +1,10 @@
 # VNFramework
 
+![Logo](./Docs/Img/logo.png)
+
 ## Program Architecture
 
-![VNFrameworkStructure](./docs/img/VNFramework_Struct.svg)
+![VNFrameworkStructure](./Docs/Img/VNFramework_Struct.svg)
 
 ## Todo List
 
@@ -16,6 +18,14 @@
 - [ ] `game_info` 增加更多自定义属性
 - [ ] Dialogue Box 中，对话中的英文单词在行末自动添加换行符
 - [ ] 剧情的多分支支持
+
+## Screenshot
+
+由于没有美术，所以当前版本的界面比较丑，请见谅。。。
+
+![screenshot01](./Docs/Img/screenshot01.png)
+![screenshot02](./Docs/Img/screenshot02.png)
+![screenshot03](./Docs/Img/screenshot03.png)
 
 ## VNScript Syntax
 
@@ -259,3 +269,9 @@ title: VN Framework
 start_view_bgm: 月姬
 start_view_bgp: white
 ```
+
+## License
+
+本项目基于MIT许可证
+
+![MIT](./Docs/Img/MIT_logo.svg)
