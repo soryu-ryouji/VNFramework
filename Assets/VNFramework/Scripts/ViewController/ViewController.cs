@@ -31,12 +31,13 @@ public class ViewController : MonoBehaviour, IController
     {
         DontDestroyOnLoad(gameObject);
 
-        _configViewPrefab = Resources.Load<GameObject>("Prefabs/ConfigView");
-        _chapterViewPrefab = Resources.Load<GameObject>("Prefabs/ChapterView");
-        _menuViewPrefab = Resources.Load<GameObject>("Prefabs/MenuView");
-        _backlogViewPrefab = Resources.Load<GameObject>("Prefabs/BacklogView");
-        _performanceViewPrefab = Resources.Load<GameObject>("Prefabs/PerformanceView");
-
+        var gameDataStorage = this.GetUtility<GameDataStorage>();
+        _configViewPrefab = gameDataStorage.LoadPrefab("ConfigView");
+        _chapterViewPrefab = gameDataStorage.LoadPrefab("ChapterView");
+        _menuViewPrefab = gameDataStorage.LoadPrefab("MenuView");
+        _backlogViewPrefab = gameDataStorage.LoadPrefab("BacklogView");
+        _performanceViewPrefab = gameDataStorage.LoadPrefab("PerformanceView");
+    
         this.RegisterEvent<ShowChapterViewEvent>(_ =>
         {
             Transform ui = GameObject.Find("UI").transform;

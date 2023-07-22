@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using System.Linq;
@@ -9,9 +10,10 @@ namespace VNFramework
 {
     class GameDataStorage : IUtility, ICanGetModel
     {
+        Dictionary<string, AssetBundle> abDic = new();
         public AudioClip LoadSound(string audioName)
         {
-            var ret = Resources.Load<AudioClip>(audioName);
+            var ret = abDic["sounds"].LoadAsset<AudioClip>(audioName);
             if (ret == null) Debug.LogError(string.Format("AudioClip {0} not found", audioName));
 
             return ret;
@@ -19,7 +21,7 @@ namespace VNFramework
 
         public Sprite LoadSprite(string path)
         {
-            var ret = Resources.Load<Sprite>(path);
+            var ret = abDic["sprites"].LoadAsset<Sprite>(path);
             if (ret == null) Debug.LogError(string.Format("Sprite {0} not found", path));
 
             return ret;
@@ -27,7 +29,7 @@ namespace VNFramework
 
         public string[] LoadVNScript(string scriptName)
         {
-            string[] fileLines = Resources.Load<TextAsset>(scriptName).text.Split('\n');
+            string[] fileLines = abDic["vnscripts"].LoadAsset<TextAsset>(scriptName).text.Split('\n');
             string[] vnScriptLines = fileLines.Select(str => str.TrimEnd('\r', '\n')).ToArray();
 
             return vnScriptLines;
@@ -36,9 +38,19 @@ namespace VNFramework
         public void LoadSystemConfig()
         {
             var configFilePath = Path.Combine(Application.dataPath, "Config", "game_config.txt");
-            string[] configList = File.ReadAllLines(configFilePath);
-
             var systemConfigModel = this.GetModel<ConfigModel>();
+            // 若文件不存在，则使用默认配置
+            if (!File.Exists(configFilePath))
+            {
+                systemConfigModel.BgmVolume = 0.8f;
+                systemConfigModel.BgsVolume = 0.5f;
+                systemConfigModel.ChsVolume = 1.0f;
+                systemConfigModel.GmsVolume = 0.4f;
+                systemConfigModel.TextSpeed = 0.08f;
+                SaveSystemConfig();
+            }
+
+            string[] configList = File.ReadAllLines(configFilePath);
 
             foreach (var config in configList.Select(ch => ch.Split(":").Select(str => str.Trim())))
             {
@@ -102,7 +114,7 @@ text_speed : {systemConfigModel.TextSpeed}";
 
         public ChapterInfo[] LoadChapterInfoList()
         {
-            string content = Resources.Load<TextAsset>("ProjectData/chapter_info").text;
+            string content = abDic["vnscripts"].LoadAsset<TextAsset>("chapter_info").text;
 
             string pattern = @"<\|\s*(\[.*?\])\s*\|>";
             MatchCollection matches = Regex.Matches(content, pattern, RegexOptions.Singleline);
@@ -158,9 +170,9 @@ text_speed : {systemConfigModel.TextSpeed}";
             return chapterInfo;
         }
 
-        public void LoadProjectConfig()
+        public void LoadProjectData()
         {
-            var configFile = Resources.Load<TextAsset>("ProjectData/game_info").text.Split('\n');
+            var configFile = abDic["game_data"].LoadAsset<TextAsset>("game_info").text.Split('\n');
             string[] configList = configFile.Select(str => str.TrimEnd('\r', '\n')).ToArray();
 
             var projectModel = this.GetModel<ProjectModel>();
@@ -173,6 +185,26 @@ text_speed : {systemConfigModel.TextSpeed}";
                 else if (key == "start_view_bgm") projectModel.TitleBgm = value;
                 else if (key == "start_view_bgp") projectModel.TitleBgp = value;
             }
+        }
+
+        public GameObject LoadPrefab(string prefabName)
+        {
+            GameObject obj = abDic["prefabs"].LoadAsset<GameObject>(prefabName);
+
+            if (obj == null) Debug.Log("AB Prefab Resources Not Found");
+
+            return obj;
+        }
+
+        public void LoadAllRes()
+        {
+            string resPath = Application.streamingAssetsPath + "/";
+
+            abDic.Add("sounds", AssetBundle.LoadFromFile(resPath + "sounds"));
+            abDic.Add("sprites", AssetBundle.LoadFromFile(resPath + "sprites"));
+            abDic.Add("vnscripts", AssetBundle.LoadFromFile(resPath + "vnscripts"));
+            abDic.Add("game_data", AssetBundle.LoadFromFile(resPath + "game_data"));
+            abDic.Add("prefabs", AssetBundle.LoadFromFile(resPath + "prefabs"));
         }
 
         public IArchitecture GetArchitecture()

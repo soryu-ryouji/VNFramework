@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 1982704335
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: c4a5881fe2d3b91f7cda160a7060d54d
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/VNFramework/Resources/VNScriptes/Chapter02.txt
+- Assets/VNFramework/Resources/VNScriptes/chapter_info.txt
+- Assets/VNFramework/Resources/VNScriptes/Chapter01.txt
+Dependencies: []

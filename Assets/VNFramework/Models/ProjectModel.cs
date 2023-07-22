@@ -21,7 +21,7 @@ StartUpViewBgm : {_titleBgm}");
 
         protected override void OnInit()
         {
-            this.GetUtility<GameDataStorage>().LoadProjectConfig();
+            this.GetUtility<GameDataStorage>().LoadProjectData();
         }
     }
 }

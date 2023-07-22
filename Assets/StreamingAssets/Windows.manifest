@@ -1,0 +1,20 @@
+ManifestFileVersion: 0
+CRC: 27357437
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: prefabs
+      Dependencies:
+        Dependency_0: sprites
+    Info_1:
+      Name: game_data
+      Dependencies: {}
+    Info_2:
+      Name: sounds
+      Dependencies: {}
+    Info_3:
+      Name: sprites
+      Dependencies: {}
+    Info_4:
+      Name: vnscripts
+      Dependencies: {}

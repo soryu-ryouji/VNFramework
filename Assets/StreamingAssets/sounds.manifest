@@ -1,0 +1,18 @@
+ManifestFileVersion: 0
+CRC: 2049661663
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0f3ba638bc6c7323b3a4faecec7c5fad
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
+HashAppended: 0
+ClassTypes:
+- Class: 83
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/VNFramework/Resources/Sounds/click-button.mp3
+- "Assets/VNFramework/Resources/Sounds/\u6708\u59EC.mp3"
+Dependencies: []

@@ -1,5 +1,5 @@
-text_speed:0.08
-bgm_volume:0.6733848
-bgs_volume:0
-chs_volume:0.09991094
-gms_volume:0.3
+bgm_volume : 0.8
+bgs_volume : 0.5
+chs_volume : 1
+gms_volume : 0.4
+text_speed : 0.08

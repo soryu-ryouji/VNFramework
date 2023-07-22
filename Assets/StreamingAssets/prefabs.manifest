@@ -1,0 +1,149 @@
+ManifestFileVersion: 0
+CRC: 990506120
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: db3d6ce91cf1246a6f67784dc6496121
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 22aed2e25bdeacc72b21679a78ac844f
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 61bb4f3359006bb4a91fe8467b450e88, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 386e6af92c6dd564d8ae0e959da0f244, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f1b2922fa6e1e2b4d9817c4acb6a5511, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: e17a71feb7c81d94787c6660cfbef026, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f0ba00d61de6f304785c2a389b4bd1fb, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 783000c684a389042b1d4bafb14a7510, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d0138abb62bc5dd46b11a687402c41ce, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d3a456c5b5a60754abe3b9d9e5e9dcaf, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d104a84d6f1cfb14fa4ddf88f43c7cac, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: ea1c96e0db3121b4ea1f4e13826adbbe, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 9db84d88c3a37394ca41ecf5be39fc57, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d9d05ed80027e5d4eb039fb2876108c6, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 841f7654c0b53a44cb0df66a6adc1462, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 017684d2a630628459eda2c5960d33d0, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 223
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.FaceInfo_Legacy
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.FontAssetCreationSettings
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.KerningTable
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_Character
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_FontFeatureTable
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_FontWeightPair
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_GlyphAdjustmentRecord
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_GlyphPairAdjustmentRecord
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_GlyphValueRecord
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.VertexGradient
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.ArgumentCache
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentListenerMode
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.RectOffset
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
+  ClassName: UnityEngine.TextCore.FaceInfo
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
+  ClassName: UnityEngine.TextCore.Glyph
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
+  ClassName: UnityEngine.TextCore.GlyphMetrics
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
+  ClassName: UnityEngine.TextCore.GlyphRect
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.AnimationTriggers
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.Button/ButtonClickedEvent
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.ColorBlock
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.Navigation
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.ScrollRect/ScrollRectEvent
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.Scrollbar/ScrollEvent
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.SpriteState
+Assets:
+- Assets/VNFramework/Resources/Prefabs/ChapterButton.prefab
+- Assets/VNFramework/Resources/Prefabs/TitleView.prefab
+- Assets/VNFramework/Resources/Prefabs/ViewController.prefab
+- Assets/VNFramework/Resources/Prefabs/GameController.prefab
+- Assets/VNFramework/Resources/Prefabs/AudioSystem.prefab
+- Assets/VNFramework/Resources/Prefabs/ChapterView.prefab
+- Assets/VNFramework/Resources/Prefabs/PerformanceView.prefab
+- Assets/VNFramework/Resources/Prefabs/MenuView.prefab
+- Assets/VNFramework/Resources/Prefabs/BacklogView.prefab
+- Assets/VNFramework/Resources/Prefabs/ConfigView.prefab
+Dependencies:
+- D:/Projects/VNFramework/AssetBundles/Windows/sprites

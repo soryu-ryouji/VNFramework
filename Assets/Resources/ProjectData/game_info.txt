@@ -1,3 +1,0 @@
-title: VN Framework
-start_view_bgm:月姬
-start_view_bgp:white
