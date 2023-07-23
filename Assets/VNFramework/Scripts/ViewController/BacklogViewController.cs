@@ -20,7 +20,7 @@ namespace VNFramework
             _dialogueModel = this.GetModel<DialogueModel>();
 
             _backlogViewPos = gameObject.GetComponent<RectTransform>();
-            _backlogBgp = transform.Find("BacklogBgp").GetComponent<Image>();
+            _backlogBgp = transform.Find("ViewBgp").GetComponent<Image>();
             _backlogTextBox = transform.Find("ScrollView/Text").GetComponent<TMP_Text>();
             scrollRect = transform.Find("ScrollView").GetComponent<ScrollRect>();
             _backBtn = transform.Find("BackBtn").GetComponent<Button>();

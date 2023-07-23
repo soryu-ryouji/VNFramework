@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2049661663
+CRC: 4068078392
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0f3ba638bc6c7323b3a4faecec7c5fad
+    Hash: a9630bb5640cc8e5d06522cabc99a967
   TypeTreeHash:
     serializedVersion: 2
     Hash: 9a2ca7bdbd1871f7131daf57de908e0c
@@ -13,6 +13,7 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/VNFramework/Resources/Sounds/1967.mp3
 - Assets/VNFramework/Resources/Sounds/click-button.mp3
 - "Assets/VNFramework/Resources/Sounds/\u6708\u59EC.mp3"
 Dependencies: []

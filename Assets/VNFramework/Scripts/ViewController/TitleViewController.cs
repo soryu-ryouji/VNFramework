@@ -1,12 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 namespace VNFramework
 {
     public class TitleViewController : MonoBehaviour, IController
     {
-        private TMP_Text _titleText;
+        private Image _titlePic;
         private Image _bgp;
 
         private Button _startBtn;
@@ -16,15 +15,15 @@ namespace VNFramework
 
         private void Start()
         {
-            _titleText = transform.Find("TitleText").GetComponent<TMP_Text>();
-            _bgp = transform.Find("TitleBgp").GetComponent<Image>();
+            _titlePic = transform.Find("TitlePic").GetComponent<Image>();
+            _bgp = transform.Find("ViewBgp").GetComponent<Image>();
             _startBtn = transform.Find("ButtonList/StartButton").GetComponent<Button>();
             _chapterViewBtn = transform.Find("ButtonList/ChapterButton").GetComponent<Button>();
             _configViewBtn = transform.Find("ButtonList/ConfigButton").GetComponent<Button>();
             _exitGameBtn = transform.Find("ButtonList/ExitButton").GetComponent<Button>();
 
             var projectModel = this.GetModel<ProjectModel>();
-            _titleText.text = projectModel.Title;
+            _titlePic.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.TitlePic);
             _bgp.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.TitleBgp);
             this.SendCommand(new PlayAudioCommand(projectModel.TitleBgm, "bgm"));
 

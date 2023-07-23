@@ -194,7 +194,7 @@ text_speed : {systemConfigModel.TextSpeed}";
                 string key = config.ElementAtOrDefault(0);
                 string value = config.ElementAtOrDefault(1);
 
-                if (key == "title") projectModel.Title = value;
+                if (key == "title") projectModel.TitlePic = value;
                 else if (key == "start_view_bgm") projectModel.TitleBgm = value;
                 else if (key == "start_view_bgp") projectModel.TitleBgp = value;
             }

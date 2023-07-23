@@ -23,9 +23,17 @@
 
 由于没有美术，所以当前版本的界面比较丑，请见谅。。。
 
+**Chapter View**
 ![screenshot01](./docs/img/screenshot01.png)
+
+**Backlog View**
 ![screenshot02](./docs/img/screenshot02.png)
+
+**Config View**
 ![screenshot03](./docs/img/screenshot03.png)
+
+**Menu View**
+![screenshot03](./docs/img/screenshot04.png)
 
 ## VNScript Syntax
 
@@ -264,10 +272,37 @@ IL Command 与 Asm 的对应关系如下图
 
 `game_info` 用于简化定制视觉小说UI的步骤
 
+由于时间关系，目前只实现了三个用于测试的选项
+
 ```
-title: VN Framework
+title: example_logo
 start_view_bgm: 月姬
 start_view_bgp: white
+```
+
+以下是待实现的配置方式
+
+```
+[ start_view ]
+title_pic: example_logo
+bgm : 月姬
+bgp : start_view_bgp
+button_start_pic: start_view_button_start
+button_chapter_pic: start_view_button_chapter
+button_config_pic: start_view_button_config
+button_exit_pic: start_view_button_exit
+
+[ menu_view ]
+bgp: menu_view_bgp
+button_start_pic: menu_view_button_start
+button_chapter_pic: menu_view_button_start
+button_config_pic: menu_view_button_config
+button_exit_pic: menu_view_button_exit
+
+[ backlog_view ]
+bgp: backlog_view_bgp
+......
+...
 ```
 
 ## License

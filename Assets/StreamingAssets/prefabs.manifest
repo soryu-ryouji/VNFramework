@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 990506120
+CRC: 3343418227
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: db3d6ce91cf1246a6f67784dc6496121
+    Hash: dfb8b321c3c89aa87c75e2acad577438
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 22aed2e25bdeacc72b21679a78ac844f
+    Hash: 97e227c14313f6bd70d7c8dd597438fc
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -39,8 +39,6 @@ ClassTypes:
   Script: {fileID: 11500000, guid: e17a71feb7c81d94787c6660cfbef026, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: f0ba00d61de6f304785c2a389b4bd1fb, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 783000c684a389042b1d4bafb14a7510, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
 - Class: 114
@@ -136,7 +134,6 @@ SerializeReferenceClassIdentifiers:
   ClassName: UnityEngine.UI.SpriteState
 Assets:
 - Assets/VNFramework/Resources/Prefabs/ChapterButton.prefab
-- Assets/VNFramework/Resources/Prefabs/TitleView.prefab
 - Assets/VNFramework/Resources/Prefabs/ViewController.prefab
 - Assets/VNFramework/Resources/Prefabs/GameController.prefab
 - Assets/VNFramework/Resources/Prefabs/AudioSystem.prefab
