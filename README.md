@@ -24,16 +24,16 @@
 由于没有美术，所以当前版本的界面比较丑，请见谅。。。
 
 **Chapter View**
-![screenshot01](./docs/img/screenshot01.png)
+![screenshot01](./docs/img/chapter_view.png)
 
 **Backlog View**
-![screenshot02](./docs/img/screenshot02.png)
+![screenshot02](./docs/img/backlog_view.png)
 
 **Config View**
-![screenshot03](./docs/img/screenshot03.png)
+![screenshot03](./docs/img/config_view.png)
 
 **Menu View**
-![screenshot03](./docs/img/screenshot04.png)
+![screenshot03](./docs/img/menu_view.png)
 
 ## VNScript Syntax
 
