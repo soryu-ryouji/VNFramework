@@ -1,4 +1,5 @@
 [ bgm_play: 1967 ]
+
 [ bgp: dormitory, fading ]
 
 很久很久以前，我住在一座学生寄宿院里。
