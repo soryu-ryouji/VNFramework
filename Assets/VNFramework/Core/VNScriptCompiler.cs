@@ -5,8 +5,6 @@ using System;
 
 namespace VNScriptCompiler
 {
-
-
     class VNScript
     {
         private enum ScriptLineType
@@ -34,6 +32,7 @@ namespace VNScriptCompiler
 
             bool lastTypeIsClearName = false;
             bool isFullDialogueMode = false;
+            bool isNotInitDialogueMode = true;
 
             for (int i = 0; i < vnScriptLines.Length; i++)
             {
@@ -63,9 +62,15 @@ namespace VNScriptCompiler
                     {
                         ilList.Add("[ open_full_dialogue_box ]");
                     }
-                    isFullDialogueMode = true;
-
+                    else if (isNotInitDialogueMode)
+                    {
+                        ilList.Add("[ open_full_dialogue_box ]");
+                        isNotInitDialogueMode = false;
+                    }
                     ilList.AddRange(ParseVNScriptDialogueLine(line[2..]));
+                    isFullDialogueMode = true;
+                    lastTypeIsClearName = false;
+
                     continue;
                 }
 
@@ -75,9 +80,15 @@ namespace VNScriptCompiler
                     {
                         ilList.Add("[ open_norm_dialogue_box ]");
                     }
-                    isFullDialogueMode = false;
-
+                    else if (isNotInitDialogueMode)
+                    {
+                        ilList.Add("[ open_norm_dialogue_box ]");
+                        isNotInitDialogueMode = false;
+                    }
                     ilList.AddRange(ParseVNScriptDialogueLine(line));
+                    isFullDialogueMode = false;
+                    lastTypeIsClearName = false;
+                    
                     continue;
                 }
             }
@@ -117,7 +128,6 @@ namespace VNScriptCompiler
         private static List<string> ParseVNScriptDialogueLine(string line)
         {
             var ilList = new List<string>();
-
 
             // Note: 继续输出语句 必定是跟在 普通对话语句 后面的，因此继续输出语句中不会包含对对话者名称的检测
             // 当 line 为继续输出语句时（换行版）

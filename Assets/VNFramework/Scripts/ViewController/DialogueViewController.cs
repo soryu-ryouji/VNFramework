@@ -17,7 +17,6 @@ namespace VNFramework
         private float _textSpeed;
         private string _curDialogue;
         private int _curDialogueIndex;
-        private string _currentName;
 
         // Name Box
         private GameObject _normNameBox;
@@ -62,7 +61,7 @@ namespace VNFramework
             {
                 _curDialogue = "";
                 _curDialogueIndex = 0;
-                _curDialogueBoxText.text = "";
+                if (_curDialogueBoxText != null) _curDialogueBoxText.text = "";
             }).UnRegisterWhenGameObjectDestroyed(gameObject); ;
 
             this.RegisterEvent<AppendNewLineToDialogueEvent>(_ =>
@@ -79,9 +78,6 @@ namespace VNFramework
 
             this.RegisterEvent<OpenFullDialogueBoxEvent>(_ => OpenFullDialogueBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<OpenNormDialogueBoxEvent>(_ => OpenNormDialogueBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
-
-            // 程序启动时默认为normDialogueBox;
-            OpenNormDialogueBox();
         }
 
         private void OnDestroy()
@@ -102,6 +98,9 @@ namespace VNFramework
 
             _curDialogueBox = _normDialogueBox;
             _curDialogueBoxText = _normDialogueBoxText;
+            _dialogueModel.CurrentName = "";
+
+            ChangeNameBox();
         }
 
         private void OpenFullDialogueBox()
@@ -111,6 +110,9 @@ namespace VNFramework
             
             _curDialogueBox = _fullDialogueBox;
             _curDialogueBoxText = _fullDialogueBoxText;
+            _dialogueModel.CurrentName = "";
+
+            ChangeNameBox();
         }
 
         private void ShowNormDialogueBox()
