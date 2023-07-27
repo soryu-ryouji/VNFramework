@@ -13,6 +13,7 @@
 - [x] ChapterView的章节加载
 - [x] 引入QFramework，将框架转换为MVC架构
 - [x] 视觉小说资源的AB包加载
+- [x] 实现全屏文字的文本演出模式
 - [ ] 窗口多分辨率切换
 - [ ] 为 VSCode 编写 VNScript 语法检查插件
 - [ ] `game_info` 增加更多自定义属性
@@ -26,8 +27,11 @@
 **Chapter View**
 ![ChapterView](./docs/img/chapter_view.png)
 
-**Performance View**
-![PerformanceView](./docs/img/performance_view.png)
+**Norm Performance View**
+![NormPerformanceView](./docs/img/norm_performance_view.png)
+
+**Full Performance View**
+![FullPerformanceView](./docs/img/full_performance_view.png)
 
 **Backlog View**
 ![BacklogView](./docs/img/backlog_view.png)
@@ -151,6 +155,21 @@
 [ bgm_vol: vol_value ]
 [ bgs_vol: vol_value ]
 [ role_vol: vol_value ]
+```
+
+#### 全屏文字演出模式
+
+如果不希望使用底部文本框，而希望使用全屏文本框来输出剧本，可使用全屏文本语法。
+
+全屏文本语法与其他语法的区别在于在句子开头添加 `|` 符号，用于提示语法编辑器此处为全屏文本区域
+
+```
+| 写下这篇序言的时候我在赤道以南的巴厘岛，这是我今年第二次来印度尼西亚。
+| -> 这边的酒店都会给客人准备一个很宽敞的露台，露台上放一盏烛和一盒火柴，
+| -> 外面是星垂平野，或者雷电打落在海面上，黑暗那么深邃。
+
+| 江南 : (chapter01_001)在寂静的夜里点燃蜡烛放在栏杆上，心就安静下来。
+| > (chapter01_002)仿佛一种仪式开始，神秘的气息氤氲的降下，可以开始缓缓的讲诉平生。
 ```
 
 ### IL Command

@@ -29,7 +29,7 @@ namespace VNFramework
             executeCommand += ExecuteDialogueCommand;
             executeCommand += ExecuteGmCommand;
 
-            _dialoguePanelController = transform.Find("DialoguePanel").GetComponent<DialoguePanelController>();
+            _dialoguePanelController = transform.Find("DialogueView").GetComponent<DialoguePanelController>();
 
             var chapterModel = this.GetModel<ChapterModel>();
             string fileName = chapterModel.GetFileName(chapterModel.CurrentChapter);
@@ -140,6 +140,12 @@ namespace VNFramework
             if (action == "append") this.SendCommand(new AppendDialogueCommand((string)hash["dialogue"]));
             else if (action == "clear") this.SendCommand<ClearDialogueCommand>();
             else if (action == "newline") this.SendCommand<AppendNewlineToDialogueCommand>();
+            else if (action == "switch")
+            {
+                var mode = (string)hash["mode"];
+                if (mode == "full") this.SendCommand<OpenFullDialogueBoxCommand>();
+                else if (mode == "norm") this.SendCommand<OpenNormDialogueBoxCommand>();
+            }
             else Debug.LogWarning("Dialogue Command Not Found");
         }
         #endregion

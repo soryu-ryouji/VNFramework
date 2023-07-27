@@ -5,36 +5,92 @@ using System;
 
 namespace VNScriptCompiler
 {
+
+
     class VNScript
     {
+        private enum ScriptLineType
+        {
+            Annotation,
+            Blank,
+            Command,
+            FullDialogue,
+            NormDialogue,
+        }
+
+        private static ScriptLineType IdentifyLineType(string line)
+        {
+            if (line.Length == 0) return ScriptLineType.Blank;
+            if (line[0] == '#') return ScriptLineType.Annotation;
+
+            if (line[0] == '[' && line[^1] == ']') return ScriptLineType.Command;
+            else if (line[0..2] == "| ") return ScriptLineType.FullDialogue;
+            else return ScriptLineType.NormDialogue;
+        }
+
         public static List<string> ParseVNScriptToIL(string[] vnScriptLines)
         {
             var ilList = new List<string>();
 
+            bool lastTypeIsClearName = false;
+            bool isFullDialogueMode = false;
+
             for (int i = 0; i < vnScriptLines.Length; i++)
             {
                 string line = vnScriptLines[i].Trim();
+                var lineType = IdentifyLineType(line);
 
-                if (line.Length == 0 && ilList[^1] != "[ clear_name ]")
+                // 多条空行只添加一条 [ clear_name ] 指令
+                if (lineType == ScriptLineType.Blank && lastTypeIsClearName == false)
                 {
                     ilList.Add("[ clear_name ]");
+                    lastTypeIsClearName = true;
+                    continue;
                 }
-                else if (line[0] == '#') continue;
-                else ilList.AddRange(ParseVNScriptToIL(line));
+
+                if (lineType == ScriptLineType.Annotation) continue;
+
+                if (lineType == ScriptLineType.Command)
+                {
+                    ilList.AddRange(ParseVNScriptCommandLine(line));
+                    lastTypeIsClearName = false;
+                    continue;
+                }
+
+                if (lineType == ScriptLineType.FullDialogue)
+                {
+                    if (isFullDialogueMode == false)
+                    {
+                        ilList.Add("[ open_full_dialogue_box ]");
+                    }
+                    isFullDialogueMode = true;
+
+                    ilList.AddRange(ParseVNScriptDialogueLine(line[2..]));
+                    continue;
+                }
+
+                if (lineType == ScriptLineType.NormDialogue)
+                {
+                    if (isFullDialogueMode == true)
+                    {
+                        ilList.Add("[ open_norm_dialogue_box ]");
+                    }
+                    isFullDialogueMode = false;
+
+                    ilList.AddRange(ParseVNScriptDialogueLine(line));
+                    continue;
+                }
             }
 
             return ilList;
         }
 
-        public static List<string> ParseVNScriptToIL(string line)
+        private static List<string> ParseVNScriptCommandLine(string line)
         {
-            var ilList = new List<string>();
-
-            // Note: 继续输出语句 必定是跟在 普通对话语句 后面的，因此继续输出语句中不会包含对对话者名称的检测
-
             // 当 line 为 IL Command 时
             // 使用 startIndex 与 endIndex 可以提取出放在同一行的多个 IL Command
             // Example: [ bgm_play: audio_name] [ bgm_vol: 0.4 ]
+            var ilList = new List<string>();
             if (line[0] == '[' && line[^1] == ']')
             {
                 int startIndex = 0;
@@ -55,27 +111,38 @@ namespace VNScriptCompiler
                 }
             }
 
-            // 当 line 为继续输出语句时（不换行版）
-            else if (line[0..3] == "-> ")
-            {
-                line = line[3..];
-                var dialogueUnit = ExtractRoleSayContent(line);
+            return ilList;
+        }
 
-                // 当存在 角色语音时，添加 role_say 命令
-                if (dialogueUnit.Length == 2) ilList.Add($"[ role_say: {dialogueUnit[0]} ]");
-                ilList.Add($"[ dialogue_append: {dialogueUnit[^1]} ]");
+        private static List<string> ParseVNScriptDialogueLine(string line)
+        {
+            var ilList = new List<string>();
+
+
+            // Note: 继续输出语句 必定是跟在 普通对话语句 后面的，因此继续输出语句中不会包含对对话者名称的检测
+            // 当 line 为继续输出语句时（换行版）
+            if (line[0] == '>')
+            {
+                ilList.Add("[ dialogue_newline ]");
+                line = line[1..].Trim();
+                if (line != "")
+                {
+                    var dialogueUnit = ExtractRoleSayContent(line);
+
+                    // 当存在 角色语音时，添加 role_say 命令
+                    if (dialogueUnit.Length == 2) ilList.Add($"[ role_say: {dialogueUnit[0]} ]");
+                    ilList.Add($"[ dialogue_append: {dialogueUnit[^1]} ]");
+                }
             }
 
-            // 当 line 为继续输出语句时（换行版）
-            else if (line[0..2] == "> ")
+            // 当 line 为继续输出语句时（不换行版）
+            else if (line[0..2] == "->")
             {
-                line = line[2..];
+                line = line[2..].Trim();
                 var dialogueUnit = ExtractRoleSayContent(line);
 
                 // 当存在 角色语音时，添加 role_say 命令
                 if (dialogueUnit.Length == 2) ilList.Add($"[ role_say: {dialogueUnit[0]} ]");
-
-                ilList.Add("[ dialogue_newline ]");
                 ilList.Add($"[ dialogue_append: {dialogueUnit[^1]} ]");
             }
 
@@ -108,26 +175,26 @@ namespace VNScriptCompiler
         /// <param name="roleDialogueContent"></param>
         private static string[] ExtractRoleSayContent(string roleDialogueContent)
         {
-            var extractedContent = new List<string>(); 
- 
+            var extractedContent = new List<string>();
+
             // 使用正则表达式匹配以括号开头的行 
-            var regex = new Regex(@"^\((.*?)\)(.*)$"); 
-             
-            Match match = regex.Match(roleDialogueContent); 
-            if (match.Success) 
-            { 
+            var regex = new Regex(@"^\((.*?)\)(.*)$");
+
+            Match match = regex.Match(roleDialogueContent);
+            if (match.Success)
+            {
                 // 获取括号内的内容 
-                string content = match.Groups[1].Value.Trim(); 
+                string content = match.Groups[1].Value.Trim();
                 // 获取括号之后的内容 
-                string remainingContent = match.Groups[2].Value.Trim(); 
-                extractedContent.Add(content); 
-                extractedContent.Add(remainingContent); 
-            } 
-            else 
-            { 
-                extractedContent.Add(roleDialogueContent); 
-            } 
- 
+                string remainingContent = match.Groups[2].Value.Trim();
+                extractedContent.Add(content);
+                extractedContent.Add(remainingContent);
+            }
+            else
+            {
+                extractedContent.Add(roleDialogueContent);
+            }
+
             return extractedContent.ToArray();
         }
     }
@@ -168,6 +235,8 @@ namespace VNScriptCompiler
         {
             Hashtable commandToAsm = new()
             {
+                { "open_full_dialogue_box", "dialogue clear\ndialogue switch full" },
+                { "open_norm_dialogue_box", "dialogue clear\ndialogue switch norm" },
                 { "dialogue", "dialogue clear\ndialogue append {0}\ngm stop" },
                 { "role_dialogue", "name clear\ndialogue clear\nname append {0}\ndialogue append {1}\ngm stop" },
                 { "dialogue_append", "dialogue append {0}\ngm stop" },
@@ -251,7 +320,6 @@ namespace VNScriptCompiler
         }
     }
 
-
     public class AsmScript
     {
         public static Hashtable ParseAsmToHash(string command)
@@ -294,6 +362,11 @@ namespace VNScriptCompiler
             else if (unit[1] == "newline")
             {
                 hashtable.Add("action", "newline");
+            }
+            else if (unit[1] == "switch")
+            {
+                hashtable.Add("action", "switch");
+                hashtable.Add("mode", unit[2]);
             }
 
             return hashtable;

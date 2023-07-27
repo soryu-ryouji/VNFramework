@@ -60,4 +60,20 @@ namespace VNFramework
             this.SendEvent<StopDialogueAnimEvent>();
         }
     }
+
+    class OpenFullDialogueBoxCommand : AbstractCommand
+    {
+        protected override void OnExecute()
+        {
+            this.SendEvent<OpenFullDialogueBoxEvent>();
+        }
+    }
+
+    class OpenNormDialogueBoxCommand : AbstractCommand
+    {
+        protected override void OnExecute()
+        {
+            this.SendEvent<OpenNormDialogueBoxEvent>();
+        }
+    }
 }

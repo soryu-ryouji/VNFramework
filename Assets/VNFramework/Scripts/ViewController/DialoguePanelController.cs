@@ -6,87 +6,82 @@ namespace VNFramework
 {
     public class DialoguePanelController : MonoBehaviour, IController
     {
-        // Name Box
-        private GameObject _nameBox;
-        private TMP_Text _nameText;
-        private string _currentName;
+        // Dialogue View
+        private bool _dialogueViewActive = true;
+        public GameObject _curDialogueBox;
+        public TMP_Text _curDialogueBoxText;
 
-        // Dialogue Box
         private bool _isAnimating = false;
-        private GameObject _dialogueBox;
-        private TMP_Text _dialogueText;
         private bool _needAnimation = true;
         private Coroutine _animationCoroutine;
         private float _textSpeed;
-        private string _currentDialogue;
-        private int _currentDialogueIndex;
+        private string _curDialogue;
+        private int _curDialogueIndex;
+        private string _currentName;
 
-        // Dialogue Panel
-        private bool _dialoguePanelActive = true;
+        // Name Box
+        public GameObject _normNameBox;
+        public TMP_Text _normNameText;
+
+        // Normal Dialogue Box
+        public GameObject _normDialogueBox;
+        public TMP_Text _normDialogueBoxText;
+
+        // Full Dialogue Box
+        public GameObject _fullDialogueBox;
+        public TMP_Text _fullDialogueBoxText;
 
         // Dialogue Model
         private DialogueModel _dialogueModel;
 
         private void Start()
         {
+            _normDialogueBox = transform.Find("NormDialogueBox").gameObject;
+            _fullDialogueBox = transform.Find("FullDialogueBox").gameObject;
+            _normDialogueBoxText = _normDialogueBox.transform.Find("DialogueBox/DialogueBoxText").GetComponent<TMP_Text>();
+            _fullDialogueBoxText = _fullDialogueBox.transform.Find("DialogueBoxText").GetComponent<TMP_Text>();
+
+            _normNameBox = _normDialogueBox.transform.Find("NameBox").gameObject;
+            _normNameText = _normNameBox.transform.Find("NameBoxText").GetComponent<TMP_Text>();
+
             _dialogueModel = this.GetModel<DialogueModel>();
-
-            _nameBox = transform.Find("NameBox").gameObject;
-            _nameText = transform.Find("NameBox/Text").GetComponent<TMP_Text>();
-            _dialogueBox = transform.Find("DialogueBox").gameObject;
-            _dialogueText = transform.Find("DialogueBox/Text").GetComponent<TMP_Text>();
-
-            this.RegisterEvent<ShowDialoguePanelEvent>(_ => ShowDialoguePanel())
-                .UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<HideDialoguePanelEvent>(_ => HideDialoguePanel())
-                .UnRegisterWhenGameObjectDestroyed(gameObject);;
-            this.RegisterEvent<ToggleDialoguePanelEvent>(_ => ToggleDialoguePanel())
-                .UnRegisterWhenGameObjectDestroyed(gameObject);;
-
             _textSpeed = this.GetModel<ConfigModel>().TextSpeed;
-            this.RegisterEvent<ConfigChangedEvent>(_ => _textSpeed = this.GetModel<ConfigModel>().TextSpeed)
-                .UnRegisterWhenGameObjectDestroyed(gameObject);
 
-            // NameBox
-            this.RegisterEvent<ChangeNameEvent>(_ =>
-            {
-                if (_dialogueModel.CurrentName == "")
-                {
-                    _nameText.text = "";
-                    _nameBox.SetActive(false);
-                }
-                else
-                {
-                    _nameBox.SetActive(true);
-                    _nameText.text = _dialogueModel.CurrentName;
-                }
-            }).UnRegisterWhenGameObjectDestroyed(gameObject);
-
-            // Dialogue Box
+            this.RegisterEvent<ConfigChangedEvent>(_ => _textSpeed = this.GetModel<ConfigModel>().TextSpeed).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<ShowDialoguePanelEvent>(_ => ShowDialogueView()).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<HideDialoguePanelEvent>(_ => HideDialogueView()).UnRegisterWhenGameObjectDestroyed(gameObject); ;
+            this.RegisterEvent<ToggleDialoguePanelEvent>(_ => ToggleDialogueView()).UnRegisterWhenGameObjectDestroyed(gameObject); ;
+            this.RegisterEvent<ChangeNameEvent>(_ => ChangeNameBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<AppendDialogueEvent>(_ =>
             {
-                _currentDialogue = _dialogueModel.CurrentDialogue;
+                _curDialogue = _dialogueModel.CurrentDialogue;
                 ChangeDisplay();
-            }).UnRegisterWhenGameObjectDestroyed(gameObject);;
+            }).UnRegisterWhenGameObjectDestroyed(gameObject); ;
 
             this.RegisterEvent<ClearDialogueEvent>(_ =>
             {
-                _currentDialogue = "";
-                _currentDialogueIndex = 0;
-                _dialogueText.text = "";
-            }).UnRegisterWhenGameObjectDestroyed(gameObject);;
+                _curDialogue = "";
+                _curDialogueIndex = 0;
+                _curDialogueBoxText.text = "";
+            }).UnRegisterWhenGameObjectDestroyed(gameObject); ;
 
             this.RegisterEvent<AppendNewLineToDialogueEvent>(_ =>
             {
-                _currentDialogue = _dialogueModel.CurrentDialogue;
-                _currentDialogueIndex += 4;
-                _dialogueText.text = _currentDialogue;
-            }).UnRegisterWhenGameObjectDestroyed(gameObject);;
+                _curDialogue = _dialogueModel.CurrentDialogue;
+                _curDialogueIndex += 4;
+                _curDialogueBoxText.text = _curDialogue;
+            }).UnRegisterWhenGameObjectDestroyed(gameObject); ;
 
             this.RegisterEvent<StopDialogueAnimEvent>(_ =>
             {
                 StopCharacterAnimation();
-            }).UnRegisterWhenGameObjectDestroyed(gameObject);;
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+            this.RegisterEvent<OpenFullDialogueBoxEvent>(_ => OpenFullDialogueBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<OpenNormDialogueBoxEvent>(_ => OpenNormDialogueBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
+
+            // 程序启动时默认为normDialogueBox;
+            OpenNormDialogueBox();
         }
 
         private void OnDestroy()
@@ -98,37 +93,90 @@ namespace VNFramework
             }
         }
 
-        # region DialoguePanel Active
+        # region Dialogue View Controller
 
-        private void SetDialoguePanelActive(bool active)
+        private void OpenNormDialogueBox()
         {
-            _dialogueBox.SetActive(active);
-            _nameBox.SetActive(active);
+            HideFullDialogueBox();
+            ShowNormDialogueBox();
+
+            _curDialogueBox = _normDialogueBox;
+            _curDialogueBoxText = _normDialogueBoxText;
         }
 
-        private void ShowDialoguePanel()
+        private void OpenFullDialogueBox()
         {
-            _dialoguePanelActive = true;
-            SetDialoguePanelActive(_dialoguePanelActive);
+            HideNormDialogueBox();
+            ShowFullDialogueBox();
+            
+            _curDialogueBox = _fullDialogueBox;
+            _curDialogueBoxText = _fullDialogueBoxText;
         }
 
-        private void HideDialoguePanel()
+        private void ShowNormDialogueBox()
         {
-            _dialoguePanelActive = false;
+            _normDialogueBox.SetActive(true);
+        }
 
+        private void HideNormDialogueBox()
+        {
+            _normDialogueBox.SetActive(false);
+        }
+        private void ShowFullDialogueBox()
+        {
+            _fullDialogueBox.SetActive(true);
+        }
+
+        private void HideFullDialogueBox()
+        {
+            _fullDialogueBox.SetActive(false);
+        }
+
+
+        private void SetDialogueViewActive(bool active)
+        {
+            _curDialogueBox.SetActive(active);
+        }
+
+        private void ShowDialogueView()
+        {
+            _dialogueViewActive = true;
+            SetDialogueViewActive(_dialogueViewActive);
+        }
+
+        private void HideDialogueView()
+        {
+            _dialogueViewActive = false;
             if (_isAnimating) StopCharacterAnimation();
 
-            SetDialoguePanelActive(_dialoguePanelActive);
+            SetDialogueViewActive(_dialogueViewActive);
         }
 
-        private void ToggleDialoguePanel()
+        private void ToggleDialogueView()
         {
-            _dialoguePanelActive = !_dialoguePanelActive;
+            _dialogueViewActive = !_dialogueViewActive;
 
-            if (_dialoguePanelActive) ShowDialoguePanel();
-            else HideDialoguePanel();
+            if (_dialogueViewActive) ShowDialogueView();
+            else HideDialogueView();
         }
 
+        # endregion
+
+        # region NameBox
+
+        private void ChangeNameBox()
+        {
+            if (_dialogueModel.CurrentName == "")
+            {
+                _normNameText.text = "";
+                _normNameBox.SetActive(false);
+            }
+            else
+            {
+                _normNameBox.SetActive(true);
+                _normNameText.text = _dialogueModel.CurrentName;
+            }
+        }
         # endregion
 
         # region DialogueBox
@@ -142,7 +190,7 @@ namespace VNFramework
         {
             if (!_needAnimation)
             {
-                _dialogueText.text = _currentDialogue;
+                _curDialogueBoxText.text = _curDialogue;
                 return;
             }
 
@@ -174,16 +222,16 @@ namespace VNFramework
             }
 
             _isAnimating = false;
-            _dialogueText.text = _currentDialogue;
-            _currentDialogueIndex = _currentDialogue.Length;
+            _curDialogueBoxText.text = _curDialogue;
+            _curDialogueIndex = _curDialogue.Length;
         }
 
         private IEnumerator CharacterAnimation()
         {
-            while (_currentDialogueIndex < _currentDialogue.Length)
+            while (_curDialogueIndex < _curDialogue.Length)
             {
-                _dialogueText.text += _currentDialogue[_currentDialogueIndex];
-                _currentDialogueIndex++;
+                _curDialogueBoxText.text += _curDialogue[_curDialogueIndex];
+                _curDialogueIndex++;
                 yield return new WaitForSeconds(_textSpeed);
             }
 

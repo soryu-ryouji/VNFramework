@@ -9,4 +9,7 @@ namespace VNFramework
     struct AppendNewLineToDialogueEvent { }
 
     struct StopDialogueAnimEvent { }
+
+    struct OpenFullDialogueBoxEvent { }
+    struct OpenNormDialogueBoxEvent { }
 }
