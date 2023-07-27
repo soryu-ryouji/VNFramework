@@ -4,12 +4,12 @@ using TMPro;
 
 namespace VNFramework
 {
-    public class DialoguePanelController : MonoBehaviour, IController
+    public class DialogueViewController : MonoBehaviour, IController
     {
         // Dialogue View
         private bool _dialogueViewActive = true;
-        public GameObject _curDialogueBox;
-        public TMP_Text _curDialogueBoxText;
+        private GameObject _curDialogueBox;
+        private TMP_Text _curDialogueBoxText;
 
         private bool _isAnimating = false;
         private bool _needAnimation = true;
@@ -20,16 +20,16 @@ namespace VNFramework
         private string _currentName;
 
         // Name Box
-        public GameObject _normNameBox;
-        public TMP_Text _normNameText;
+        private GameObject _normNameBox;
+        private TMP_Text _normNameText;
 
         // Normal Dialogue Box
-        public GameObject _normDialogueBox;
-        public TMP_Text _normDialogueBoxText;
+        private GameObject _normDialogueBox;
+        private TMP_Text _normDialogueBoxText;
 
         // Full Dialogue Box
-        public GameObject _fullDialogueBox;
-        public TMP_Text _fullDialogueBoxText;
+        private GameObject _fullDialogueBox;
+        private TMP_Text _fullDialogueBoxText;
 
         // Dialogue Model
         private DialogueModel _dialogueModel;

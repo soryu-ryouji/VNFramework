@@ -16,6 +16,7 @@ namespace VNFramework
         {
             Debug.Log("Command : Hide Chapter View");
             this.SendEvent<HideChapterViewEvent>();
+            this.SendCommand<LoadStartUpSceneCommand>();
         }
     }
 }

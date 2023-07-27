@@ -10,6 +10,10 @@ namespace VNFramework
 {
     class GameDataStorage : IUtility, ICanGetModel
     {
+        private string _configDirPath = Path.Combine(Application.dataPath, "Config");
+        private string _systemConfigPath = Path.Combine(Application.dataPath, "Config", "game_config.txt");
+        private string _chapterRecordPath = Path.Combine(Application.dataPath, "Config", "chapter_record.txt");
+        
         Dictionary<string, AssetBundle> abDic = new();
         public AudioClip LoadSound(string audioName)
         {
@@ -37,57 +41,54 @@ namespace VNFramework
 
         public void LoadSystemConfig()
         {
-            var configFilePath = Path.Combine(Application.dataPath, "Config", "game_config.txt");
             var systemConfigModel = this.GetModel<ConfigModel>();
-            // 若文件不存在，则使用默认配置
-            if (!File.Exists(configFilePath))
+            Dictionary<string, float> defaultConfig = new Dictionary<string, float>
             {
-                systemConfigModel.BgmVolume = 0.8f;
-                systemConfigModel.BgsVolume = 0.5f;
-                systemConfigModel.ChsVolume = 1.0f;
-                systemConfigModel.GmsVolume = 0.4f;
-                systemConfigModel.TextSpeed = 0.08f;
-                SaveSystemConfig();
+                { "bgm_volume", 0.8f },
+                { "bgs_volume", 0.5f },
+                { "chs_volume", 1.0f },
+                { "gms_volume", 0.4f },
+                { "text_speed", 0.08f }
+            };
+
+            if (File.Exists(_systemConfigPath))
+            {
+                string[] configList = File.ReadAllLines(_systemConfigPath);
+
+                foreach (var config in configList.Select(ch => ch.Split(":").Select(str => str.Trim())))
+                {
+                    string key = config.ElementAtOrDefault(0);
+                    string value = config.ElementAtOrDefault(1);
+
+                    if (defaultConfig.ContainsKey(key) && float.TryParse(value, out float floatValue))
+                    {
+                        defaultConfig[key] = floatValue;
+                    }
+                }
             }
 
-            string[] configList = File.ReadAllLines(configFilePath);
-
-            foreach (var config in configList.Select(ch => ch.Split(":").Select(str => str.Trim())))
-            {
-                string key = config.ElementAtOrDefault(0);
-                string value = config.ElementAtOrDefault(1);
-
-                if (key == "bgm_volume") systemConfigModel.BgmVolume = Convert.ToSingle(value);
-                else if (key == "bgs_volume") systemConfigModel.BgsVolume = Convert.ToSingle(value);
-                else if (key == "chs_volume") systemConfigModel.ChsVolume = Convert.ToSingle(value);
-                else if (key == "gms_volume") systemConfigModel.GmsVolume = Convert.ToSingle(value);
-                else if (key == "text_speed") systemConfigModel.TextSpeed = Convert.ToSingle(value);
-            }
+            // 将配置值设置到 systemConfigModel 中
+            systemConfigModel.BgmVolume = defaultConfig["bgm_volume"];
+            systemConfigModel.BgsVolume = defaultConfig["bgs_volume"];
+            systemConfigModel.ChsVolume = defaultConfig["chs_volume"];
+            systemConfigModel.GmsVolume = defaultConfig["gms_volume"];
+            systemConfigModel.TextSpeed = defaultConfig["text_speed"];
+            
+            SaveSystemConfig();
         }
 
         public void SaveSystemConfig()
         {
-            var configFolderPath = Path.Combine(Application.dataPath, "Config");
-            var configFilePath = Path.Combine(configFolderPath, "game_config.txt");
-
             var systemConfigModel = this.GetModel<ConfigModel>();
             var configStr = @$"bgm_volume : {systemConfigModel.BgmVolume}
 bgs_volume : {systemConfigModel.BgsVolume}
 chs_volume : {systemConfigModel.ChsVolume}
 gms_volume : {systemConfigModel.GmsVolume}
 text_speed : {systemConfigModel.TextSpeed}";
+            
+            if (!Directory.Exists(_configDirPath))  Directory.CreateDirectory(_configDirPath);
 
-            // Create the directory if it does not exist
-            if (!Directory.Exists(configFolderPath))
-            {
-                Directory.CreateDirectory(configFolderPath);
-            }
-
-            // Save the configuration to the file
-            using (StreamWriter sw = new StreamWriter(configFilePath))
-            {
-                sw.Write(configStr);
-            }
+            File.WriteAllText(_systemConfigPath, configStr);
         }
 
         /// <summary>
@@ -95,29 +96,44 @@ text_speed : {systemConfigModel.TextSpeed}";
         /// </summary>
         public string[] LoadUnlockedChapterList()
         {
-            var unlockConfigPath = Path.Combine(Application.dataPath, "Config", "chapter_record.txt");
-
             // 若存档文件不存在，则在指定目录创建存档文件
-            if (!File.Exists(unlockConfigPath))
-            {
-                var infoList = LoadChapterInfoList();
-                using (StreamWriter sw = new StreamWriter(unlockConfigPath))
-                {
-                    sw.Write($"[ chapter_name : {infoList[0].ChapterName} ]");
-                }
-            }
+            if (!File.Exists(_chapterRecordPath))  CreateBasicUnlockedRecordFile();
 
-            string fileContent = File.ReadAllText(unlockConfigPath);
-
+            string fileContent = File.ReadAllText(_chapterRecordPath);
+            
             string pattern = @"\[\s*chapter_name\s:\s*(.*?)\s*\]";
             MatchCollection matches = Regex.Matches(fileContent, pattern);
 
             var unlockedList = matches
-                .Cast<Match>()
                 .Select(match => match.Groups[1].Value.Trim())
                 .ToArray();
 
+            // 如果unlockedList结果为空，则将文件覆盖并重新读取
+            if (unlockedList.Length == 0)
+            {
+                CreateBasicUnlockedRecordFile();
+                fileContent = File.ReadAllText(_chapterRecordPath);
+                matches = Regex.Matches(fileContent, pattern);
+                unlockedList = matches
+                    .Select(match => match.Groups[1].Value.Trim())
+                    .ToArray();
+            }
+            
             return unlockedList;
+        }
+
+        private void CreateBasicUnlockedRecordFile()
+        {
+            var infoList = LoadChapterInfoList();
+            try
+            {
+                File.WriteAllText(_chapterRecordPath, $"[ chapter_name : {infoList[0].ChapterName} ]");
+            }
+            catch (Exception ex)
+            {
+                // 处理可能的异常，比如权限问题等
+                Console.WriteLine($"Error creating unlock config file: {ex.Message}");
+            }
         }
 
         public ChapterInfo[] LoadChapterInfoList()
@@ -128,7 +144,6 @@ text_speed : {systemConfigModel.TextSpeed}";
             MatchCollection matches = Regex.Matches(content, pattern, RegexOptions.Singleline);
 
             ChapterInfo[] chapterInfoList = matches
-                .Cast<Match>()
                 .Select(match => ParseChapterInfo(match.Groups[1].Value))
                 .ToArray();
 
@@ -137,25 +152,11 @@ text_speed : {systemConfigModel.TextSpeed}";
 
         public void SaveUnlockedChapterList()
         {
-            var unlockConfigPath = Path.Combine(Application.dataPath, "Config", "chapter_record.txt");
             var unlockedChapterList = this.GetModel<ChapterModel>().UnlockedChapterList;
 
             StringBuilder sb = new();
-
-            foreach (var chapterName in unlockedChapterList)
-            {
-                sb.Append($"[ chapter_name : {chapterName} ]\n");
-            }
-
-            if (File.Exists(unlockConfigPath))
-            {
-                File.CreateText(unlockConfigPath);
-            }
-
-            using (StreamWriter sw = new StreamWriter(unlockConfigPath))
-            {
-                sw.Write(sb);
-            }
+            var linesToWrite = unlockedChapterList.Select(chapterName => $"[ chapter_name : {chapterName} ]");
+            File.WriteAllLines(_chapterRecordPath, linesToWrite);
         }
 
         private ChapterInfo ParseChapterInfo(string blockContent)

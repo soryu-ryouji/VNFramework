@@ -8,7 +8,7 @@ namespace VNFramework
 {
     public class PerformanceController : MonoBehaviour, IController
     {
-        private DialoguePanelController _dialoguePanelController;
+        private DialogueViewController _dialogueViewController;
         private List<string> _vnScript;
         private string _vnScriptName;
         private int _scriptIndex;
@@ -29,7 +29,7 @@ namespace VNFramework
             executeCommand += ExecuteDialogueCommand;
             executeCommand += ExecuteGmCommand;
 
-            _dialoguePanelController = transform.Find("DialogueView").GetComponent<DialoguePanelController>();
+            _dialogueViewController = transform.Find("DialogueView").GetComponent<DialogueViewController>();
 
             var chapterModel = this.GetModel<ChapterModel>();
             string fileName = chapterModel.GetFileName(chapterModel.CurrentChapter);
@@ -64,7 +64,7 @@ namespace VNFramework
         private void NextILCommand()
         {
             _autoExecuteCommand = true;
-            if (_dialoguePanelController.IsAnimating)
+            if (_dialogueViewController.IsAnimating)
             {
                 this.SendCommand<StopDialogueAnimCommand>();
                 return;
