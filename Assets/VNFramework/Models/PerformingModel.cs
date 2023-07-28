@@ -6,6 +6,11 @@ namespace VNFramework
         private float _performingBgsVolume;
         private float _performingChsVolume;
         private float _performingGmsVolume;
+        private string _bgpName;
+        private string _bgmName;
+        private string _chLeft;
+        private string _chMid;
+        private string _chRight;
 
         public float BgmVolume
         {
@@ -41,6 +46,51 @@ namespace VNFramework
             {
                 _performingGmsVolume = value;
                 this.SendEvent<PerformingModelChangedEvent>();
+            }
+        }
+
+        public string BgmName
+        {
+            get { return _bgmName; }
+            set
+            {
+                _bgmName = value;
+            }
+        }
+
+        public string BgpName
+        {
+            get { return _bgpName; }
+            set
+            {
+                _bgpName = value;
+            }
+        }
+
+        public string ChLeft
+        {
+            get { return _chLeft; }
+            set
+            {
+                _chLeft = value;
+            }
+        }
+
+        public string ChMid
+        {
+            get { return _chMid; }
+            set
+            {
+                _chMid = value;
+            }
+        }
+        
+        public string ChRight
+        {
+            get { return _chRight; }
+            set
+            {
+                _chRight = value;
             }
         }
 

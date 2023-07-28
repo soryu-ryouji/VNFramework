@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using VNScriptCompiler;
+using VNFramework.VNScriptCompiler;
 
 namespace VNFramework
 {
@@ -22,10 +23,7 @@ namespace VNFramework
         private void Start()
         {
             executeCommand += ExecuteAudioCommand;
-            executeCommand += ExecuteBgpCommand;
-            executeCommand += ExecuteChlpCommand;
-            executeCommand += ExecuteChmpCommand;
-            executeCommand += ExecuteChrpCommand;
+            executeCommand += ExecuteSpriteCommand;
             executeCommand += ExecuteNameCommand;
             executeCommand += ExecuteDialogueCommand;
             executeCommand += ExecuteGmCommand;
@@ -46,14 +44,9 @@ namespace VNFramework
         private void OnDestroy()
         {
             executeCommand -= ExecuteAudioCommand;
-
-            executeCommand -= ExecuteBgpCommand;
-            executeCommand -= ExecuteChlpCommand;
-            executeCommand -= ExecuteChmpCommand;
-            executeCommand -= ExecuteChrpCommand;
+            executeCommand -= ExecuteSpriteCommand;
             executeCommand -= ExecuteNameCommand;
             executeCommand -= ExecuteDialogueCommand;
-
             executeCommand -= ExecuteGmCommand;
         }
 
@@ -93,31 +86,18 @@ namespace VNFramework
         }
 
         #region Execute Picture box Command
-        private void ExecuteBgpCommand(Hashtable hash)
+        private void ExecuteSpriteCommand(Hashtable hash)
         {
-            if ((string)hash["object"] != "bgp") return;
+            var obj = (string)hash["object"];
+            if (obj == "bgp" || obj == "ch_mid")
+            {
+                var action = (SpriteAction)hash["action"];
 
-            GameState.BgpChanged(hash);
-        }
-
-        private void ExecuteChlpCommand(Hashtable hash)
-        {
-            if ((string)hash["object"] != "ch_left") return;
-
-            GameState.ChlpChanged(hash);
-        }
-
-        private void ExecuteChmpCommand(Hashtable hash)
-        {
-            if ((string)hash["object"] != "ch_mid") return;
-            GameState.ChmpChanged(hash);
-        }
-
-        private void ExecuteChrpCommand(Hashtable hash)
-        {
-            if ((string)hash["object"] != "ch_right") return;
-
-            GameState.ChrpChanged(hash);
+                if (action == SpriteAction.Show)
+                    this.SendCommand(new ShowSpriteCommand(VNutils.StrToSpriteObj(obj), (string)hash["sprite_name"], (SpriteMode)hash["mode"]));
+                else if (action == SpriteAction.Hide)
+                    this.SendCommand(new HideSpriteCommand(VNutils.StrToSpriteObj(obj), (SpriteMode)hash["mode"]));
+            }
         }
         #endregion
 
@@ -156,7 +136,12 @@ namespace VNFramework
         {
             string obj = (string)hash["object"];
 
-            if (obj == "bgm" || obj == "bgs" || obj == "chs" || obj == "gms") GameState.AudioChanged(hash);
+            if (obj == "bgm" || obj == "bgs" || obj == "chs" || obj == "gms")
+            {
+                var action = (AudioAction)hash["action"];
+                if (action == AudioAction.Play) this.SendCommand(new PlayAudioCommand((string)hash["audio_name"], VNutils.StrToAudioPlayer(obj)));
+                else if (action == AudioAction.Stop) this.SendCommand(new StopAudioCommand(VNutils.StrToAudioPlayer(obj)));
+            }
         }
 
         private void ExecuteGmCommand(Hashtable hash)
@@ -169,7 +154,6 @@ namespace VNFramework
             }
             if ((string)hash["action"] == "finish")
             {
-                Debug.Log("Finish");
                 this.SendCommand(new UnlockedChapterCommand(this.GetModel<ChapterModel>().CurrentChapter));
                 this.SendCommand<ShowChapterViewCommand>();
             }

@@ -1,4 +1,11 @@
 <|
+    [ chapter_name: VNFramework 介绍 ]
+    [ file_name: Chapter00 ]
+    [ resume: 介绍 VNScript 语法 ]
+    [ resume_pic: 夕阳_1 ]
+|>
+
+<|
     [ chapter_name: 第一章：永远记得我 ]
     [ file_name: Chapter01 ]
     [ resume: “真的永远都不会把我忘掉？”她耳语似的低声询问。<br>“永远不会忘，对你我怎么能忘呢！” ]

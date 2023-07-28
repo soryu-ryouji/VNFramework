@@ -24,5 +24,23 @@ namespace VNFramework
                 return hashTable;
             }
         }
+
+        public static SpriteObj StrToSpriteObj(string obj)
+        {
+            if (obj == "bgp") return SpriteObj.Bgp;
+            else if (obj == "ch_left") return SpriteObj.ChLeft;
+            else if (obj == "ch_right") return SpriteObj.ChRight;
+            else if (obj == "ch_mid") return SpriteObj.ChMid;
+            else return SpriteObj.Null;
+        }
+
+        public static AudioPlayer StrToAudioPlayer(string obj)
+        {
+            if (obj == "bgm") return AudioPlayer.Bgm;
+            else if (obj == "bgs") return AudioPlayer.Bgs;
+            else if (obj == "chs") return AudioPlayer.Chs;
+            else if (obj == "gms") return AudioPlayer.Gms;
+            else return AudioPlayer.Null;
+        }
     }
 }

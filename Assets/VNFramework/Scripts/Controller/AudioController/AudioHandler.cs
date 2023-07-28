@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections;
 
 namespace VNFramework
 {
@@ -7,7 +8,7 @@ namespace VNFramework
     {
         private string _currentAudioName;
         private float _currentVolume;
-        private AudioSource _audioPlayer;
+        protected AudioSource audioPlayer;
 
         public string CurrentAudioName
         {
@@ -18,45 +19,51 @@ namespace VNFramework
         {
             get => _currentVolume;
         }
+        
+        public void OnAudioChanged(Hashtable hash)
+        {
+            var action = (AudioAction)hash["action"];
+
+            if (action == AudioAction.Play) PlayAudio((string)hash["audio_name"]);
+            else if (action == AudioAction.Stop) StopAudio();
+            else if (action == AudioAction.Vol) SetVolume(Convert.ToSingle(hash["volume"]));
+            else if (action == AudioAction.Loop) SetLoop((string)hash["is_loop"]);
+        }
 
         public void SetVolume(string volume)
         {
             var vol = Convert.ToInt64(volume);
             _currentVolume = vol;
-            _audioPlayer.volume = _currentVolume;
+            audioPlayer.volume = _currentVolume;
         }
 
         public void SetVolume(float volume)
         {
             _currentVolume = volume;
-            _audioPlayer.volume = _currentVolume;
+            audioPlayer.volume = _currentVolume;
         }
 
         public void SetLoop(string value)
         {
             var isLoop = Convert.ToBoolean(value);
-            _audioPlayer.loop = isLoop;
+            audioPlayer.loop = isLoop;
         }
 
-        private void Awake()
-        {
-            _audioPlayer = GetComponent<AudioSource>();
-        }
 
         public void PlayAudio(string audioName)
         {
-            _audioPlayer.clip = GetAudioClip(audioName);
-            _audioPlayer.Play();
+            audioPlayer.clip = GetAudioClip(audioName);
+            audioPlayer.Play();
         }
 
         public void StopAudio()
         {
-            _audioPlayer.Stop();
+            audioPlayer.Stop();
         }
 
         public void Continue()
         {
-            _audioPlayer.Play();
+            audioPlayer.Play();
         }
 
         private AudioClip GetAudioClip(string audioName)

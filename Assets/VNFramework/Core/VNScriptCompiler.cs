@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System;
 
-namespace VNScriptCompiler
+namespace VNFramework.VNScriptCompiler
 {
     class VNScript
     {
@@ -400,11 +400,13 @@ namespace VNScriptCompiler
                 { "dialogue", DialogueAsmToHash },
                 { "name", NameAsmToHash },
                 { "gm", GmAsmToHash },
-                { "bgm", BgmAsmToHash },
-                { "bgs", BgsAsmToHash },
-                { "chs", ChsAsmToHash },
-                { "bgp", BgpAsmToHash },
-                { "ch_mid", ChmAsmToHash }
+                { "bgm", AudioAsmToHash },
+                { "bgs", AudioAsmToHash },
+                { "chs", AudioAsmToHash },
+                { "bgp", SpriteAsmToHash },
+                { "ch_left", SpriteAsmToHash },
+                { "ch_right", SpriteAsmToHash },
+                { "ch_mid", SpriteAsmToHash }
             };
 
             if (commandMapper.TryGetValue(unit[0], out var asmCommandFunc))
@@ -469,98 +471,49 @@ namespace VNScriptCompiler
             return hash;
         }
 
-        private static Hashtable BgmAsmToHash(string[] unit)
+        private static Hashtable AudioAsmToHash(string[] unit)
         {
-            var hash = new Hashtable
+            var hash = new Hashtable { {"object",unit[0]} };
+            var action = unit[1];
+            if (action == "play")
             {
-                {"object","bgm"}
-            };
-
-            if (unit[1] == "play")
-            {
-                hash.Add("action", "play");
+                hash.Add("action", AudioAction.Play);
                 hash.Add("audio_name", unit[2]);
             }
-            else if (unit[1] == "stop")
+            else if (action == "stop") hash.Add("action",AudioAction.Stop);
+            else if (action == "vol")
             {
-                hash.Add("action", "stop");
-            }
-            else if (unit[1] == "vol")
-            {
-                hash.Add("action", "vol");
+                hash.Add("action", AudioAction.Vol);
                 hash.Add("volume", unit[2]);
             }
-            else if (unit[1] == "loop")
+            else if (action == "loop")
             {
-                hash.Add("action", "loop");
+                hash.Add("action", AudioAction.Loop);
                 hash.Add("is_loop", unit[2]);
             }
 
             return hash;
         }
 
-        private static Hashtable BgsAsmToHash(string[] unit)
+        private static Hashtable SpriteAsmToHash(string[] unit)
         {
-            var hash = new Hashtable
+            var hash = new Hashtable { { "object", unit[0] } };
+
+            var action = unit[1];
+            if (action == "set")
             {
-                {"object","bgs"}
-            };
-
-            if (unit[1] == "play")
-            {
-                hash.Add("operate", "play");
-                hash.Add("audio_name", unit[2]);
-            }
-
-            return hash;
-        }
-
-        private static Hashtable ChsAsmToHash(string[] unit)
-        {
-            var hash = new Hashtable
-            {
-                {"object","chs"}
-            };
-
-            if (unit[1] == "play")
-            {
-                hash.Add("action", "play");
-                hash.Add("audio_name", unit[2]);
-            }
-
-            return hash;
-        }
-
-        private static Hashtable BgpAsmToHash(string[] unit)
-        {
-            var hash = new Hashtable { { "object", "bgp" } };
-
-            hash.Add("action", unit[1]);
-            if (unit[1] == "set")
-            {
+                hash.Add("action", SpriteAction.Show);
                 hash.Add("sprite_name", unit[2]);
-                hash.Add("mode", unit[3]);
-            }
-            else if (unit[1] == "hide")
-            {
-                hash.Add("mode", unit[2]);
-            }
 
-            return hash;
-        }
-
-        private static Hashtable ChmAsmToHash(string[] unit)
-        {
-            var hash = new Hashtable { { "object", "ch_mid" } };
-            hash.Add("action", unit[1]);
-            if (unit[1] == "set")
-            {
-                hash.Add("sprite_name", unit[2]);
-                hash.Add("mode", unit[3]);
+                if (unit[3] == "fading") hash.Add("mode", SpriteMode.Fading);
+                else if (unit[3] == "immediate") hash.Add("mode", SpriteMode.Immediate);
             }
-            else if (unit[1] == "hide")
+            else if (action == "hide")
             {
-                hash.Add("mode", unit[2]);
+                hash.Add("action", SpriteAction.Hide);
+
+                if (unit[2] == "fading") hash.Add("mode", SpriteMode.Fading);
+                else if (unit[2] == "immediate") hash.Add("mode", SpriteMode.Immediate);
             }
 
             return hash;

@@ -25,7 +25,7 @@ namespace VNFramework
             var projectModel = this.GetModel<ProjectModel>();
             _titlePic.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.TitlePic);
             _bgp.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.TitleBgp);
-            this.SendCommand(new PlayAudioCommand(projectModel.TitleBgm, "bgm"));
+            this.SendCommand(new PlayAudioCommand(projectModel.TitleBgm, VNutils.StrToAudioPlayer("bgm")));
 
             _startBtn.onClick.AddListener(StartGame);
             _chapterViewBtn.onClick.AddListener(ShowChapterView);

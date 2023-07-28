@@ -7,9 +7,9 @@ namespace VNFramework
     {
         public void OnPointerEnter(PointerEventData eventData)
         {
-            GameState.AudioChanged(VNutils.Hash(
-                "object","gms",
-                "action","play",
+            GameState.GmsChanged(VNutils.Hash(
+                "object", AudioPlayer.Gms,
+                "action", AudioAction.Play,
                 "audio_name","click-button"
             ));
         }

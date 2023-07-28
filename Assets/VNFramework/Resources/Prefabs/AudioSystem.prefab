@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3493257254852651283}
-  - component: {fileID: 3493257254852651280}
   m_Layer: 0
   m_Name: AudioSystem
   m_TagString: Untagged
@@ -36,18 +35,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3493257254852651280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3493257254852651282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9db84d88c3a37394ca41ecf5be39fc57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3493257254976385710
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,7 +45,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3493257254976385711}
   - component: {fileID: 3493257254976385708}
-  - component: {fileID: 3493257254976385709}
+  - component: {fileID: 745875332}
   m_Layer: 0
   m_Name: GMS
   m_TagString: Untagged
@@ -177,7 +164,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3493257254976385709
+--- !u!114 &745875332
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -186,7 +173,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3493257254976385710}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 017684d2a630628459eda2c5960d33d0, type: 3}
+  m_Script: {fileID: 11500000, guid: dc7b5c9ac50eede459f0a6cca21df381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3493257255038615871
@@ -199,7 +186,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3493257255038615868}
   - component: {fileID: 3493257255038615869}
-  - component: {fileID: 3493257255038615866}
+  - component: {fileID: 1662506483}
   m_Layer: 0
   m_Name: BGS
   m_TagString: Untagged
@@ -318,7 +305,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3493257255038615866
+--- !u!114 &1662506483
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -327,7 +314,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3493257255038615871}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 017684d2a630628459eda2c5960d33d0, type: 3}
+  m_Script: {fileID: 11500000, guid: a5d43a775e9a0a64ba5f27d29d48bc01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3493257255674287523
@@ -340,7 +327,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3493257255674287520}
   - component: {fileID: 3493257255674287521}
-  - component: {fileID: 3493257255674287550}
+  - component: {fileID: 1072195511}
   m_Layer: 0
   m_Name: CHS
   m_TagString: Untagged
@@ -459,7 +446,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3493257255674287550
+--- !u!114 &1072195511
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -468,7 +455,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3493257255674287523}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 017684d2a630628459eda2c5960d33d0, type: 3}
+  m_Script: {fileID: 11500000, guid: cbb1b4032c2eb814e812f243bfb97557, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3493257255953148317
@@ -481,7 +468,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3493257255953148314}
   - component: {fileID: 3493257255953148315}
-  - component: {fileID: 3493257255953148312}
+  - component: {fileID: 1520634434}
   m_Layer: 0
   m_Name: BGM
   m_TagString: Untagged
@@ -600,7 +587,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3493257255953148312
+--- !u!114 &1520634434
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -609,6 +596,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 3493257255953148317}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 017684d2a630628459eda2c5960d33d0, type: 3}
+  m_Script: {fileID: 11500000, guid: f5b018269a2f6514dad1a6475110573b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

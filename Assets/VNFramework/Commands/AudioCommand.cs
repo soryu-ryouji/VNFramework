@@ -4,9 +4,9 @@ namespace VNFramework
     class PlayAudioCommand : AbstractCommand
     {
         private string _audioName;
-        private string _playerName;
+        private AudioPlayer _playerName;
 
-        public PlayAudioCommand(string audioName, string playerName)
+        public PlayAudioCommand(string audioName, AudioPlayer playerName)
         {
             _audioName = audioName;
             _playerName = playerName;
@@ -14,11 +14,78 @@ namespace VNFramework
 
         protected override void OnExecute()
         {
-            GameState.AudioChanged(VNutils.Hash(
-                "object", _playerName,
-                "action", "play",
-                "audio_name", _audioName
-            ));
+            if (_playerName == AudioPlayer.Bgm)
+            {
+                GameState.BgmChanged(VNutils.Hash(
+                    "action", AudioAction.Play,
+                    "audio_name", _audioName
+                ));
+            }
+
+            else if (_playerName == AudioPlayer.Bgs)
+            {
+                GameState.BgsChanged(VNutils.Hash(
+                    "action", AudioAction.Play,
+                    "audio_name", _audioName
+                ));
+            }
+
+            else if (_playerName == AudioPlayer.Chs)
+            {
+                GameState.ChsChanged(VNutils.Hash(
+                    "action", AudioAction.Play,
+                    "audio_name", _audioName
+                ));
+            }
+
+            else if (_playerName == AudioPlayer.Gms)
+            {
+                GameState.GmsChanged(VNutils.Hash(
+                    "action", AudioAction.Play,
+                    "audio_name", _audioName
+                ));
+            }
+        }
+    }
+
+    class StopAudioCommand : AbstractCommand
+    {
+        private AudioPlayer _playerName;
+
+        public StopAudioCommand(AudioPlayer playerName)
+        {
+            _playerName = playerName;
+        }
+
+        protected override void OnExecute()
+        {
+            if (_playerName == AudioPlayer.Bgm)
+            {
+                GameState.BgmChanged(VNutils.Hash(
+                    "action", AudioAction.Stop
+                ));
+            }
+
+            else if (_playerName == AudioPlayer.Bgs)
+            {
+                GameState.BgsChanged(VNutils.Hash(
+                    "action", AudioAction.Stop
+                ));
+            }
+
+            else if (_playerName == AudioPlayer.Chs)
+            {
+                GameState.ChsChanged(VNutils.Hash(
+                    "action", AudioAction.Stop
+                ));
+            }
+
+            else if (_playerName == AudioPlayer.Gms)
+            {
+                GameState.GmsChanged(VNutils.Hash(
+                    "action", AudioAction.Stop
+                ));
+            }
         }
     }
 }

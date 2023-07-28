@@ -1,10 +1,9 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace VNFramework
 {
-    public class CharacterSpriteHandler : MonoBehaviour,ICanGetUtility
+    public class CharacterSpriteHandler : MonoBehaviour, ICanGetUtility
     {
         private float _moveSpeed = 0.5f; // 平移的速度
         private int _loopCount = 4; // 循环次数
@@ -38,40 +37,41 @@ namespace VNFramework
             _originalPosition = transform.position;
         }
 
+        public void ShowSprite(string spriteName, SpriteMode mode)
+        {
+            if (mode == SpriteMode.Fading) FadingChangeSprite(spriteName);
+            else if (mode == SpriteMode.Immediate) ImmediatelyShowSprite(spriteName);
+        }
+
+        public void HideSprite(SpriteMode mode)
+        {
+            if (mode == SpriteMode.Fading) FadingHideSprite();
+            else if (mode == SpriteMode.Immediate) ImmediatelyHideSprite();
+        }
+
+        public void ActSprite(SpriteAction action)
+        {
+            if (action == SpriteAction.Shake) Shake();
+            else if (action == SpriteAction.MoveLR) Move();
+        }
+
         public void OnSpriteChanged(Hashtable hash)
         {
-            var action = (string)hash["action"];
-            var mode = (string)hash["mode"];
-            if (action == "set")
+            var action = (SpriteAction)hash["action"];
+            var mode = (SpriteMode)hash["mode"];
+            
+            if (action == SpriteAction.Show)
             {
-                if (mode == "fading")
-                {
-                    FadingChangeSprite((string)hash["sprite_name"]);
-                }
-                else if (mode == "immediate")
-                {
-                    ShowSprite((string)hash["sprite_name"]);
-                }
+                if (mode == SpriteMode.Fading) FadingChangeSprite((string)hash["sprite_name"]);
+                else if (mode == SpriteMode.Immediate) ImmediatelyShowSprite((string)hash["sprite_name"]);
             }
-            else if (action == "hide")
+            else if (action == SpriteAction.Hide)
             {
-                if (mode == "fading")
-                {
-                    FadingHideSprite();
-                }
-                else if (mode == "immediate")
-                {
-                    HideSprite();
-                }
+                if (mode == SpriteMode.Fading) FadingHideSprite();
+                else if (mode == SpriteMode.Immediate) ImmediatelyHideSprite();
             }
-            else if (action == "shake")
-            {
-                Shake();
-            }
-            else if (action == "move_lf")
-            {
-                Move();
-            }
+            else if (action == SpriteAction.Shake) Shake();
+            else if (action == SpriteAction.MoveLR) Move();
         }
 
         private Coroutine fadingCoroutine;
@@ -123,7 +123,7 @@ namespace VNFramework
         /// 直接显示 sprite，若给定的 Sprite 为空，则显示透明图像
         /// </summary>
         /// <param name="spriteName"></param>
-        public void ShowSprite(string spriteName)
+        public void ImmediatelyShowSprite(string spriteName)
         {
             var sprite = this.GetUtility<GameDataStorage>().LoadSprite(spriteName);
             if (sprite != null)
@@ -143,7 +143,7 @@ namespace VNFramework
         /// <summary>
         /// 将图像设置为隐藏（Alpha设置为0）
         /// </summary>
-        public void HideSprite()
+        public void ImmediatelyHideSprite()
         {
             var color = _image.color;
             color.a = 0;
@@ -231,7 +231,7 @@ namespace VNFramework
             PerformShake();
         }
 
-        private IEnumerator MoveLeftAndRight(int count,float moveDistance = 0.5f)
+        private IEnumerator MoveLeftAndRight(int count, float moveDistance = 0.5f)
         {
             while (count > 0)
             {
@@ -242,7 +242,7 @@ namespace VNFramework
                     moveDistance *= -1;
                     iTween.MoveBy(gameObject, iTween.Hash(
                         "x", moveDistance,
-                        "time",_moveSpeed,
+                        "time", _moveSpeed,
                         "looptype", iTween.LoopType.none,
                         "oncompletetarget", gameObject));
                 }
