@@ -10,13 +10,14 @@ namespace VNFramework
     {
         private DialogueViewController _dialogueViewController;
         private List<string> _vnScript;
-        private string _vnScriptName;
         private int _scriptIndex;
         private int _vnScriptCount;
         private bool _autoExecuteCommand;
         private UnityAction<Hashtable> executeCommand;
 
         private PerformingModel _performingModel;
+
+        private VNScript vnScriptCompiler = new();
 
         private void Start()
         {
@@ -33,7 +34,7 @@ namespace VNFramework
 
             var chapterModel = this.GetModel<ChapterModel>();
             string fileName = chapterModel.GetFileName(chapterModel.CurrentChapter);
-            _vnScript = VNScript.ParseVNScriptToIL(this.GetUtility<GameDataStorage>().LoadVNScript(fileName));
+            _vnScript = new(this.GetUtility<GameDataStorage>().LoadVNScript(fileName));
             _vnScriptCount = _vnScript.Count;
 
             _performingModel = this.GetModel<PerformingModel>();
@@ -72,7 +73,8 @@ namespace VNFramework
 
             while (_autoExecuteCommand && _scriptIndex < _vnScriptCount)
             {
-                var commands = ILScript.ParseILToAsm(_vnScript[_scriptIndex]);
+                var commands = ILScript.ParseILToAsm(vnScriptCompiler.ParseVNScriptToIL(_vnScript[_scriptIndex])
+                    .ToArray());
 
                 foreach (var command in commands)
                 {

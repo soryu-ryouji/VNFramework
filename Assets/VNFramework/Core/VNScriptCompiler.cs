@@ -26,7 +26,66 @@ namespace VNScriptCompiler
             else return ScriptLineType.NormDialogue;
         }
 
-        public static List<string> ParseVNScriptToIL(string[] vnScriptLines)
+        bool lastTypeIsClearName = false;
+        bool isFullDialogueMode = false;
+        bool isNotInitDialogueMode = true;
+
+        public List<string> ParseVNScriptToIL(string line)
+        {
+            var ilList = new List<string>();
+            line = line.Trim();
+            var lineType = IdentifyLineType(line);
+
+            // 多条空行只添加一条 [ clear_name ] 指令
+            if (lineType == ScriptLineType.Blank && lastTypeIsClearName == false)
+            {
+                ilList.Add("[ clear_name ]");
+                lastTypeIsClearName = true;
+            }
+            else if (lineType == ScriptLineType.Annotation)
+            {
+
+            }
+            else if (lineType == ScriptLineType.Command)
+            {
+                ilList.AddRange(ParseVNScriptCommandLine(line));
+                lastTypeIsClearName = false;
+            }
+            else if (lineType == ScriptLineType.FullDialogue)
+            {
+                if (isFullDialogueMode == false)
+                {
+                    ilList.Add("[ open_full_dialogue_box ]");
+                }
+                else if (isNotInitDialogueMode)
+                {
+                    ilList.Add("[ open_full_dialogue_box ]");
+                    isNotInitDialogueMode = false;
+                }
+                ilList.AddRange(ParseVNScriptDialogueLine(line[2..]));
+                isFullDialogueMode = true;
+                lastTypeIsClearName = false;
+            }
+            else if (lineType == ScriptLineType.NormDialogue)
+            {
+                if (isFullDialogueMode == true)
+                {
+                    ilList.Add("[ open_norm_dialogue_box ]");
+                }
+                else if (isNotInitDialogueMode)
+                {
+                    ilList.Add("[ open_norm_dialogue_box ]");
+                    isNotInitDialogueMode = false;
+                }
+                ilList.AddRange(ParseVNScriptDialogueLine(line));
+                isFullDialogueMode = false;
+                lastTypeIsClearName = false;
+            }
+
+            return ilList;
+        }
+
+        public static List<string> ParseAllVNScriptToIL(string[] vnScriptLines)
         {
             var ilList = new List<string>();
 
@@ -88,7 +147,7 @@ namespace VNScriptCompiler
                     ilList.AddRange(ParseVNScriptDialogueLine(line));
                     isFullDialogueMode = false;
                     lastTypeIsClearName = false;
-                    
+
                     continue;
                 }
             }
