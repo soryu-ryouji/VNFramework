@@ -77,5 +77,8 @@ crashlytics-build.properties
 # Asset Bundle Package
 AssetBundles/
 Assets/StreamingAssets/
-
 Assets/Config/
+/[Aa]ssets/[Vv][Nn][Ff]ramework/[Rr]esources/[Ss]ounds/
+/[Aa]ssets/[Vv][Nn][Ff]ramework/[Rr]esources/[Ss]prites/
+/[Aa]ssets/[Vv][Nn][Ff]ramework/[Rr]esources/[Vv][Nn][Ss]criptes/
+/[Aa]ssets/[Vv][Nn][Ff]ramework/[Rr]esources/[Pp]roject[Dd]ata/
