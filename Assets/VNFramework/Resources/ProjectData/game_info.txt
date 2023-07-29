@@ -1,3 +1,3 @@
-title: example_logo
-start_view_bgm: 月姬
-start_view_bgp: white
+version https://git-lfs.github.com/spec/v1
+oid sha256:6b4f81ac6ea69416a3ad036be279a87748c65b5ae9ae6939facf02f531e29aed
+size 66
