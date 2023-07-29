@@ -68,8 +68,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Back
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e203fbddb7cee0d41bdda4cee657846e, type: 2}
-  m_sharedMaterial: {fileID: 21291203167983366, guid: e203fbddb7cee0d41bdda4cee657846e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
+  m_sharedMaterial: {fileID: 7820795082927930774, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -204,8 +204,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: This is a test sentence
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e203fbddb7cee0d41bdda4cee657846e, type: 2}
-  m_sharedMaterial: {fileID: 21291203167983366, guid: e203fbddb7cee0d41bdda4cee657846e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
+  m_sharedMaterial: {fileID: 7820795082927930774, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
