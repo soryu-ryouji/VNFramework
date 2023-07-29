@@ -5,6 +5,7 @@ namespace VNFramework
         protected override void Init()
         {
             this.RegisterUtility(new GameDataStorage());
+            this.RegisterUtility(new GameLog());
             this.GetUtility<GameDataStorage>().LoadAllRes();
 
             this.RegisterModel(new ProjectModel());

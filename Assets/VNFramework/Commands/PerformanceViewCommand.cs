@@ -6,16 +6,16 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            Debug.Log("Command : Show Dialogue Panel");
+            this.GetUtility<GameLog>().RunningLog("Show Dialogue View Command");
             this.SendEvent<ShowDialoguePanelEvent>();
         }
     }
-    
+
     class HideDialoguePanelCommand : AbstractCommand
     {
         protected override void OnExecute()
         {
-            Debug.Log("Command : Hide Dialogue Panel");
+            this.GetUtility<GameLog>().RunningLog("Hide Dialogue View Command");
             this.SendEvent<HideDialoguePanelEvent>();
         }
     }
@@ -24,7 +24,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            Debug.Log("Command : Toggle Dialogue Panel");
+            this.GetUtility<GameLog>().RunningLog("Toggle Dialogue View Command");
             this.SendEvent<ToggleDialoguePanelEvent>();
         }
     }
@@ -33,6 +33,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
+            this.GetUtility<GameLog>().RunningLog("Show Performance View Command");
             this.SendEvent<ShowPerformanceViewEvent>();
         }
     }
@@ -40,6 +41,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
+            this.GetUtility<GameLog>().RunningLog("Hide Performance View Command");
             this.SendEvent<HidePerformanceViewEvent>();
         }
     }

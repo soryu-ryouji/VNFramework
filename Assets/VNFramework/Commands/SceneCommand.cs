@@ -5,6 +5,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
+            this.GetUtility<GameLog>().RunningLog("Load Start Up Scene");
             SceneManager.LoadScene("StartUp");
         }
     }
@@ -13,6 +14,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
+            this.GetUtility<GameLog>().RunningLog("Load Game Scene");
             SceneManager.LoadScene("Game");
         }
     }

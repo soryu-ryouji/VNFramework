@@ -14,6 +14,7 @@ namespace VNFramework
 
         protected override void OnExecute()
         {
+            this.GetUtility<GameLog>().RunningLog($"{_playerName} Play Audio -> {_audioName}");
             if (_playerName == AudioPlayer.Bgm)
             {
                 GameState.BgmChanged(VNutils.Hash(
@@ -59,6 +60,7 @@ namespace VNFramework
 
         protected override void OnExecute()
         {
+            this.GetUtility<GameLog>().RunningLog($"{_playerName} Stop Audio");
             if (_playerName == AudioPlayer.Bgm)
             {
                 GameState.BgmChanged(VNutils.Hash(

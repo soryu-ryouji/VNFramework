@@ -1,11 +1,10 @@
-using UnityEngine;
 namespace VNFramework
 {
     class ShowBacklogViewCommand : AbstractCommand
     {
         protected override void OnExecute()
         {
-            Debug.Log("Command : Show Backlog View");
+            this.GetUtility<GameLog>().RunningLog("Show Backlog View Command");
             this.SendEvent<ShowBacklogViewEvent>();
         }
     }
@@ -14,7 +13,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            Debug.Log("Command : Hide Backlog View");
+            this.GetUtility<GameLog>().RunningLog("Hide Backlog View Command");
             this.SendEvent<HideBacklogViewEvent>();
         }
     }

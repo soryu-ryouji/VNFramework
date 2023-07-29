@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
 using System.Linq;
 
 namespace VNFramework
@@ -44,33 +42,6 @@ namespace VNFramework
             // 更新本地记录
             this.GetUtility<GameDataStorage>().SaveUnlockedChapterList();
         }
-
-        public void PrintChapterInfoList()
-        {
-            var sb = new StringBuilder();
-            foreach (var info in _chapterInfoList)
-            {
-                sb.Append(@$"chapter_name : {info.ChapterName}
-file_name : {info.FileName}
-resume : {info.Resume}
-resume : {info.ResumePic}\n");
-            }
-
-            Debug.Log(sb);
-        }
-
-        public void PrintUnlockedChapterList()
-        {
-            var sb = new StringBuilder();
-
-            foreach (var name in _unlockedChapterList)
-            {
-                sb.Append($"name : {name}\n");
-            }
-
-            Debug.Log(sb);
-        }
-
         protected override void OnInit()
         {
             _unlockedChapterList = new(this.GetUtility<GameDataStorage>().LoadUnlockedChapterList());

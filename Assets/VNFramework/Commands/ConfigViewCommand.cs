@@ -1,11 +1,10 @@
-using UnityEngine;
 namespace VNFramework
 {
     class ShowConfigViewCommand : AbstractCommand
     {
         protected override void OnExecute()
         {
-            Debug.Log("Command : Show Config View");
+            this.GetUtility<GameLog>().RunningLog("Show Config View Command");
             this.SendEvent<ShowConfigViewEvent>();
         }
     }
@@ -14,6 +13,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
+            this.GetUtility<GameLog>().RunningLog("Hide Config View Command");
             this.SendEvent<HideConfigViewEvent>();
         }
     }

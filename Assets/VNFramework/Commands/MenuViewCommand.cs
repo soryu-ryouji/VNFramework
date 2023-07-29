@@ -1,12 +1,10 @@
-using UnityEngine;
-
 namespace VNFramework
 {
     class ShowMenuViewCommand : AbstractCommand
     {
         protected override void OnExecute()
         {
-            Debug.Log("Command : Show Menu View");
+            this.GetUtility<GameLog>().RunningLog("Show Menu View Command");
             this.SendEvent<ShowMenuViewEvent>();
         }
     }
@@ -15,7 +13,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            Debug.Log("Command : Hide Menu View");
+            this.GetUtility<GameLog>().RunningLog("Hide Menu View Command");
             this.SendEvent<HideMenuViewEvent>();
         }
     }

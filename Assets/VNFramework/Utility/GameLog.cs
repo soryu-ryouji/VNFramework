@@ -8,19 +8,19 @@ namespace VNFramework
     }
     class GameLog : IUtility
     {
-        public bool isPrintAsmRunning = true;
-        public bool isPrintDebug = true;
-        public void Log(string log, LogType type = LogType.Debug)
+        public void RunningLog(string log)
         {
-            if (type == LogType.AsmRunning && isPrintAsmRunning)
-            {
-                Debug.Log(log);
-            }
+            Debug.Log("Running Log : " + log);
+        }
 
-            else if (type == LogType.Debug && isPrintDebug)
-            {
-                Debug.Log(log);
-            }
+        public void DebugLog(string log)
+        {
+            Debug.Log("Debug Log : " + log);
+        }
+
+        public void ErrorLog(string log)
+        {
+            Debug.LogError("Error Log : " + log);
         }
     }
 }

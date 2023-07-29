@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace VNFramework
 {
-    class BgsAudioController : AudioHandler
+    class BgsAudioController : AudioController
     {
         private void Awake()
         {

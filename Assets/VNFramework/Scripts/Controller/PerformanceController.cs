@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +19,8 @@ namespace VNFramework
 
         private VNScript vnScriptCompiler = new();
 
+        private GameLog gameLog;
+
         private void Start()
         {
             executeCommand += ExecuteAudioCommand;
@@ -36,6 +37,7 @@ namespace VNFramework
             _vnScriptCount = _vnScript.Count;
 
             _performingModel = this.GetModel<PerformingModel>();
+            gameLog = this.GetUtility<GameLog>();
 
             this.RegisterEvent<LoadNextPerformanceEvent>(_ => NextPerformance());
             NextPerformance();
@@ -71,7 +73,7 @@ namespace VNFramework
 
                 foreach (var command in commands)
                 {
-                    Debug.Log(command);
+                    gameLog.RunningLog("asm -> " + command);
                     ExecuteAsmCommand(command);
                 }
 
@@ -110,7 +112,6 @@ namespace VNFramework
 
             if (action == "append") this.SendCommand(new ChangeNameCommand((string)hash["name"]));
             else if (action == "clear") this.SendCommand(new ChangeNameCommand(""));
-            else Debug.LogWarning("Name Command Not Found");
         }
 
         private void ExecuteDialogueCommand(Hashtable hash)
@@ -128,7 +129,6 @@ namespace VNFramework
                 if (mode == "full") this.SendCommand<OpenFullDialogueBoxCommand>();
                 else if (mode == "norm") this.SendCommand<OpenNormDialogueBoxCommand>();
             }
-            else Debug.LogWarning("Dialogue Command Not Found");
         }
         #endregion
 

@@ -1,11 +1,10 @@
-using UnityEngine;
 namespace VNFramework
 {
     class ShowChapterViewCommand : AbstractCommand
     {
         protected override void OnExecute()
         {
-            Debug.Log("Command : Show Chapter View");
+            this.GetUtility<GameLog>().RunningLog("Show Chapter View Command");
             this.SendEvent<ShowChapterViewEvent>();
         }
     }
@@ -14,9 +13,8 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            Debug.Log("Command : Hide Chapter View");
+            this.GetUtility<GameLog>().RunningLog("Hide Chapter View Command");
             this.SendEvent<HideChapterViewEvent>();
-            this.SendCommand<LoadStartUpSceneCommand>();
         }
     }
 }

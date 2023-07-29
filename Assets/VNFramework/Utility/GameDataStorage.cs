@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace VNFramework
 {
-    class GameDataStorage : IUtility, ICanGetModel
+    class GameDataStorage : IUtility, ICanGetModel, ICanGetUtility
     {
         private string _configDirPath = Path.Combine(Application.dataPath, "Config");
         private string _systemConfigPath = Path.Combine(Application.dataPath, "Config", "game_config.txt");
@@ -18,7 +18,7 @@ namespace VNFramework
         public AudioClip LoadSound(string audioName)
         {
             var ret = abDic["sounds"].LoadAsset<AudioClip>(audioName);
-            if (ret == null) Debug.LogError(string.Format("AudioClip {0} not found", audioName));
+            if (ret == null) this.GetUtility<GameLog>().ErrorLog(string.Format("AudioClip {0} not found", audioName));
 
             return ret;
         }
@@ -26,7 +26,7 @@ namespace VNFramework
         public Sprite LoadSprite(string path)
         {
             var ret = abDic["sprites"].LoadAsset<Sprite>(path);
-            if (ret == null) Debug.LogError(string.Format("Sprite {0} not found", path));
+            if (ret == null) this.GetUtility<GameLog>().ErrorLog(string.Format("Sprite {0} not found", path));
 
             return ret;
         }
@@ -205,7 +205,7 @@ text_speed : {systemConfigModel.TextSpeed}";
         {
             GameObject obj = abDic["prefabs"].LoadAsset<GameObject>(prefabName);
 
-            if (obj == null) Debug.Log("AB Prefab Resources Not Found");
+            if (obj == null) this.GetUtility<GameLog>().ErrorLog("AB Prefab Resources Not Found");
 
             return obj;
         }

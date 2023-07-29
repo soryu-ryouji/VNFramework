@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace VNFramework
 {
-    public class AudioHandler : MonoBehaviour, ICanGetUtility
+    public class AudioController : MonoBehaviour, IController
     {
         private string _currentAudioName;
         private float _currentVolume;
