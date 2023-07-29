@@ -46,7 +46,11 @@ namespace VNFramework
             _highBtn.onClick.AddListener(SetHightTextSpeed);
             _mediumBtn.onClick.AddListener(SetMediumTextSpeed);
             _lowBtn.onClick.AddListener(SetLowTextSpeed);
-            _backConfigViewBtn.onClick.AddListener(this.SendCommand<HideConfigViewCommand>);
+            _backConfigViewBtn.onClick.AddListener(() =>
+            {
+                this.SendCommand<SaveSystemConfigCommand>();
+                this.SendCommand<HideConfigViewCommand>();
+            });
         }
 
         private void OnDestroy()
@@ -82,8 +86,8 @@ namespace VNFramework
             _configModel.TextSpeed = 0.12f;
             StartCharacterAnimation();
         }
-        
-        # region  TestDialogueBox
+
+        #region  TestDialogueBox
 
         public bool needAnimation = true;
         private bool _isAnimating = false;
@@ -187,7 +191,7 @@ namespace VNFramework
             // Animation stop
             _isAnimating = false;
         }
-        
+
         #endregion
 
         public IArchitecture GetArchitecture()

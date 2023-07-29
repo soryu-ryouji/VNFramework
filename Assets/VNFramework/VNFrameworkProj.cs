@@ -6,13 +6,14 @@ namespace VNFramework
         {
             this.RegisterUtility(new GameDataStorage());
             this.RegisterUtility(new GameLog());
-            this.GetUtility<GameDataStorage>().LoadAllRes();
 
             this.RegisterModel(new ProjectModel());
             this.RegisterModel(new ConfigModel());
             this.RegisterModel(new PerformingModel());
             this.RegisterModel(new ChapterModel());
             this.RegisterModel(new DialogueModel());
+
+            this.GetUtility<GameDataStorage>().LoadAllRes();
         }
     }
 }

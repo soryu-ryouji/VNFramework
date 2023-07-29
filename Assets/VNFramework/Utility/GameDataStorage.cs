@@ -13,7 +13,7 @@ namespace VNFramework
         private string _configDirPath = Path.Combine(Application.dataPath, "Config");
         private string _systemConfigPath = Path.Combine(Application.dataPath, "Config", "game_config.txt");
         private string _chapterRecordPath = Path.Combine(Application.dataPath, "Config", "chapter_record.txt");
-        
+
         Dictionary<string, AssetBundle> abDic = new();
         public AudioClip LoadSound(string audioName)
         {
@@ -41,6 +41,7 @@ namespace VNFramework
 
         public void LoadSystemConfig()
         {
+            this.GetUtility<GameLog>().RunningLog("Load System Config");
             var systemConfigModel = this.GetModel<ConfigModel>();
             Dictionary<string, float> defaultConfig = new Dictionary<string, float>
             {
@@ -73,7 +74,7 @@ namespace VNFramework
             systemConfigModel.ChsVolume = defaultConfig["chs_volume"];
             systemConfigModel.GmsVolume = defaultConfig["gms_volume"];
             systemConfigModel.TextSpeed = defaultConfig["text_speed"];
-            
+
             SaveSystemConfig();
         }
 
@@ -85,8 +86,8 @@ bgs_volume : {systemConfigModel.BgsVolume}
 chs_volume : {systemConfigModel.ChsVolume}
 gms_volume : {systemConfigModel.GmsVolume}
 text_speed : {systemConfigModel.TextSpeed}";
-            
-            if (!Directory.Exists(_configDirPath))  Directory.CreateDirectory(_configDirPath);
+
+            if (!Directory.Exists(_configDirPath)) Directory.CreateDirectory(_configDirPath);
 
             File.WriteAllText(_systemConfigPath, configStr);
         }
@@ -97,10 +98,10 @@ text_speed : {systemConfigModel.TextSpeed}";
         public string[] LoadUnlockedChapterList()
         {
             // 若存档文件不存在，则在指定目录创建存档文件
-            if (!File.Exists(_chapterRecordPath))  CreateBasicUnlockedRecordFile();
+            if (!File.Exists(_chapterRecordPath)) CreateBasicUnlockedRecordFile();
 
             string fileContent = File.ReadAllText(_chapterRecordPath);
-            
+
             string pattern = @"\[\s*chapter_name\s:\s*(.*?)\s*\]";
             MatchCollection matches = Regex.Matches(fileContent, pattern);
 
@@ -118,7 +119,7 @@ text_speed : {systemConfigModel.TextSpeed}";
                     .Select(match => match.Groups[1].Value.Trim())
                     .ToArray();
             }
-            
+
             return unlockedList;
         }
 
