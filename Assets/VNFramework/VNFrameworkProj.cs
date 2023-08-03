@@ -11,6 +11,8 @@ namespace VNFramework
             this.RegisterModel(new ConfigModel());
             this.RegisterModel(new PerformingModel());
             this.RegisterModel(new ChapterModel());
+            this.RegisterModel(new MermaidModel());
+            this.RegisterModel(new SaveFileModel());
             this.RegisterModel(new DialogueModel());
 
             this.GetUtility<GameDataStorage>().LoadAllRes();

@@ -1,5 +1,0 @@
-Assets/VNFramework/Fonts/* filter=lfs diff=lfs merge=lfs -text
-Assets/VNFramework/Resources/Sounds/* filter=lfs diff=lfs merge=lfs -text
-Assets/VNFramework/Resources/Sprites/* filter=lfs diff=lfs merge=lfs -text
-Assets/VNFramework/Resources/ProjectData/* filter=lfs diff=lfs merge=lfs -text
-Assets/VNFramework/Resources/VNScriptes/* filter=lfs diff=lfs merge=lfs -text

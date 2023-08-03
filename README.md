@@ -16,10 +16,10 @@
 - [x] 视觉小说资源的AB包加载
 - [x] 实现全屏文字的文本演出模式
 - [x] 窗口多分辨率切换
+- [ ] 剧情的多分支支持
 - [ ] 为 VSCode 编写 VNScript 语法检查插件
 - [ ] `game_info` 增加更多自定义属性
 - [ ] Dialogue Box 中，对话中的英文单词在行末自动添加换行符
-- [ ] 剧情的多分支支持
 
 ## Screenshot
 
@@ -42,6 +42,74 @@
 
 **Menu View**
 ![MenuView](./docs/img/menu_view.png)
+
+## VN Mermaid
+
+剧情选项是视觉小说的精髓，VNFramework 实现剧情选项的方法是使用 `VNMermaid` 语法，来源是借鉴了 markdown 的 mermaid 流程图语法
+
+`VNMermaid` 有三种语法，分为定义语法，链接语法，以及注释语法。
+
+`VNMermaid` 语法中，在行的开始位置使用「`#`」 字符，则表示当前行是注释行，在进行语法解析时会将这行忽略。
+
+### Define Mermaid Node
+
+要定义 Mermaid 节点，需要使用 `[Define]` 标识符，该标识符以下的所有文本都将被当作节点定义语句。
+
+```
+[Define]
+序章[Chapter00]
+线路1_第一章[Route1_Chapter01]
+线路2_第二章[Route2_Chapter01]
+```
+
+#### Define Syntax
+
+```
+mermaidNodeName[VNScriptChapterName]
+```
+
+### Link Mermaid Node
+
+要连接 Mermaid 节点，需要使用 `[Link]` 标识符，该标识符以下的所有文本都将被当作节点连接语句。
+
+
+```
+[Link]
+序章 --> 线路1_第一章(跟上去)
+序章 --> 线路2_第一章(不跟上去)
+```
+
+#### Link Syntax
+
+如果一个 `fromNode` 的 `toNode` 的 `optionText` 为空，则该 `fromNode` 只能有这一个 `toNode`。
+
+这表示该 `fromNode` 在执行完之后将直接加载 `toNode`，而不会弹出任何选项。
+
+```
+# case 1
+fromNode --> toNode(optionText)
+
+# case 2
+fromNode --> toNode
+```
+
+### VNMermaid Example
+
+```
+[Define]
+序章[Chapter00]
+线路1_第一章[Route1_Chapter01]
+线路2_第一章[Route2_Chapter01]
+第二章[Chapter02]
+
+[Link]
+序章 --> 线路1_第一章(跟上去)
+序章 --> 线路2_第一章(不跟上去)
+线路1_第一章 --> 第二章
+线路2_第一章 --> 第二章
+```
+
+![Example_VNMermaid](Docs/Img/Example_VNMermaid.svg)
 
 ## VNScript Syntax
 

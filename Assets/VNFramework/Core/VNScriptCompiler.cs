@@ -5,7 +5,7 @@ using System;
 
 namespace VNFramework.VNScriptCompiler
 {
-    class VNScript
+    public class VNScript
     {
         private enum ScriptLineType
         {
@@ -396,18 +396,18 @@ namespace VNFramework.VNScriptCompiler
             string[] unit = command.Split(' ');
 
             var commandMapper = new Dictionary<string, Func<string[], Hashtable>>
-            {
-                { "dialogue", DialogueAsmToHash },
-                { "name", NameAsmToHash },
-                { "gm", GmAsmToHash },
-                { "bgm", AudioAsmToHash },
-                { "bgs", AudioAsmToHash },
-                { "chs", AudioAsmToHash },
-                { "bgp", SpriteAsmToHash },
-                { "ch_left", SpriteAsmToHash },
-                { "ch_right", SpriteAsmToHash },
-                { "ch_mid", SpriteAsmToHash }
-            };
+        {
+            { "dialogue", DialogueAsmToHash },
+            { "name", NameAsmToHash },
+            { "gm", GmAsmToHash },
+            { "bgm", AudioAsmToHash },
+            { "bgs", AudioAsmToHash },
+            { "chs", AudioAsmToHash },
+            { "bgp", SpriteAsmToHash },
+            { "ch_left", SpriteAsmToHash },
+            { "ch_right", SpriteAsmToHash },
+            { "ch_mid", SpriteAsmToHash }
+        };
 
             if (commandMapper.TryGetValue(unit[0], out var asmCommandFunc))
             {
@@ -463,24 +463,24 @@ namespace VNFramework.VNScriptCompiler
         private static Hashtable GmAsmToHash(string[] unit)
         {
             var hash = new Hashtable
-            {
-                { "object", "gm" },
-                { "action", unit[1] }
-            };
+        {
+            { "object", "gm" },
+            { "action", unit[1] }
+        };
 
             return hash;
         }
 
         private static Hashtable AudioAsmToHash(string[] unit)
         {
-            var hash = new Hashtable { {"object",unit[0]} };
+            var hash = new Hashtable { { "object", unit[0] } };
             var action = unit[1];
             if (action == "play")
             {
                 hash.Add("action", AudioAction.Play);
                 hash.Add("audio_name", unit[2]);
             }
-            else if (action == "stop") hash.Add("action",AudioAction.Stop);
+            else if (action == "stop") hash.Add("action", AudioAction.Stop);
             else if (action == "vol")
             {
                 hash.Add("action", AudioAction.Vol);

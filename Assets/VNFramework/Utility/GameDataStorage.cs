@@ -39,6 +39,44 @@ namespace VNFramework
             return vnScriptLines;
         }
 
+        public string LoadVNMermaid(string name)
+        {
+            var file = abDic["vnscripts"].LoadAsset<TextAsset>(name).text;
+
+            return file;
+        }
+
+        public SaveFile[] LoadSaveFiles()
+        {
+            var saveFiles = new SaveFile[60];
+
+            for (int i = 0; i < saveFiles.Length; i++)
+            {
+                saveFiles[i] = new SaveFile();
+            }
+
+            var saveFile = File.ReadAllText(Path.Combine(_configDirPath, "save_file.txt"));
+
+            var regex = new Regex(@"<\|\s*save_index:(\d+)\s*save_date:(.*?)\s*mermaid_node:(.*?)\s*script_index:(\d+)\s*resume_pic:(.*?)\s*resume_text:(.*?)\s*\|>",
+            RegexOptions.Singleline);
+            var matches = regex.Matches(saveFile);
+
+            foreach (Match match in matches)
+            {
+                SaveFile save = new SaveFile();
+                int index = int.Parse(match.Groups[1].Value);
+                save.SaveDate = match.Groups[2].Value.Trim();
+                save.MermaidNode = match.Groups[3].Value.Trim();
+                save.VNScriptIndex = int.Parse(match.Groups[4].Value);
+                save.ResumePic = match.Groups[5].Value.Trim();
+                save.ResumeText = match.Groups[6].Value.Trim();
+
+                saveFiles[index] = save;
+            }
+
+            return saveFiles;
+        }
+
         public void LoadSystemConfig()
         {
             this.GetUtility<GameLog>().RunningLog("Load System Config");
