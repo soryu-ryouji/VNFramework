@@ -10,6 +10,8 @@ namespace VNFramework
         private SaveFileItemHandle[] _saveFileItems = new SaveFileItemHandle[6];
         private Button[] _galleryButtons = new Button[10];
 
+        private Button _backButton;
+
         private int _currentPage = 0;
 
         private SaveFileModel _saveFileModel;
@@ -33,7 +35,7 @@ namespace VNFramework
             _galleryButtons[7] = transform.Find("GalleryList/Button07").GetComponent<Button>();
             _galleryButtons[8] = transform.Find("GalleryList/Button08").GetComponent<Button>();
             _galleryButtons[9] = transform.Find("GalleryList/Button09").GetComponent<Button>();
-
+            
             _galleryButtons[0].onClick.AddListener(() => { _currentPage = 0; UpdateView(); });
             _galleryButtons[1].onClick.AddListener(() => { _currentPage = 1; UpdateView(); });
             _galleryButtons[2].onClick.AddListener(() => { _currentPage = 2; UpdateView(); });
@@ -44,6 +46,9 @@ namespace VNFramework
             _galleryButtons[7].onClick.AddListener(() => { _currentPage = 7; UpdateView(); });
             _galleryButtons[8].onClick.AddListener(() => { _currentPage = 8; UpdateView(); });
             _galleryButtons[9].onClick.AddListener(() => { _currentPage = 9; UpdateView(); });
+
+            _backButton = transform.Find("BackButton").GetComponent<Button>();
+            _backButton.onClick.AddListener(() => { this.SendCommand<HideSaveFileViewCommand>(); });
         }
 
         private void Start()
@@ -55,7 +60,7 @@ namespace VNFramework
         private void UpdateView()
         {
             var saveFiles = _saveFileModel.GetSaveFiles();
-
+            this.GetUtility<GameLog>().RunningLog("Save File View Current Page : " + _currentPage);
             for (int i = 0; i < _saveFileItems.Length; i++)
             {
                 int index = i + _currentPage * 6;

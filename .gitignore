@@ -78,7 +78,12 @@ crashlytics-build.properties
 AssetBundles/
 Assets/StreamingAssets/
 Assets/Config/
-/[Aa]ssets/[Vv][Nn][Ff]ramework/[Rr]esources/[Ss]ounds/
-/[Aa]ssets/[Vv][Nn][Ff]ramework/[Rr]esources/[Ss]prites/
-/[Aa]ssets/[Vv][Nn][Ff]ramework/[Rr]esources/[Vv][Nn][Ss]criptes/
-/[Aa]ssets/[Vv][Nn][Ff]ramework/[Rr]esources/[Pp]roject[Dd]ata/
+Assets/VNFramework/Fonts/
+
+Assets/VNFramework/Resources/Sounds/
+
+Assets/VNFramework/Resources/VNScriptes/
+
+Assets/VNFramework/Resources/Sprites/
+
+Assets/VNFramework/Resources/ProjectData/
