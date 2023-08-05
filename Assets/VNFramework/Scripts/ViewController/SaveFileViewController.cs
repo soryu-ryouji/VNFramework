@@ -7,7 +7,7 @@ namespace VNFramework
 {
     public class SaveFileViewController : MonoBehaviour, IController
     {
-        private SaveFileItemHandle[] _saveFileItems = new SaveFileItemHandle[6];
+        private GameSaveViewGalleryItemHandle[] _saveFileItems = new GameSaveViewGalleryItemHandle[6];
         private Button[] _galleryButtons = new Button[10];
 
         private Button _backButton;
@@ -18,12 +18,12 @@ namespace VNFramework
 
         private void Awake()
         {
-            _saveFileItems[0] = transform.Find("Gallery/Item00").GetComponent<SaveFileItemHandle>();
-            _saveFileItems[1] = transform.Find("Gallery/Item01").GetComponent<SaveFileItemHandle>();
-            _saveFileItems[2] = transform.Find("Gallery/Item02").GetComponent<SaveFileItemHandle>();
-            _saveFileItems[3] = transform.Find("Gallery/Item03").GetComponent<SaveFileItemHandle>();
-            _saveFileItems[4] = transform.Find("Gallery/Item04").GetComponent<SaveFileItemHandle>();
-            _saveFileItems[5] = transform.Find("Gallery/Item05").GetComponent<SaveFileItemHandle>();
+            _saveFileItems[0] = transform.Find("Gallery/Item00").GetComponent<GameSaveViewGalleryItemHandle>();
+            _saveFileItems[1] = transform.Find("Gallery/Item01").GetComponent<GameSaveViewGalleryItemHandle>();
+            _saveFileItems[2] = transform.Find("Gallery/Item02").GetComponent<GameSaveViewGalleryItemHandle>();
+            _saveFileItems[3] = transform.Find("Gallery/Item03").GetComponent<GameSaveViewGalleryItemHandle>();
+            _saveFileItems[4] = transform.Find("Gallery/Item04").GetComponent<GameSaveViewGalleryItemHandle>();
+            _saveFileItems[5] = transform.Find("Gallery/Item05").GetComponent<GameSaveViewGalleryItemHandle>();
 
             _galleryButtons[0] = transform.Find("GalleryList/Button00").GetComponent<Button>();
             _galleryButtons[1] = transform.Find("GalleryList/Button01").GetComponent<Button>();

@@ -198,7 +198,7 @@ namespace VNFramework
         protected override void OnExecute()
         {
             this.GetUtility<GameLog>().RunningLog("Show Save File View Command");
-            this.SendEvent<ShowSaveFileViewEvent>();
+            this.SendEvent<ShowGameSaveViewEvent>();
         }
     }
 
@@ -207,7 +207,7 @@ namespace VNFramework
         protected override void OnExecute()
         {
             this.GetUtility<GameLog>().RunningLog("Hide Save File View Command");
-            this.SendEvent<HideSaveFileViewEvent>();
+            this.SendEvent<HideGameSaveViewEvent>();
         }
     }
 }

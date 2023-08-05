@@ -16,18 +16,20 @@ namespace VNFramework
 
         private void Start()
         {
+            var projectModel = this.GetModel<ProjectModel>();
+
+            // 对 View 进行初始化
             _titlePic = transform.Find("TitlePic").GetComponent<Image>();
             _bgp = transform.Find("ViewBgp").GetComponent<Image>();
+            _titlePic.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.TitleViewLogo);
+            _bgp.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.TitleViewBgp);
+            this.SendCommand(new PlayAudioCommand(projectModel.TitleViewBgm, VNutils.StrToAudioPlayer("bgm")));
+
             _startBtn = transform.Find("ButtonList/StartButton").GetComponent<Button>();
             _loadBtn = transform.Find("ButtonList/LoadButton").GetComponent<Button>();
             _chapterViewBtn = transform.Find("ButtonList/ChapterButton").GetComponent<Button>();
             _configViewBtn = transform.Find("ButtonList/ConfigButton").GetComponent<Button>();
             _exitGameBtn = transform.Find("ButtonList/ExitButton").GetComponent<Button>();
-
-            var projectModel = this.GetModel<ProjectModel>();
-            _titlePic.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.TitlePic);
-            _bgp.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.TitleBgp);
-            this.SendCommand(new PlayAudioCommand(projectModel.TitleBgm, VNutils.StrToAudioPlayer("bgm")));
 
             _startBtn.onClick.AddListener(() =>
             {
@@ -37,7 +39,7 @@ namespace VNFramework
             });
 
             _loadBtn.onClick.AddListener(() => this.SendCommand<ShowSaveFileViewCommand>());
-            _chapterViewBtn.onClick.AddListener(() => this.SendCommand<ShowChapterViewCommand>());            
+            _chapterViewBtn.onClick.AddListener(() => this.SendCommand<ShowChapterViewCommand>());
             _configViewBtn.onClick.AddListener(() => this.SendCommand<ShowConfigViewCommand>());
             _exitGameBtn.onClick.AddListener(() => Application.Quit());
         }

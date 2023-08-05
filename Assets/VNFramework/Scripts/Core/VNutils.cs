@@ -42,5 +42,11 @@ namespace VNFramework
             else if (obj == "gms") return AudioPlayer.Gms;
             else return AudioPlayer.Null;
         }
+
+        public static Color StrToColor(string colorCode)
+        {
+            ColorUtility.TryParseHtmlString(colorCode, out Color color);
+            return color;
+        }
     }
 }

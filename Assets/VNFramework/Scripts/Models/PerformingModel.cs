@@ -2,6 +2,7 @@ namespace VNFramework
 {
     class PerformingModel : AbstractModel
     {
+        private string _performingMermaidName;
         private float _performingBgmVolume;
         private float _performingBgsVolume;
         private float _performingChsVolume;
@@ -11,6 +12,15 @@ namespace VNFramework
         private string _chLeft;
         private string _chMid;
         private string _chRight;
+
+        public string PerformingMermaidName
+        {
+            get { return _performingMermaidName; }
+            set
+            {
+                _performingMermaidName = value;
+            }
+        }
 
         public float BgmVolume
         {
@@ -84,7 +94,7 @@ namespace VNFramework
                 _chMid = value;
             }
         }
-        
+
         public string ChRight
         {
             get { return _chRight; }

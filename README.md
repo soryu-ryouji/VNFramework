@@ -363,37 +363,30 @@ IL Command 与 Asm 的对应关系如下图
 
 `game_info` 用于简化定制视觉小说UI的步骤
 
-由于时间关系，目前只实现了三个用于测试的选项
-
 ```
-title: example_logo
-start_view_bgm: 月姬
-start_view_bgp: white
-```
+[ Title View ]
+logo: example_logo
+bgm: 月姬
+bgp: white
 
-以下是待实现的配置方式
+[ Game Save View ]
+bgm: 月姬
+bgp: white
+gallery_item_pic: save_file_gallery_item
+gallery_list_pic: white
 
-```
-[ start_view ]
-title_pic: example_logo
-bgm : 月姬
-bgp : start_view_bgp
-button_start_pic: start_view_button_start
-button_chapter_pic: start_view_button_chapter
-button_config_pic: start_view_button_config
-button_exit_pic: start_view_button_exit
+[ Backlog View ]
+bgp: backlog_view_white
+text_color: #000000
+back_button_text_color: #000000
 
-[ menu_view ]
-bgp: menu_view_bgp
-button_start_pic: menu_view_button_start
-button_chapter_pic: menu_view_button_start
-button_config_pic: menu_view_button_config
-button_exit_pic: menu_view_button_exit
-
-[ backlog_view ]
-bgp: backlog_view_bgp
-......
-...
+[ Performance View ]
+norm_name_box_pic: dialogue_box
+norm_dialogue_box_pic: dialogue_box
+full_dialogue_box_pic: dialogue_box
+menu_view_button_pic: menu_view_button
+backlog_view_button_pic: backlog_view_button
+config_view_button_pic: config_view_button
 ```
 
 ## License

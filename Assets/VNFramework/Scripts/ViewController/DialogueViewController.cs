@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 namespace VNFramework
@@ -18,34 +19,46 @@ namespace VNFramework
         private string _curDialogue;
         private int _curDialogueIndex;
 
-        // Name Box
-        private GameObject _normNameBox;
-        private TMP_Text _normNameText;
-
         // Normal Dialogue Box
         private GameObject _normDialogueBox;
+        private GameObject _normNameBox;
         private TMP_Text _normDialogueBoxText;
+        private Image _normDialogueBoxImage;
+        private TMP_Text _normNameBoxText;
+        private Image _normNameBoxImage;
 
         // Full Dialogue Box
         private GameObject _fullDialogueBox;
         private TMP_Text _fullDialogueBoxText;
+        private Image _fullDialogueBoxImage;
 
         // Dialogue Model
         private DialogueModel _dialogueModel;
 
         private void Start()
         {
-            _normDialogueBox = transform.Find("NormDialogueBox").gameObject;
+            // 获取 View 组件            
             _fullDialogueBox = transform.Find("FullDialogueBox").gameObject;
-            _normDialogueBoxText = _normDialogueBox.transform.Find("DialogueBox/DialogueBoxText").GetComponent<TMP_Text>();
             _fullDialogueBoxText = _fullDialogueBox.transform.Find("DialogueBoxText").GetComponent<TMP_Text>();
+            _fullDialogueBoxImage = _fullDialogueBox.transform.Find("DialogueBoxBgp").GetComponent<Image>();
 
+            _normDialogueBox = transform.Find("NormDialogueBox").gameObject;
             _normNameBox = _normDialogueBox.transform.Find("NameBox").gameObject;
-            _normNameText = _normNameBox.transform.Find("NameBoxText").GetComponent<TMP_Text>();
+            _normNameBoxText = _normDialogueBox.transform.Find("NameBox/NameBoxText").GetComponent<TMP_Text>();
+            _normNameBoxImage = _normDialogueBox.transform.Find("NameBox/NameBoxBgp").GetComponent<Image>();
+            _normDialogueBoxText = _normDialogueBox.transform.Find("DialogueBox/DialogueBoxText").GetComponent<TMP_Text>();
+            _normDialogueBoxImage = _normDialogueBox.transform.Find("DialogueBox/DialogueBoxBgp").GetComponent<Image>();
 
+            // 对 DialogueView 进行初始化
             _dialogueModel = this.GetModel<DialogueModel>();
             _textSpeed = this.GetModel<ConfigModel>().TextSpeed;
 
+            var projectModel = this.GetModel<ProjectModel>();
+            _normNameBoxImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.NormNameBoxPic);
+            _normDialogueBoxImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.NormDialogueBoxPic);
+            _fullDialogueBoxImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.FullDialogueBoxPic);
+
+            // 注册 DialogueView 相关事件
             this.RegisterEvent<ConfigChangedEvent>(_ => _textSpeed = this.GetModel<ConfigModel>().TextSpeed).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<ShowDialoguePanelEvent>(_ => ShowDialogueView()).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<HideDialoguePanelEvent>(_ => HideDialogueView()).UnRegisterWhenGameObjectDestroyed(gameObject); ;
@@ -170,13 +183,13 @@ namespace VNFramework
         {
             if (_dialogueModel.CurrentName == "")
             {
-                _normNameText.text = "";
+                _normNameBoxText.text = "";
                 _normNameBox.SetActive(false);
             }
             else
             {
                 _normNameBox.SetActive(true);
-                _normNameText.text = _dialogueModel.CurrentName;
+                _normNameBoxText.text = _dialogueModel.CurrentName;
             }
         }
         # endregion

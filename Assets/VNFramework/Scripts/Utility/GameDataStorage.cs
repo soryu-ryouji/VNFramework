@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using VNFramework.Utils;
 
 namespace VNFramework
 {
@@ -54,6 +55,8 @@ namespace VNFramework
             {
                 saveFiles[i] = new SaveFile();
             }
+            
+            if (!File.Exists(Path.Combine(_configDirPath, "save_file.txt"))) return saveFiles;
 
             var saveFile = File.ReadAllText(Path.Combine(_configDirPath, "save_file.txt"));
 
@@ -225,18 +228,41 @@ text_speed : {systemConfigModel.TextSpeed}";
 
         public void LoadProjectData()
         {
-            var configFile = abDic["projectdata"].LoadAsset<TextAsset>("game_info").text.Split('\n');
-            string[] configList = configFile.Select(str => str.TrimEnd('\r', '\n')).ToArray();
-
-            var projectModel = this.GetModel<ProjectModel>();
-            foreach (var config in configList.Select(ch => ch.Split(":").Select(str => str.Trim())))
+            var configFile = abDic["projectdata"].LoadAsset<TextAsset>("game_info").text;
+            
+            var gameInfoModel = this.GetModel<ProjectModel>();
+            
+            var gameInfo = VNGameInfo.ExtractGameInfo(configFile);
+            foreach (var (blockType, property) in gameInfo)
             {
-                string key = config.ElementAtOrDefault(0);
-                string value = config.ElementAtOrDefault(1);
-
-                if (key == "title") projectModel.TitlePic = value;
-                else if (key == "start_view_bgm") projectModel.TitleBgm = value;
-                else if (key == "start_view_bgp") projectModel.TitleBgp = value;
+                if (blockType == GameInfoType.TitleView)
+                {
+                    gameInfoModel.TitleViewLogo = property["logo"];
+                    gameInfoModel.TitleViewBgm = property["bgm"];
+                    gameInfoModel.TitleViewBgp = property["bgp"];
+                }
+                else if (blockType == GameInfoType.GameSaveView)
+                {
+                    gameInfoModel.GameSaveViewBgm = property["bgm"];
+                    gameInfoModel.GameSaveViewBgp = property["bgp"];
+                    gameInfoModel.GameSaveViewGalleryItemPic = property["gallery_item_pic"];
+                    gameInfoModel.GameSaveViewGalleryListPic = property["gallery_list_pic"];
+                }
+                else if (blockType == GameInfoType.PerformanceView)
+                {
+                    gameInfoModel.NormDialogueBoxPic = property["norm_dialogue_box_pic"];
+                    gameInfoModel.FullDialogueBoxPic = property["full_dialogue_box_pic"];
+                    gameInfoModel.NormNameBoxPic = property["norm_name_box_pic"];
+                    gameInfoModel.PerformanceViewMenuViewButtonPic = property["menu_view_button_pic"];
+                    gameInfoModel.PerformanceViewBacklogViewButtonPic = property["backlog_view_button_pic"];
+                    gameInfoModel.PerformanceViewConfigViewButtonPic = property["config_view_button_pic"];
+                }
+                else if (blockType == GameInfoType.BacklogView)
+                {
+                    gameInfoModel.BacklogViewBgp = property["bgp"];
+                    gameInfoModel.BacklogViewTextColor = property["text_color"];
+                    gameInfoModel.BacklogViewBackButtonTextColor = property["back_button_text_color"];
+                }
             }
         }
 
