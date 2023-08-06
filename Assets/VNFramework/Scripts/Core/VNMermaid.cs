@@ -244,15 +244,16 @@ namespace VNFramework.VNMermaid
         public static List<string> ExtractMermaidTagText(string text, MermaidTag mode)
         {
             string pattern = "";
-            if (mode == MermaidTag.Define) pattern = @"\[Define\](.*?)(?=\[Define\]|\[Link\]|\z)";
-            else if (mode == MermaidTag.Link) pattern = @"\[Link\](.*?)(?=\[Define\]|\[Link\]|\z)";
+            if (mode == MermaidTag.Define)  pattern = @"\[Define\](.*?)(?=\[Define\]|\[Link\]|\z)";
+            else if (mode == MermaidTag.Link)  pattern = @"\[Link\](.*?)(?=\[Define\]|\[Link\]|\z)";
 
             MatchCollection matches = Regex.Matches(text, pattern, RegexOptions.Singleline);
             var result = new List<string>();
-
+            
+            string newlinePattern = @"\r\n|\n|\r";
             for (int i = 0; i < matches.Count; i++)
             {
-                var lines = matches[i].Groups[1].Value.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                var lines = Regex.Split(matches[i].Groups[1].Value, newlinePattern);
                 var newLines = lines.Where(line => !string.IsNullOrWhiteSpace(line) && !line.TrimStart().StartsWith("#"));
                 result.AddRange(newLines);
             }
