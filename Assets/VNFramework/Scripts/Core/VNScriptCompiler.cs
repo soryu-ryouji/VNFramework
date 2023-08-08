@@ -133,15 +133,16 @@ namespace VNFramework.Core
             }
             else if (lineType == ScriptLineType.FullDialogue)
             {
-                if (isFullDialogueMode == false)
-                {
-                    ilList.Add(new VNScriptIL("open_full_dialogue_box"));
-                }
-                else if (isNotInitDialogueMode)
+                if (isNotInitDialogueMode)
                 {
                     ilList.Add(new VNScriptIL("open_full_dialogue_box"));
                     isNotInitDialogueMode = false;
                 }
+                else if (isFullDialogueMode == false)
+                {
+                    ilList.Add(new VNScriptIL("open_full_dialogue_box"));
+                }
+
                 ilList.AddRange(ParseVNScriptDialogueSyntax(line[2..]));
                 isFullDialogueMode = true;
                 lastTypeIsClearDialogue = false;
