@@ -23,7 +23,7 @@ namespace VNFramework
             _bgp = transform.Find("ViewBgp").GetComponent<Image>();
             _titlePic.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.TitleViewLogo);
             _bgp.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.TitleViewBgp);
-            this.SendCommand(new PlayAudioCommand(projectModel.TitleViewBgm, VNutils.StrToAudioPlayer("bgm")));
+            this.SendCommand(new PlayAudioCommand(projectModel.TitleViewBgm, AsmObj.bgm));
 
             _startBtn = transform.Find("ButtonList/StartButton").GetComponent<Button>();
             _loadBtn = transform.Find("ButtonList/LoadButton").GetComponent<Button>();

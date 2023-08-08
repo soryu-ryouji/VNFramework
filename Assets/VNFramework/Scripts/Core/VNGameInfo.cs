@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace VNFramework.Utils
+namespace VNFramework.Core
 {
     public enum GameInfoType
     {

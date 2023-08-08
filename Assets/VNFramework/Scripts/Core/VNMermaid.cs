@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace VNFramework.VNMermaid
+namespace VNFramework.Core
 {
     public enum MermaidTag
     {

@@ -3,10 +3,39 @@ using System.Collections.Generic;
 using System.Collections;
 using System;
 
-namespace VNFramework.VNScriptCompiler
+namespace VNFramework.Core
 {
-    public class VNScript
+    public class VNScriptCompiler
     {
+        #region VNScript
+
+        private string[] _vnScriptLines;
+        private int _vnScriptLen;
+        private int _scriptIndex = 0;
+
+        public int ScriptIndex { get => _scriptIndex; }
+
+        public VNScriptCompiler(string[] vnScriptLines)
+        {
+            this._vnScriptLines = vnScriptLines;
+            _vnScriptLen = _vnScriptLines.Length;
+        }
+
+        public int ScriptCountDown()
+        {
+            return _vnScriptLen - _scriptIndex;
+        }
+
+        public List<VNScriptAsm> NextAsmList()
+        {
+            var ilList = ParseVNScriptLineToIL(_vnScriptLines[_scriptIndex]);
+            var asmList = ParseILLinesToAsm(ilList);
+
+            if (_scriptIndex < _vnScriptLen) _scriptIndex++;
+
+            return asmList;
+        }
+
         private enum ScriptLineType
         {
             Annotation,
@@ -15,6 +44,60 @@ namespace VNFramework.VNScriptCompiler
             FullDialogue,
             NormDialogue,
         }
+
+        public static PerformanceState GetPerformanceStateByIndex(string[] vnScript, int index)
+        {
+            var performanceState = new PerformanceState();
+            var compiler = new VNScriptCompiler(vnScript);
+
+            int lastBlock = 0;
+            bool isOpenFullDialogueBox = false;
+
+            for (int i = 0; compiler.ScriptCountDown() > 0 && i < index; i++)
+            {
+                var asmList = compiler.NextAsmList();
+                foreach (var asm in asmList)
+                {
+                    // 图片与音乐的状态获取
+                    if (asm.Obj == AsmObj.bgm && asm.Action == "play") performanceState.Bgm = asm.Parameters[0];
+                    else if (asm.Obj == AsmObj.bgm && asm.Action == "Stop") performanceState.Bgm = "";
+
+                    if (asm.Obj == AsmObj.bgp && asm.Action == "set") performanceState.Bgp = asm.Parameters[0];
+                    else if (asm.Obj == AsmObj.bgp && asm.Action == "hide") performanceState.Bgp = "";
+
+                    if (asm.Obj == AsmObj.ch_left && asm.Action == "set") performanceState.ChLeft = asm.Parameters[0];
+                    else if (asm.Obj == AsmObj.ch_left && asm.Action == "hide") performanceState.ChLeft = "";
+
+                    if (asm.Obj == AsmObj.ch_right && asm.Action == "set") performanceState.ChRight = asm.Parameters[0];
+                    else if (asm.Obj == AsmObj.ch_right && asm.Action == "hide") performanceState.ChRight = "";
+
+                    if (asm.Obj == AsmObj.ch_mid && asm.Action == "set") performanceState.ChMid = asm.Parameters[0];
+                    else if (asm.Obj == AsmObj.ch_mid && asm.Action == "hide") performanceState.ChMid = "";
+
+                    // 文本框状态获取
+                    // 判断当前最后的对话 Block，实现全屏文字演出的完整性
+                    if (asm.Obj == AsmObj.dialogue && asm.Action == "switch" && asm.Parameters[0] == "full")
+                    {
+                        lastBlock = i;
+                        isOpenFullDialogueBox = true;
+                    }
+                    else if (asm.Obj == AsmObj.dialogue && asm.Action == "switch" && asm.Parameters[0] == "norm")
+                    {
+                        isOpenFullDialogueBox = false;
+                    }
+                    else if (asm.Obj == AsmObj.dialogue && asm.Action == "clear")
+                    {
+                        lastBlock = i;
+                    }
+                }
+
+                if (isOpenFullDialogueBox == false) lastBlock = i;
+            }
+
+            performanceState.ScriptIndex = lastBlock;
+            return performanceState;
+        }
+
 
         private static ScriptLineType IdentifyLineType(string line)
         {
@@ -26,141 +109,68 @@ namespace VNFramework.VNScriptCompiler
             else return ScriptLineType.NormDialogue;
         }
 
-        bool lastTypeIsClearName = false;
+        bool lastTypeIsClearDialogue = false;
         bool isFullDialogueMode = false;
         bool isNotInitDialogueMode = true;
-
-        public List<string> ParseVNScriptToIL(string line)
+        public List<VNScriptIL> ParseVNScriptLineToIL(string line)
         {
-            var ilList = new List<string>();
+            var ilList = new List<VNScriptIL>();
             line = line.Trim();
             var lineType = IdentifyLineType(line);
 
-            // 多条空行只添加一条 [ clear_name ] 指令
-            if (lineType == ScriptLineType.Blank && lastTypeIsClearName == false)
-            {
-                ilList.Add("[ clear_name ]");
-                lastTypeIsClearName = true;
-            }
-            else if (lineType == ScriptLineType.Annotation)
-            {
+            if (lineType == ScriptLineType.Annotation) return ilList;
 
+            // 多条空行只添加一条 [ clear_dialogue ] 指令
+            if (lineType == ScriptLineType.Blank && lastTypeIsClearDialogue == false)
+            {
+                ilList.Add(new VNScriptIL("clear_dialogue"));
+                lastTypeIsClearDialogue = true;
             }
             else if (lineType == ScriptLineType.Command)
             {
-                ilList.AddRange(ParseVNScriptCommandLine(line));
-                lastTypeIsClearName = false;
+                ilList.AddRange(ParseVNScriptCommandSyntax(line));
+                lastTypeIsClearDialogue = false;
             }
             else if (lineType == ScriptLineType.FullDialogue)
             {
                 if (isFullDialogueMode == false)
                 {
-                    ilList.Add("[ open_full_dialogue_box ]");
+                    ilList.Add(new VNScriptIL("open_full_dialogue_box"));
                 }
                 else if (isNotInitDialogueMode)
                 {
-                    ilList.Add("[ open_full_dialogue_box ]");
+                    ilList.Add(new VNScriptIL("open_full_dialogue_box"));
                     isNotInitDialogueMode = false;
                 }
-                ilList.AddRange(ParseVNScriptDialogueLine(line[2..]));
+                ilList.AddRange(ParseVNScriptDialogueSyntax(line[2..]));
                 isFullDialogueMode = true;
-                lastTypeIsClearName = false;
+                lastTypeIsClearDialogue = false;
             }
             else if (lineType == ScriptLineType.NormDialogue)
             {
                 if (isFullDialogueMode == true)
                 {
-                    ilList.Add("[ open_norm_dialogue_box ]");
+                    ilList.Add(new VNScriptIL("open_norm_dialogue_box"));
                 }
                 else if (isNotInitDialogueMode)
                 {
-                    ilList.Add("[ open_norm_dialogue_box ]");
+                    ilList.Add(new VNScriptIL("open_norm_dialogue_box"));
                     isNotInitDialogueMode = false;
                 }
-                ilList.AddRange(ParseVNScriptDialogueLine(line));
+                ilList.AddRange(ParseVNScriptDialogueSyntax(line));
                 isFullDialogueMode = false;
-                lastTypeIsClearName = false;
+                lastTypeIsClearDialogue = false;
             }
 
             return ilList;
         }
 
-        public static List<string> ParseAllVNScriptToIL(string[] vnScriptLines)
-        {
-            var ilList = new List<string>();
-
-            bool lastTypeIsClearName = false;
-            bool isFullDialogueMode = false;
-            bool isNotInitDialogueMode = true;
-
-            for (int i = 0; i < vnScriptLines.Length; i++)
-            {
-                string line = vnScriptLines[i].Trim();
-                var lineType = IdentifyLineType(line);
-
-                // 多条空行只添加一条 [ clear_name ] 指令
-                if (lineType == ScriptLineType.Blank && lastTypeIsClearName == false)
-                {
-                    ilList.Add("[ clear_name ]");
-                    lastTypeIsClearName = true;
-                    continue;
-                }
-
-                if (lineType == ScriptLineType.Annotation) continue;
-
-                if (lineType == ScriptLineType.Command)
-                {
-                    ilList.AddRange(ParseVNScriptCommandLine(line));
-                    lastTypeIsClearName = false;
-                    continue;
-                }
-
-                if (lineType == ScriptLineType.FullDialogue)
-                {
-                    if (isFullDialogueMode == false)
-                    {
-                        ilList.Add("[ open_full_dialogue_box ]");
-                    }
-                    else if (isNotInitDialogueMode)
-                    {
-                        ilList.Add("[ open_full_dialogue_box ]");
-                        isNotInitDialogueMode = false;
-                    }
-                    ilList.AddRange(ParseVNScriptDialogueLine(line[2..]));
-                    isFullDialogueMode = true;
-                    lastTypeIsClearName = false;
-
-                    continue;
-                }
-
-                if (lineType == ScriptLineType.NormDialogue)
-                {
-                    if (isFullDialogueMode == true)
-                    {
-                        ilList.Add("[ open_norm_dialogue_box ]");
-                    }
-                    else if (isNotInitDialogueMode)
-                    {
-                        ilList.Add("[ open_norm_dialogue_box ]");
-                        isNotInitDialogueMode = false;
-                    }
-                    ilList.AddRange(ParseVNScriptDialogueLine(line));
-                    isFullDialogueMode = false;
-                    lastTypeIsClearName = false;
-
-                    continue;
-                }
-            }
-
-            return ilList;
-        }
-
-        private static List<string> ParseVNScriptCommandLine(string line)
+        private static List<VNScriptIL> ParseVNScriptCommandSyntax(string line)
         {
             // 当 line 为 IL Command 时
             // 使用 startIndex 与 endIndex 可以提取出放在同一行的多个 IL Command
             // Example: [ bgm_play: audio_name] [ bgm_vol: 0.4 ]
-            var ilList = new List<string>();
+            var ilList = new List<VNScriptIL>();
             if (line[0] == '[' && line[^1] == ']')
             {
                 int startIndex = 0;
@@ -176,7 +186,7 @@ namespace VNFramework.VNScriptCompiler
                     {
                         endIndex = i;
                         string unit = line[startIndex..(endIndex + 1)];
-                        ilList.Add(unit);
+                        ilList.Add(ParseILToStruct(unit));
                     }
                 }
             }
@@ -184,23 +194,27 @@ namespace VNFramework.VNScriptCompiler
             return ilList;
         }
 
-        private static List<string> ParseVNScriptDialogueLine(string line)
+        private static List<VNScriptIL> ParseVNScriptDialogueSyntax(string line)
         {
-            var ilList = new List<string>();
+            var ilList = new List<VNScriptIL>();
 
             // Note: 继续输出语句 必定是跟在 普通对话语句 后面的，因此继续输出语句中不会包含对对话者名称的检测
             // 当 line 为继续输出语句时（换行版）
             if (line[0] == '>')
             {
-                ilList.Add("[ dialogue_newline ]");
                 line = line[1..].Trim();
+                ilList.Add(new VNScriptIL("dialogue_newline"));
                 if (line != "")
                 {
-                    var dialogueUnit = ExtractRoleSayContent(line);
+                    var dialogueUnit = ExtractRoleSayUnit(line);
 
                     // 当存在 角色语音时，添加 role_say 命令
-                    if (dialogueUnit.Length == 2) ilList.Add($"[ role_say: {dialogueUnit[0]} ]");
-                    ilList.Add($"[ dialogue_append: {dialogueUnit[^1]} ]");
+                    if (dialogueUnit.Length == 2)
+                    {
+                        ilList.Add(new VNScriptIL("role_say", parameters: new() { dialogueUnit[0] }));
+                    }
+
+                    ilList.Add(new VNScriptIL("dialogue_append", parameters: new() { dialogueUnit[^1] }));
                 }
             }
 
@@ -208,11 +222,12 @@ namespace VNFramework.VNScriptCompiler
             else if (line[0..2] == "->")
             {
                 line = line[2..].Trim();
-                var dialogueUnit = ExtractRoleSayContent(line);
+                var dialogueUnit = ExtractRoleSayUnit(line);
 
                 // 当存在 角色语音时，添加 role_say 命令
-                if (dialogueUnit.Length == 2) ilList.Add($"[ role_say: {dialogueUnit[0]} ]");
-                ilList.Add($"[ dialogue_append: {dialogueUnit[^1]} ]");
+                if (dialogueUnit.Length == 2) ilList.Add(new VNScriptIL("role_say", new() { dialogueUnit[0] }));
+
+                ilList.Add(new VNScriptIL("dialogue_append", new() { dialogueUnit[^1] }));
             }
 
             // 其他情况统一按照 普通的对话格式 处理
@@ -224,25 +239,182 @@ namespace VNFramework.VNScriptCompiler
                 string dialogueContent = parts[parts.Length - 1].Trim();
 
                 // 当 roleName 参数不为空时，添加 role_name 命令
-                if (roleName != "") ilList.Add($"[ name: {roleName} ]");
+                if (roleName != "") ilList.Add(new VNScriptIL("name", new() { roleName }));
 
-                var dialogueUnit = ExtractRoleSayContent(dialogueContent);
+                var dialogueUnit = ExtractRoleSayUnit(dialogueContent);
 
                 // 当存在 角色语音时，添加 role_say 命令
-                if (dialogueUnit.Length == 2) ilList.Add($"[ role_say: {dialogueUnit[0]} ]");
-
-                ilList.Add($"[ dialogue: {dialogueUnit[^1]} ]");
+                if (dialogueUnit.Length == 2) ilList.Add(new VNScriptIL("role_say", new() { dialogueUnit[0] }));
+                ilList.Add(new VNScriptIL("dialogue", new() { dialogueUnit[^1] }));
             }
 
             return ilList;
         }
+        #endregion
+
+        #region IL
+
+        public static List<VNScriptAsm> ParseILLinesToAsm(List<VNScriptIL> ilList)
+        {
+            var asmList = new List<VNScriptAsm>();
+
+            foreach (var line in ilList)
+            {
+                asmList.AddRange(ParseILToAsm(line));
+            }
+
+            return asmList;
+        }
+
+        public static List<VNScriptAsm> ParseILToAsm(VNScriptIL ilUnit)
+        {
+            var asmList = new List<VNScriptAsm>();
+
+            switch (ilUnit.CommandName)
+            {
+                case "open_full_dialogue_box":
+                    asmList.Add(new VNScriptAsm(AsmObj.dialogue, "clear"));
+                    asmList.Add(new VNScriptAsm(AsmObj.dialogue, "switch", new() { "full" }));
+                    break;
+                case "open_norm_dialogue_box":
+                    asmList.Add(new VNScriptAsm(AsmObj.dialogue, "clear"));
+                    asmList.Add(new VNScriptAsm(AsmObj.dialogue, "switch", new() { "norm" }));
+                    break;
+                case "dialogue":
+                    asmList.Add(new VNScriptAsm(AsmObj.dialogue, "clear"));
+                    asmList.Add(new VNScriptAsm(AsmObj.dialogue, "append", ilUnit.Parameters));
+                    asmList.Add(new VNScriptAsm(AsmObj.gm, "stop"));
+                    break;
+                case "dialogue_append":
+                    asmList.Add(new VNScriptAsm(AsmObj.dialogue, "append", ilUnit.Parameters));
+                    asmList.Add(new VNScriptAsm(AsmObj.gm, "stop"));
+                    break;
+                case "role_dialogue":
+                    asmList.Add(new VNScriptAsm(AsmObj.name, "clear"));
+                    asmList.Add(new VNScriptAsm(AsmObj.dialogue, "clear"));
+                    asmList.Add(new VNScriptAsm(AsmObj.name, "append", ilUnit.Parameters));
+                    asmList.Add(new VNScriptAsm(AsmObj.dialogue, "append", ilUnit.Parameters));
+                    asmList.Add(new VNScriptAsm(AsmObj.gm, "stop"));
+                    break;
+                case "dialogue_newline":
+                    asmList.Add(new VNScriptAsm(AsmObj.dialogue, "newline"));
+                    break;
+                case "clear_dialogue":
+                    asmList.Add(new VNScriptAsm(AsmObj.dialogue, "clear"));
+                    asmList.Add(new VNScriptAsm(AsmObj.name, "clear"));
+                    break;
+                case "name":
+                    asmList.Add(new VNScriptAsm(AsmObj.name, "clear"));
+                    asmList.Add(new VNScriptAsm(AsmObj.name, "append", ilUnit.Parameters));
+                    break;
+                case "bgp":
+                    asmList.Add(new VNScriptAsm(AsmObj.bgp, "set", ilUnit.Parameters));
+                    break;
+                case "bgp_hide":
+                    asmList.Add(new VNScriptAsm(AsmObj.bgp, "hide", ilUnit.Parameters));
+                    break;
+                case "role_pic":
+                    asmList.Add(new VNScriptAsm(ilUnit.Parameters[0] switch
+                    {
+                        "mid" => AsmObj.ch_mid,
+                        "left" => AsmObj.ch_left,
+                        "right" => AsmObj.ch_right,
+                        _ => AsmObj.ch_mid
+                    },
+                        "set",
+                        ilUnit.Parameters));
+                    break;
+                case "role_pic_hide":
+                    asmList.Add(new VNScriptAsm(ilUnit.Parameters[0] switch
+                    {
+                        "mid" => AsmObj.ch_mid,
+                        "left" => AsmObj.ch_left,
+                        "right" => AsmObj.ch_right,
+                        _ => AsmObj.ch_mid
+                    },
+                        "hide",
+                        ilUnit.Parameters));
+                    break;
+                case "role_act":
+                    asmList.Add(new VNScriptAsm(ilUnit.Parameters[0] switch
+                    {
+                        "mid" => AsmObj.ch_mid,
+                        "left" => AsmObj.ch_left,
+                        "right" => AsmObj.ch_right,
+                        _ => AsmObj.ch_mid
+                    },
+                        ilUnit.Parameters[1]
+                    ));
+                    break;
+                case "bgm_play":
+                    asmList.Add(new VNScriptAsm(AsmObj.bgm, "play", ilUnit.Parameters));
+                    break;
+                case "bgm_stop":
+                    asmList.Add(new VNScriptAsm(AsmObj.bgm, "stop"));
+                    break;
+                case "bgm_loop":
+                    asmList.Add(new VNScriptAsm(AsmObj.bgm, "loop", ilUnit.Parameters));
+                    break;
+                case "bgm_continue":
+                    asmList.Add(new VNScriptAsm(AsmObj.bgm, "continue"));
+                    break;
+                case "bgm_vol":
+                    asmList.Add(new VNScriptAsm(AsmObj.bgm, "vol", ilUnit.Parameters));
+                    break;
+                case "bgs_play":
+                    asmList.Add(new VNScriptAsm(AsmObj.bgs, "play", ilUnit.Parameters));
+                    break;
+                case "role_say":
+                    asmList.Add(new VNScriptAsm(AsmObj.chs, "play", ilUnit.Parameters));
+                    break;
+                case "role_vol":
+                    asmList.Add(new VNScriptAsm(AsmObj.chs, "vol", ilUnit.Parameters));
+                    break;
+            }
+
+            return asmList;
+        }
+
+        /// <summary>
+        /// 将中间代码转换为中间代码单元
+        /// </summary>
+        /// <param name="command"></param>
+        public static VNScriptIL ParseILToStruct(string command)
+        {
+            var ilUnit = new VNScriptIL();
+
+            // 去除前后的 [ ] 括号
+            command = command.Trim()[1..(command.Length - 1)].Trim();
+
+            // 将中间命令的参数解析出来
+            var unit = command.Split(':', 2);
+
+            // 拥有参数的IntermediateCommand会以「:」号将命令名称与参数隔开，因此如果unit长度为2，则说明当前命令是拥有参数的
+            if (unit.Length == 2)
+            {
+                // unit第一个部分是命令名称，第二个部分是参数串。
+                // 参数串部分使用「,」号进行分割
+                ilUnit.CommandName = unit[0];
+                ilUnit.Parameters = SplitComma(unit[1]);
+            }
+            else
+            {
+                ilUnit.CommandName = unit[0];
+                ilUnit.Parameters = new();
+            }
+
+            return ilUnit;
+        }
+        #endregion
+
+        #region Tools
 
         /// <summary>
         /// 解析一个形如 （xxx）xxx 的字符串，将其括号内的内容和括号之后的内容分别提取出来
         /// (角色语音，对话内容)
         /// </summary>
         /// <param name="roleDialogueContent"></param>
-        private static string[] ExtractRoleSayContent(string roleDialogueContent)
+        private static string[] ExtractRoleSayUnit(string roleDialogueContent)
         {
             var extractedContent = new List<string>();
 
@@ -266,105 +438,18 @@ namespace VNFramework.VNScriptCompiler
 
             return extractedContent.ToArray();
         }
-    }
 
-    public class ILScript
-    {
-        public struct ILunit
+        private static string ReplaceEscapeChar(string command)
         {
-            public string CommandName;
-            public List<string> P;
-
-            public void PrintUnit()
+            string newStr = Regex.Replace(command, @"\\(\d*)s", match =>
             {
-                Console.WriteLine($"Command Name : |{CommandName}|");
-                Console.WriteLine("P : " + string.Join(',', P));
-            }
-        }
+                string numStr = match.Groups[1].Value;
+                int spaceCount = string.IsNullOrEmpty(numStr) ? 1 : int.Parse(numStr);
+                var spaces = new string(' ', spaceCount);
+                return spaces;
+            });
 
-        public static string[] ParseILToAsm(string[] ilLines)
-        {
-            var asmList = new List<string>();
-
-            foreach (var line in ilLines)
-            {
-                asmList.AddRange(ParseILToAsm(line));
-            }
-
-            return asmList.ToArray();
-        }
-
-        public static List<string> ParseILToAsm(string line)
-        {
-            var unit = ParseILToUnit(line);
-            return ParseILToAsm(unit);
-        }
-
-        public static List<string> ParseILToAsm(ILunit unit)
-        {
-            Hashtable commandToAsm = new()
-            {
-                { "open_full_dialogue_box", "dialogue clear\ndialogue switch full" },
-                { "open_norm_dialogue_box", "dialogue clear\ndialogue switch norm" },
-                { "dialogue", "dialogue clear\ndialogue append {0}\ngm stop" },
-                { "role_dialogue", "name clear\ndialogue clear\nname append {0}\ndialogue append {1}\ngm stop" },
-                { "dialogue_append", "dialogue append {0}\ngm stop" },
-                { "dialogue_newline", "dialogue newline" },
-                { "clear_dialog", "dialogue clear" },
-                { "name", "name clear\nname append {0}" },
-                { "clear_name", "name clear" },
-                { "bgp", "bgp set {0} {1}" },
-                { "bgp_hide", "bgp hide {0}" },
-                { "role_pic", "ch_{0} set {1} {2}" },
-                { "role_pic_hide", "ch_{0} hide {1}" },
-                { "role_act", "ch_{0} {1}" },
-                { "bgm_play", "bgm play {0}" },
-                { "bgm_stop", "bgm stop" },
-                { "bgm_loop", "bgm loop {0}" },
-                { "bgm_continue", "bgm continue" },
-                { "bgm_vol", "bgm vol {0}" },
-                { "bgs_play", "bgs play {0}" },
-                { "role_say", "chs play {0}" },
-                { "role_vol", "chs vol {0}" },
-                { "finish", "gm finish\nbgm stop\nbgs stop\nchs stop" }
-            };
-
-            string asmTemplate = Convert.ToString(commandToAsm[unit.CommandName]) ?? "";
-
-            if (unit.P.Count == 0) return new List<string>(asmTemplate.Split('\n'));
-            else return new List<string>(string.Format(asmTemplate, unit.P.ToArray()).Split('\n'));
-        }
-
-
-        /// <summary>
-        /// 将中间代码转换为中间代码单元
-        /// </summary>
-        /// <param name="command"></param>
-        public static ILunit ParseILToUnit(string command)
-        {
-            var ilUnit = new ILunit();
-
-            // 去除前后的 [ ] 括号
-            command = command.Trim()[1..(command.Length - 1)].Trim();
-
-            // 将中间命令的参数解析出来
-            var unit = command.Split(':', 2);
-
-            // 拥有参数的IntermediateCommand会以「:」号将命令名称与参数隔开，因此如果unit长度为2，则说明当前命令是拥有参数的
-            if (unit.Length == 2)
-            {
-                // unit第一个部分是命令名称，第二个部分是参数串。
-                // 参数串部分使用「,」号进行分割
-                ilUnit.CommandName = unit[0];
-                ilUnit.P = SplitComma(unit[1]);
-            }
-            else
-            {
-                ilUnit.CommandName = unit[0];
-                ilUnit.P = new();
-            }
-
-            return ilUnit;
+            return newStr;
         }
 
         /// <summary>
@@ -387,149 +472,6 @@ namespace VNFramework.VNScriptCompiler
 
             return result;
         }
-    }
-
-    public class AsmScript
-    {
-        public static Hashtable ParseAsmToHash(string command)
-        {
-            string[] unit = command.Split(' ');
-
-            var commandMapper = new Dictionary<string, Func<string[], Hashtable>>
-        {
-            { "dialogue", DialogueAsmToHash },
-            { "name", NameAsmToHash },
-            { "gm", GmAsmToHash },
-            { "bgm", AudioAsmToHash },
-            { "bgs", AudioAsmToHash },
-            { "chs", AudioAsmToHash },
-            { "bgp", SpriteAsmToHash },
-            { "ch_left", SpriteAsmToHash },
-            { "ch_right", SpriteAsmToHash },
-            { "ch_mid", SpriteAsmToHash }
-        };
-
-            if (commandMapper.TryGetValue(unit[0], out var asmCommandFunc))
-            {
-                return asmCommandFunc(unit);
-            }
-
-            throw new Exception($"Unknown Asm Command: {command}");
-        }
-
-        private static Hashtable DialogueAsmToHash(string[] unit)
-        {
-            var hashtable = new Hashtable { { "object", "dialogue" } };
-
-            if (unit[1] == "append")
-            {
-                hashtable.Add("action", "append");
-                hashtable.Add("dialogue", ReplaceEscapeChar(unit[2]));
-            }
-            else if (unit[1] == "clear")
-            {
-                hashtable.Add("action", "clear");
-            }
-            else if (unit[1] == "newline")
-            {
-                hashtable.Add("action", "newline");
-            }
-            else if (unit[1] == "switch")
-            {
-                hashtable.Add("action", "switch");
-                hashtable.Add("mode", unit[2]);
-            }
-
-            return hashtable;
-        }
-
-        private static Hashtable NameAsmToHash(string[] unit)
-        {
-            var hashtable = new Hashtable { { "object", "name" } };
-
-            if (unit[1] == "append")
-            {
-                hashtable.Add("action", "append");
-                hashtable.Add("name", ReplaceEscapeChar(unit[2]));
-            }
-            else if (unit[1] == "clear")
-            {
-                hashtable.Add("action", "clear");
-            }
-
-            return hashtable;
-        }
-
-        private static Hashtable GmAsmToHash(string[] unit)
-        {
-            var hash = new Hashtable
-        {
-            { "object", "gm" },
-            { "action", unit[1] }
-        };
-
-            return hash;
-        }
-
-        private static Hashtable AudioAsmToHash(string[] unit)
-        {
-            var hash = new Hashtable { { "object", unit[0] } };
-            var action = unit[1];
-            if (action == "play")
-            {
-                hash.Add("action", AudioAction.Play);
-                hash.Add("audio_name", unit[2]);
-            }
-            else if (action == "stop") hash.Add("action", AudioAction.Stop);
-            else if (action == "vol")
-            {
-                hash.Add("action", AudioAction.Vol);
-                hash.Add("volume", unit[2]);
-            }
-            else if (action == "loop")
-            {
-                hash.Add("action", AudioAction.Loop);
-                hash.Add("is_loop", unit[2]);
-            }
-
-            return hash;
-        }
-
-        private static Hashtable SpriteAsmToHash(string[] unit)
-        {
-            var hash = new Hashtable { { "object", unit[0] } };
-
-            var action = unit[1];
-            if (action == "set")
-            {
-                hash.Add("action", SpriteAction.Show);
-                hash.Add("sprite_name", unit[2]);
-
-                if (unit[3] == "fading") hash.Add("mode", SpriteMode.Fading);
-                else if (unit[3] == "immediate") hash.Add("mode", SpriteMode.Immediate);
-            }
-            else if (action == "hide")
-            {
-                hash.Add("action", SpriteAction.Hide);
-
-                if (unit[2] == "fading") hash.Add("mode", SpriteMode.Fading);
-                else if (unit[2] == "immediate") hash.Add("mode", SpriteMode.Immediate);
-            }
-
-            return hash;
-        }
-
-        private static string ReplaceEscapeChar(string command)
-        {
-            string newStr = Regex.Replace(command, @"\\(\d*)s", match =>
-            {
-                string numStr = match.Groups[1].Value;
-                int spaceCount = string.IsNullOrEmpty(numStr) ? 1 : int.Parse(numStr);
-                var spaces = new string(' ', spaceCount);
-                return spaces;
-            });
-
-            return newStr;
-        }
+        #endregion
     }
 }

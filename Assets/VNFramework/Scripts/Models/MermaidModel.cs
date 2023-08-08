@@ -1,4 +1,4 @@
-using VNFramework.VNMermaid;
+using VNFramework.Core;
 
 namespace VNFramework
 {

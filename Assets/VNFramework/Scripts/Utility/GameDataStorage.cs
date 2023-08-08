@@ -5,7 +5,7 @@ using System.Linq;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using VNFramework.Utils;
+using VNFramework.Core;
 
 namespace VNFramework
 {

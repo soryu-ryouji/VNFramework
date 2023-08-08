@@ -3,9 +3,9 @@ namespace VNFramework
     class PlayAudioCommand : AbstractCommand
     {
         private string _audioName;
-        private AudioPlayer _playerName;
+        private AsmObj _playerName;
 
-        public PlayAudioCommand(string audioName, AudioPlayer playerName)
+        public PlayAudioCommand(string audioName, AsmObj playerName)
         {
             _audioName = audioName;
             _playerName = playerName;
@@ -14,7 +14,7 @@ namespace VNFramework
         protected override void OnExecute()
         {
             this.GetUtility<GameLog>().RunningLog($"{_playerName} Play Audio -> {_audioName}");
-            if (_playerName == AudioPlayer.Bgm)
+            if (_playerName == AsmObj.bgm)
             {
                 GameState.BgmChanged(VNutils.Hash(
                     "action", AudioAction.Play,
@@ -22,7 +22,7 @@ namespace VNFramework
                 ));
             }
 
-            else if (_playerName == AudioPlayer.Bgs)
+            else if (_playerName == AsmObj.bgs)
             {
                 GameState.BgsChanged(VNutils.Hash(
                     "action", AudioAction.Play,
@@ -30,7 +30,7 @@ namespace VNFramework
                 ));
             }
 
-            else if (_playerName == AudioPlayer.Chs)
+            else if (_playerName == AsmObj.chs)
             {
                 GameState.ChsChanged(VNutils.Hash(
                     "action", AudioAction.Play,
@@ -38,7 +38,7 @@ namespace VNFramework
                 ));
             }
 
-            else if (_playerName == AudioPlayer.Gms)
+            else if (_playerName == AsmObj.gms)
             {
                 GameState.GmsChanged(VNutils.Hash(
                     "action", AudioAction.Play,
@@ -50,9 +50,9 @@ namespace VNFramework
 
     class StopAudioCommand : AbstractCommand
     {
-        private AudioPlayer _playerName;
+        private AsmObj _playerName;
 
-        public StopAudioCommand(AudioPlayer playerName)
+        public StopAudioCommand(AsmObj playerName)
         {
             _playerName = playerName;
         }
@@ -60,28 +60,28 @@ namespace VNFramework
         protected override void OnExecute()
         {
             this.GetUtility<GameLog>().RunningLog($"{_playerName} Stop Audio");
-            if (_playerName == AudioPlayer.Bgm)
+            if (_playerName == AsmObj.bgm)
             {
                 GameState.BgmChanged(VNutils.Hash(
                     "action", AudioAction.Stop
                 ));
             }
 
-            else if (_playerName == AudioPlayer.Bgs)
+            else if (_playerName == AsmObj.bgs)
             {
                 GameState.BgsChanged(VNutils.Hash(
                     "action", AudioAction.Stop
                 ));
             }
 
-            else if (_playerName == AudioPlayer.Chs)
+            else if (_playerName == AsmObj.chs)
             {
                 GameState.ChsChanged(VNutils.Hash(
                     "action", AudioAction.Stop
                 ));
             }
 
-            else if (_playerName == AudioPlayer.Gms)
+            else if (_playerName == AsmObj.gms)
             {
                 GameState.GmsChanged(VNutils.Hash(
                     "action", AudioAction.Stop

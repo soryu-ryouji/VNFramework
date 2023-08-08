@@ -2,11 +2,11 @@ namespace VNFramework
 {
     class ShowSpriteCommand : AbstractCommand
     {
-        private SpriteObj _spriteObj;
+        private AsmObj _spriteObj;
         private string _spriteName;
-        private SpriteMode _spriteMode;
+        private string _spriteMode;
 
-        public ShowSpriteCommand(SpriteObj spriteObj, string spriteName, SpriteMode spriteMode)
+        public ShowSpriteCommand(AsmObj spriteObj, string spriteName, string spriteMode)
         {
             _spriteObj = spriteObj;
             _spriteName = spriteName;
@@ -15,7 +15,7 @@ namespace VNFramework
 
         protected override void OnExecute()
         {
-            if (_spriteObj == SpriteObj.Bgp)
+            if (_spriteObj == AsmObj.bgp)
             {
                 GameState.BgpChanged(VNutils.Hash(
                     "action", SpriteAction.Show,
@@ -24,7 +24,7 @@ namespace VNFramework
                 ));
             }
 
-            else if (_spriteObj == SpriteObj.ChLeft)
+            else if (_spriteObj == AsmObj.ch_left)
             {
                 GameState.ChlpChanged(VNutils.Hash(
                     "action", SpriteAction.Show,
@@ -33,7 +33,7 @@ namespace VNFramework
                 ));
             }
 
-            else if (_spriteObj == SpriteObj.ChMid)
+            else if (_spriteObj == AsmObj.ch_mid)
             {
                 GameState.ChmpChanged(VNutils.Hash(
                     "action", SpriteAction.Show,
@@ -42,7 +42,7 @@ namespace VNFramework
                 ));
             }
 
-            else if (_spriteObj == SpriteObj.ChRight)
+            else if (_spriteObj == AsmObj.ch_right)
             {
                 GameState.ChrpChanged(VNutils.Hash(
                     "action", SpriteAction.Show,
@@ -55,10 +55,10 @@ namespace VNFramework
 
     class HideSpriteCommand : AbstractCommand
     {
-        private SpriteObj _spriteObj;
-        private SpriteMode _spriteMode;
+        private AsmObj _spriteObj;
+        private string _spriteMode;
 
-        public HideSpriteCommand(SpriteObj spriteObj, SpriteMode spriteMode)
+        public HideSpriteCommand(AsmObj spriteObj, string spriteMode)
         {
             _spriteObj = spriteObj;
             _spriteMode = spriteMode;
@@ -66,7 +66,7 @@ namespace VNFramework
 
         protected override void OnExecute()
         {
-            if (_spriteObj == SpriteObj.Bgp)
+            if (_spriteObj == AsmObj.bgp)
             {
                 GameState.BgpChanged(VNutils.Hash(
                     "action", SpriteAction.Hide,
@@ -74,7 +74,7 @@ namespace VNFramework
                 ));
             }
 
-            else if (_spriteObj == SpriteObj.ChLeft)
+            else if (_spriteObj == AsmObj.ch_left)
             {
                 GameState.ChlpChanged(VNutils.Hash(
                     "action", SpriteAction.Hide,
@@ -82,7 +82,7 @@ namespace VNFramework
                 ));
             }
 
-            else if (_spriteObj == SpriteObj.ChMid)
+            else if (_spriteObj == AsmObj.ch_mid)
             {
                 GameState.ChmpChanged(VNutils.Hash(
                     "action", SpriteAction.Hide,
@@ -90,7 +90,7 @@ namespace VNFramework
                 ));
             }
 
-            else if (_spriteObj == SpriteObj.ChRight)
+            else if (_spriteObj == AsmObj.ch_right)
             {
                 GameState.ChrpChanged(VNutils.Hash(
                     "action", SpriteAction.Hide,

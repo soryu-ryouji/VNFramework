@@ -1,5 +1,111 @@
+using System.Collections.Generic;
+
 namespace VNFramework
 {
+    public enum AsmObj
+    {
+        dialogue,
+        name,
+        bgp,
+        ch_left,
+        ch_mid,
+        ch_right,
+        bgm,
+        bgs,
+        chs,
+        gms,
+        gm,
+    }
+
+    public class VNScriptIL
+    {
+        public string CommandName;
+        public List<string> Parameters;
+
+        public VNScriptIL()
+        {
+            CommandName = "";
+            Parameters = new();
+        }
+
+        public VNScriptIL(string commandName)
+        {
+            CommandName = commandName;
+            Parameters = new();
+        }
+
+        public VNScriptIL(string commandName, List<string> parameters)
+        {
+            CommandName = commandName;
+            Parameters = parameters;
+        }
+    }
+
+    public class VNScriptAsm
+    {
+        public AsmObj Obj;
+        public string Action;
+        public List<string> Parameters;
+
+        public VNScriptAsm()
+        {
+            Action = "";
+            Parameters = new();
+        }
+
+        public VNScriptAsm(AsmObj obj, string action, List<string> parameters)
+        {
+            Obj = obj;
+            Action = action;
+            Parameters = parameters;
+        }
+
+        public VNScriptAsm(AsmObj obj, string action)
+        {
+            Obj = obj;
+            Action = action;
+            Parameters = new();
+        }
+
+        public override string ToString()
+        {
+            return $"{Obj} {Action} {string.Join(" ", Parameters)}";
+        }
+    }
+
+    public class PerformanceState
+    {
+        public string MermaidName;
+        public int ScriptIndex;
+        public string Bgm;
+        public string Bgp;
+        public string ChLeft;
+        public string ChRight;
+        public string ChMid;
+
+        public PerformanceState()
+        {
+            MermaidName = "";
+            ScriptIndex = 0;
+            Bgm = "";
+            Bgp = "";
+            ChLeft = "";
+            ChRight = "";
+            ChMid = "";
+        }
+
+        public override string ToString()
+        {
+            return @$"Index: {ScriptIndex}
+Mermaid: {MermaidName}
+Bgm: {Bgm}
+Bgp: {Bgp}
+ChLeft: {ChLeft}
+ChRight: {ChRight}
+ChMid: {ChMid}";
+        }
+    }
+
     public enum AudioPlayer
     {
         Bgm,
