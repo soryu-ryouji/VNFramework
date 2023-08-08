@@ -146,7 +146,7 @@ ChMid: {ChMid}";
         MoveLR,
     }
 
-    public class SaveFile
+    public class GameSave
     {
         public string SaveDate;
         public string MermaidNode;
@@ -154,7 +154,7 @@ ChMid: {ChMid}";
         public string ResumePic;
         public string ResumeText;
 
-        public SaveFile(string saveDate, string mermaidNode, int vNScriptIndex, string resumePic, string resumeText)
+        public GameSave(string saveDate, string mermaidNode, int vNScriptIndex, string resumePic, string resumeText)
         {
             SaveDate = saveDate;
             MermaidNode = mermaidNode;
@@ -162,7 +162,7 @@ ChMid: {ChMid}";
             ResumePic = resumePic;
             ResumeText = resumeText;
         }
-        public SaveFile()
+        public GameSave()
         {
             SaveDate = null;
             MermaidNode = null;

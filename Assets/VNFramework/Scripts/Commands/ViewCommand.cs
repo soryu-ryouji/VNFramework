@@ -193,7 +193,7 @@ namespace VNFramework
         }
     }
 
-    class ShowSaveFileViewCommand : AbstractCommand
+    class ShowGameSaveViewCommand : AbstractCommand
     {
         protected override void OnExecute()
         {
@@ -202,7 +202,7 @@ namespace VNFramework
         }
     }
 
-    class HideSaveFileViewCommand : AbstractCommand
+    class HideGameSaveViewCommand : AbstractCommand
     {
         protected override void OnExecute()
         {

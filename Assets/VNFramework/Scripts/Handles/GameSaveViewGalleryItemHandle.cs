@@ -25,9 +25,9 @@ namespace VNFramework
             _gameGalleryImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(this.GetModel<ProjectModel>().GameSaveViewGalleryItemPic);
         }
 
-        public void SetSaveFileItem(SaveFile saveFile)
+        public void SetGameSaveItem(GameSave gameSave)
         {
-            if (saveFile.SaveDate == null)
+            if (gameSave.SaveDate == null)
             {
                 _resumePic.sprite = null;
                 _resumeText.text = "";
@@ -37,10 +37,10 @@ namespace VNFramework
             else
             {
                 var tool = this.GetUtility<GameDataStorage>();
-                _resumePic.sprite = tool.LoadSprite(saveFile.ResumePic);
-                _resumeText.text = saveFile.ResumeText;
-                _mermaidName.text = saveFile.MermaidNode;
-                _dateText.text = saveFile.SaveDate;
+                _resumePic.sprite = tool.LoadSprite(gameSave.ResumePic);
+                _resumeText.text = gameSave.ResumeText;
+                _mermaidName.text = gameSave.MermaidNode;
+                _dateText.text = gameSave.SaveDate;
             }
         }
 

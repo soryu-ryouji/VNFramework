@@ -329,36 +329,6 @@ IL Command 与 Asm 的对应关系如下图
 
 ## Game Config
 
-### file: chapter_info
-
-`chapter_info.txt` 用于声明视觉小说中会用到的剧本的信息，当前版本的 VNFramework 会将`chapter_info` 中的顺序当作是剧本的顺序
-
-```
-<|
-    [ chapter_name: xxxxxx ]
-    [ file_name: xxxxxx ]
-    [ resume: xxxxxxxxxx ]
-    [ resume_pic: xxxxxx ]
-|>
-
-<|
-    [ chapter_name: xxxxxx ]
-    [ file_name: xxxxxx ]
-    [ resume: xxxxxxxxxx ]
-    [ resume_pic: xxxxxx ]
-|>
-```
-
-### file: chapter_record
-
-`chapter_record`用于记录玩家当前已完成的章节
-
-```
-[ chapter_name:  chapter_01 ]
-[ chapter_name:  chapter_02 ]
-[ chapter_name:  chapter_03 ]
-```
-
 ### file: game_info
 
 `game_info` 用于简化定制视觉小说UI的步骤
@@ -387,6 +357,51 @@ full_dialogue_box_pic: dialogue_box
 menu_view_button_pic: menu_view_button
 backlog_view_button_pic: backlog_view_button
 config_view_button_pic: config_view_button
+```
+
+### file: save_file
+
+`save_file.txt` 是视觉小说的存档文件，用于记录游戏的存档信息，存放路径为 `Config/save_file.txt`
+
+```
+<|
+	save_index: 1
+	save_date: 2023-0203-11:45-23
+	mermaid_node: Prologue
+	script_index: 10
+	resume_pic: 夕阳_01
+	resume_text: 远野志贵，是一个杀人鬼
+|>
+```
+
+### file: chapter_info（如果使用ChapterView）
+
+`chapter_info.txt` 用于声明视觉小说中会用到的剧本的信息，当前版本的 VNFramework 会将`chapter_info` 中的顺序当作是剧本的顺序
+
+```
+<|
+    [ chapter_name: xxxxxx ]
+    [ file_name: xxxxxx ]
+    [ resume: xxxxxxxxxx ]
+    [ resume_pic: xxxxxx ]
+|>
+
+<|
+    [ chapter_name: xxxxxx ]
+    [ file_name: xxxxxx ]
+    [ resume: xxxxxxxxxx ]
+    [ resume_pic: xxxxxx ]
+|>
+```
+
+### file: chapter_record（如果使用ChapterView）
+
+`chapter_record`用于记录玩家当前已完成的章节
+
+```
+[ chapter_name:  chapter_01 ]
+[ chapter_name:  chapter_02 ]
+[ chapter_name:  chapter_03 ]
 ```
 
 ## License

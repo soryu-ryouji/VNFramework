@@ -47,37 +47,37 @@ namespace VNFramework
             return file;
         }
 
-        public SaveFile[] LoadSaveFiles()
+        public GameSave[] LoadGameSave()
         {
-            var saveFiles = new SaveFile[60];
+            var gameSaves = new GameSave[60];
 
-            for (int i = 0; i < saveFiles.Length; i++)
+            for (int i = 0; i < gameSaves.Length; i++)
             {
-                saveFiles[i] = new SaveFile();
+                gameSaves[i] = new GameSave();
             }
             
-            if (!File.Exists(Path.Combine(_configDirPath, "save_file.txt"))) return saveFiles;
+            if (!File.Exists(Path.Combine(_configDirPath, "save_file.txt"))) return gameSaves;
 
-            var saveFile = File.ReadAllText(Path.Combine(_configDirPath, "save_file.txt"));
+            var saveText = File.ReadAllText(Path.Combine(_configDirPath, "save_file.txt"));
 
             var regex = new Regex(@"<\|\s*save_index:(\d+)\s*save_date:(.*?)\s*mermaid_node:(.*?)\s*script_index:(\d+)\s*resume_pic:(.*?)\s*resume_text:(.*?)\s*\|>",
             RegexOptions.Singleline);
-            var matches = regex.Matches(saveFile);
+            var matches = regex.Matches(saveText);
 
             foreach (Match match in matches)
             {
-                SaveFile save = new SaveFile();
+                GameSave gameSave = new GameSave();
                 int index = int.Parse(match.Groups[1].Value);
-                save.SaveDate = match.Groups[2].Value.Trim();
-                save.MermaidNode = match.Groups[3].Value.Trim();
-                save.VNScriptIndex = int.Parse(match.Groups[4].Value);
-                save.ResumePic = match.Groups[5].Value.Trim();
-                save.ResumeText = match.Groups[6].Value.Trim();
+                gameSave.SaveDate = match.Groups[2].Value.Trim();
+                gameSave.MermaidNode = match.Groups[3].Value.Trim();
+                gameSave.VNScriptIndex = int.Parse(match.Groups[4].Value);
+                gameSave.ResumePic = match.Groups[5].Value.Trim();
+                gameSave.ResumeText = match.Groups[6].Value.Trim();
 
-                saveFiles[index] = save;
+                gameSaves[index] = gameSave;
             }
 
-            return saveFiles;
+            return gameSaves;
         }
 
         public void LoadSystemConfig()
