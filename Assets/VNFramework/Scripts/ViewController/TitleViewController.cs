@@ -33,8 +33,9 @@ namespace VNFramework
 
             _startBtn.onClick.AddListener(() =>
             {
-                var chapterModel = this.GetModel<ChapterModel>();
-                chapterModel.CurrentChapter = chapterModel.ChapterInfoList[0].ChapterName;
+                var mermaidModel = this.GetModel<MermaidModel>();
+                var performanceModel = this.GetModel<PerformanceModel>();
+                performanceModel.PerformingMermaidName = mermaidModel.GetFirstMermaidName();
                 this.SendCommand<LoadGameSceneCommand>();
             });
 

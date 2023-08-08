@@ -631,6 +631,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: PerformanceView
       objectReference: {fileID: 0}
+    - target: {fileID: 8697651521277903508, guid: 7545419ffbd490941bc96b9e25cae98a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8697651521277903508, guid: 7545419ffbd490941bc96b9e25cae98a, type: 3}
+      propertyPath: m_Color.a
+      value: 0.09803922
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7545419ffbd490941bc96b9e25cae98a, type: 3}
 --- !u!224 &644353364 stripped

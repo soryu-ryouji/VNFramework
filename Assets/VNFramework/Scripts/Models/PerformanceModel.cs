@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace VNFramework
 {
     class PerformanceModel : AbstractModel
@@ -14,6 +16,7 @@ namespace VNFramework
         private string _chLeft;
         private string _chMid;
         private string _chRight;
+        private List<(string mermaidName, string optionText)> _chooseList;
 
         public string PerformingMermaidName
         {
@@ -21,6 +24,16 @@ namespace VNFramework
             set
             {
                 _performingMermaidName = value;
+                this.SendEvent<PerformanceMermaidNameChangeEvent>();
+            }
+        }
+
+        public List<(string mermaidName, string optionText)> ChooseList
+        {
+            get { return _chooseList; }
+            set
+            {
+                _chooseList = value;
             }
         }
 

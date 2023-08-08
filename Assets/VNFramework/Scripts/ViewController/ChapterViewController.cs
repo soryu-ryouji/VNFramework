@@ -14,7 +14,7 @@ namespace VNFramework
         private VerticalLayoutGroup _buttonListLayoutGroup;
         private Image _chapterPic;
         private Image _resumePic;
-        private TMP_Text _ResumeText;
+        private TMP_Text _resumeText;
         private Button _backChapterBtn;
         private Button _loadChapterBtn;
 
@@ -24,13 +24,13 @@ namespace VNFramework
         {
             _chapterModel = this.GetModel<ChapterModel>();
 
-            _buttonPrefab = Resources.Load<GameObject>("Prefabs/ChapterButton");
+            _buttonPrefab = this.GetUtility<GameDataStorage>().LoadPrefab("ChapterButton");
             _buttonListScrollbar = transform.Find("ButtonListScrollbar").GetComponent<Scrollbar>();
             _buttonListContent = transform.Find("ChapterList/Content").gameObject;
             _buttonListLayoutGroup = _buttonListContent.GetComponent<VerticalLayoutGroup>();
             _chapterPic = transform.Find("ChapterViewBgp").GetComponent<Image>();
             _resumePic = transform.Find("ResumePic").GetComponent<Image>();
-            _ResumeText = transform.Find("ResumeText").GetComponent<TMP_Text>();
+            _resumeText = transform.Find("ResumeText").GetComponent<TMP_Text>();
             _backChapterBtn = transform.Find("BackButton").GetComponent<Button>();
             _loadChapterBtn = transform.Find("LoadChapterButton").GetComponent<Button>();
 
@@ -46,7 +46,7 @@ namespace VNFramework
 
             var firstChapter = _chapterModel.ChapterInfoList[0];
             _resumePic.sprite = this.GetUtility<GameDataStorage>().LoadSprite(firstChapter.ResumePic);
-            _ResumeText.text = firstChapter.Resume;
+            _resumeText.text = firstChapter.Resume;
 
             GenerateChapterList(_chapterModel.UnlockedChapterList);
             _buttonListScrollbar.value = 1;
@@ -83,7 +83,7 @@ namespace VNFramework
             _chapterModel.CurrentChapter = chapterName;
 
             var info = _chapterModel.GetChapterInfo(chapterName);
-            _ResumeText.text = info.Resume;
+            _resumeText.text = info.Resume;
             _resumePic.sprite = this.GetUtility<GameDataStorage>().LoadSprite(info.ResumePic);
         }
 

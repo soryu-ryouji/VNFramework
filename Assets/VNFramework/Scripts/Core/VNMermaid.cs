@@ -25,6 +25,18 @@ namespace VNFramework.Core
             Children = new();
         }
 
+        public List<(string childName, string optionText)> GetChildren()
+        {
+            var list = new List<(string childName, string optionText)>();
+
+            foreach (var child in Children)
+            {
+                list.Add((child.node.NodeName, child.optionText));
+            }
+
+            return list;
+        }
+
         public void AddLinkedNode(MermaidNode node, string optionText)
         {
             Children.Add((node: node, optionText: optionText));

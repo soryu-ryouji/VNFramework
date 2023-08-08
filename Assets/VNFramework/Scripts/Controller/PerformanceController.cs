@@ -1,6 +1,4 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 using VNFramework.Core;
 
 namespace VNFramework
@@ -10,20 +8,32 @@ namespace VNFramework
         private DialogueViewController _dialogueViewController;
         private bool _autoExecuteCommand;
         private PerformanceModel _performanceModel;
+        private MermaidModel _mermaidModel;
         private VNScriptCompiler _compiler;
 
         private void Start()
         {
             _dialogueViewController = transform.Find("DialogueView").GetComponent<DialogueViewController>();
-            
+
             _performanceModel = this.GetModel<PerformanceModel>();
-            var chapterModel = this.GetModel<ChapterModel>();
-            
-            string fileName = chapterModel.GetFileName(chapterModel.CurrentChapter);
+            _mermaidModel = this.GetModel<MermaidModel>();
+
+            var fileName = _mermaidModel.GetFileName(_performanceModel.PerformingMermaidName);
             var fileLines = this.GetUtility<GameDataStorage>().LoadVNScript(fileName);
             _compiler = new(fileLines);
 
             this.RegisterEvent<LoadNextPerformanceEvent>(_ => NextPerformance());
+            this.RegisterEvent<PerformanceMermaidNameChangeEvent>(_ => InitPerformance());
+            NextPerformance();
+        }
+
+        private void InitPerformance()
+        {
+            var nodeName = _performanceModel.PerformingMermaidName;
+            Debug.Log("nodeName -> " + nodeName);
+            var fileName = _mermaidModel.GetFileName(nodeName);
+            var fileLines = this.GetUtility<GameDataStorage>().LoadVNScript(fileName);
+            _compiler = new VNScriptCompiler(fileLines);
             NextPerformance();
         }
 
@@ -38,6 +48,17 @@ namespace VNFramework
             if (_dialogueViewController.IsAnimating)
             {
                 this.SendCommand<StopDialogueAnimCommand>();
+                return;
+            }
+
+            if (_compiler.ScriptCountDown() <= 0)
+            {
+                var children = _mermaidModel.GetMermaidChildren(_performanceModel.PerformingMermaidName);
+                if (children.Count > 0)
+                {
+                   _performanceModel.ChooseList = children;
+                    this.SendCommand<ShowChooseViewCommand>();
+                }
                 return;
             }
 

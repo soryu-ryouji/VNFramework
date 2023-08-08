@@ -210,4 +210,22 @@ namespace VNFramework
             this.SendEvent<HideGameSaveViewEvent>();
         }
     }
+
+    class ShowChooseViewCommand : AbstractCommand
+    {
+        protected override void OnExecute()
+        {
+            this.GetUtility<GameLog>().RunningLog("Show Choose View Command");
+            this.SendEvent<ShowChooseViewEvent>();
+        }
+    }
+    
+    class HideChooseViewCommand : AbstractCommand
+    {
+        protected override void OnExecute()
+        {
+            this.GetUtility<GameLog>().RunningLog("Hide Choose View Command");
+            this.SendEvent<HideChooseViewEvent>();
+        }
+    }
 }

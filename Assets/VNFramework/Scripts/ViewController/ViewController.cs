@@ -9,6 +9,7 @@ public class ViewController : MonoBehaviour, IController
     private GameObject _backlogViewPrefab;
     private GameObject _performanceViewPrefab;
     private GameObject _gameSaveViewPrefab;
+    private GameObject _chooseViewPrefab;
 
     private GameObject _configView;
     private GameObject _chapterView;
@@ -16,6 +17,7 @@ public class ViewController : MonoBehaviour, IController
     private GameObject _backlogView;
     private GameObject _performanceView;
     private GameObject _gameSaveView;
+    private GameObject _chooseView;
 
     private void Start()
     {
@@ -26,6 +28,7 @@ public class ViewController : MonoBehaviour, IController
         _backlogViewPrefab = gameDataStorage.LoadPrefab("BacklogView");
         _performanceViewPrefab = gameDataStorage.LoadPrefab("PerformanceView");
         _gameSaveViewPrefab = gameDataStorage.LoadPrefab("GameSaveView");
+        _chooseViewPrefab = gameDataStorage.LoadPrefab("ChooseView");
     
         this.RegisterEvent<ShowChapterViewEvent>(_ =>
         {
@@ -61,6 +64,11 @@ public class ViewController : MonoBehaviour, IController
             Transform ui = GameObject.Find("UI").transform;
             _gameSaveView = Instantiate(_gameSaveViewPrefab, ui);
         }).UnRegisterWhenGameObjectDestroyed(gameObject);
+        this.RegisterEvent<ShowChooseViewEvent>(_ =>
+        {
+            Transform ui = GameObject.Find("UI").transform;
+            _chooseView = Instantiate(_chooseViewPrefab, ui);
+        }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
         this.RegisterEvent<HideChapterViewEvent>(_ => Destroy(_chapterView)).UnRegisterWhenGameObjectDestroyed(gameObject);
         this.RegisterEvent<HideConfigViewEvent>(_ => Destroy(_configView)).UnRegisterWhenGameObjectDestroyed(gameObject);
@@ -68,6 +76,7 @@ public class ViewController : MonoBehaviour, IController
         this.RegisterEvent<HideBacklogViewEvent>(_ => Destroy(_backlogView)).UnRegisterWhenGameObjectDestroyed(gameObject);
         this.RegisterEvent<HidePerformanceViewEvent>(_ => Destroy(_performanceView)).UnRegisterWhenGameObjectDestroyed(gameObject);
         this.RegisterEvent<HideGameSaveViewEvent>(_ => Destroy(_gameSaveView)).UnRegisterWhenGameObjectDestroyed(gameObject);
+        this.RegisterEvent<HideChooseViewEvent>(_ => Destroy(_chooseView)).UnRegisterWhenGameObjectDestroyed(gameObject);
     }
 
     public IArchitecture GetArchitecture()
