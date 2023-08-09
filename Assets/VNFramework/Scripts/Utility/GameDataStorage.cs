@@ -26,6 +26,11 @@ namespace VNFramework
 
         public Sprite LoadSprite(string path)
         {
+            if (path == "")
+            {
+                Debug.Log("Sprite Name Is Null");
+                return null;
+            }
             var ret = abDic["sprite"].LoadAsset<Sprite>(path);
             if (ret == null) this.GetUtility<GameLog>().ErrorLog(string.Format("Sprite {0} not found", path));
 
@@ -78,6 +83,31 @@ namespace VNFramework
             }
 
             return gameSaves;
+        }
+
+        public void SaveGameSave()
+        {
+            var gameSaves = this.GetModel<GameSaveModel>().GameSaves;
+            var sb = new StringBuilder();
+            for (int i = 0; i < gameSaves.Length; i++)
+            {
+                if (!string.IsNullOrWhiteSpace(gameSaves[i].SaveDate))
+                {
+                    sb.Append($@"<|
+    save_index: {i}
+    save_date: {gameSaves[i].SaveDate}
+    mermaid_node: {gameSaves[i].MermaidNode}
+    script_index: {gameSaves[i].VNScriptIndex}
+    resume_pic: {gameSaves[i].ResumePic}
+    resume_text: {gameSaves[i].ResumeText}
+|>
+");
+                }
+            }
+
+            var gameSaveText = sb.ToString();
+            var path = Path.Combine(_configDirPath, "save_file.txt");
+            File.WriteAllText(path,gameSaveText);
         }
 
         public void LoadSystemConfig()

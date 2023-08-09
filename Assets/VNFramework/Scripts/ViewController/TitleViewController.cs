@@ -39,7 +39,7 @@ namespace VNFramework
                 this.SendCommand<LoadGameSceneCommand>();
             });
 
-            _loadBtn.onClick.AddListener(() => this.SendCommand<ShowGameSaveViewCommand>());
+            _loadBtn.onClick.AddListener(() => this.SendCommand<ShowLoadGameSaveViewCommand>());
             _chapterViewBtn.onClick.AddListener(() => this.SendCommand<ShowChapterViewCommand>());
             _configViewBtn.onClick.AddListener(() => this.SendCommand<ShowConfigViewCommand>());
             _exitGameBtn.onClick.AddListener(() => Application.Quit());

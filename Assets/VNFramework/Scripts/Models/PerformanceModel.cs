@@ -6,6 +6,7 @@ namespace VNFramework
     {
         private string _performingMermaidName;
         private int _performingIndex;
+        private string _dialogue;
         
         private float _performingBgmVolume;
         private float _performingBgsVolume;
@@ -44,6 +45,12 @@ namespace VNFramework
             {
                 _performingIndex = value;
             }
+        }
+
+        public string PerformingDialogue
+        {
+            get { return _dialogue; }
+            set { _dialogue = value; }
         }
 
         public float BgmVolume

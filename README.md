@@ -366,7 +366,7 @@ config_view_button_pic: config_view_button
 ```
 <|
 	save_index: 1
-	save_date: 2023-0203-11:45-23
+	save_date: 2023-02-03 11:45:23
 	mermaid_node: Prologue
 	script_index: 10
 	resume_pic: 夕阳_01

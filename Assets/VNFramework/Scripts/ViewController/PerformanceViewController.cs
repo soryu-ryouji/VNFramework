@@ -8,29 +8,35 @@ namespace VNFramework
         private Button _menuViewBtn;
         private Button _backlogViewBtn;
         private Button _configViewBtn;
+        private Button _saveDataBtn;
 
         private Image _menuViewBtnImage;
-        private Image _backlogViewButtonImage;
-        private Image _configViewButtonImage;
+        private Image _backlogViewBtnImage;
+        private Image _configViewBtnImage;
+        private Image _saveDataBtnImage;
 
         private void Start()
         {
             _menuViewBtn = transform.Find("ButtonList/MenuViewBtn").GetComponent<Button>();
             _backlogViewBtn = transform.Find("ButtonList/BacklogViewBtn").GetComponent<Button>();
             _configViewBtn = transform.Find("ButtonList/ConfigViewBtn").GetComponent<Button>();
+            _saveDataBtn = transform.Find("ButtonList/SaveDataBtn").GetComponent<Button>();
 
             _menuViewBtnImage = transform.Find("ButtonList/MenuViewBtn").GetComponent<Image>();
-            _backlogViewButtonImage = transform.Find("ButtonList/BacklogViewBtn").GetComponent<Image>();
-            _configViewButtonImage = transform.Find("ButtonList/ConfigViewBtn").GetComponent<Image>();
+            _backlogViewBtnImage = transform.Find("ButtonList/BacklogViewBtn").GetComponent<Image>();
+            _configViewBtnImage = transform.Find("ButtonList/ConfigViewBtn").GetComponent<Image>();
+            _saveDataBtnImage = transform.Find("ButtonList/SaveDataBtn").GetComponent<Image>();
 
             _menuViewBtn.onClick.AddListener(this.SendCommand<ShowMenuViewCommand>);
             _backlogViewBtn.onClick.AddListener(this.SendCommand<ShowBacklogViewCommand>);
             _configViewBtn.onClick.AddListener(this.SendCommand<ShowConfigViewCommand>);
+            _saveDataBtn.onClick.AddListener(this.SendCommand<ShowSaveGameSaveViewCommand>);
 
             var projectModel = this.GetModel<ProjectModel>();
             _menuViewBtnImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.PerformanceViewMenuViewButtonPic);
-            _backlogViewButtonImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.PerformanceViewBacklogViewButtonPic);
-            _configViewButtonImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.PerformanceViewConfigViewButtonPic);
+            _backlogViewBtnImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.PerformanceViewBacklogViewButtonPic);
+            _configViewBtnImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.PerformanceViewConfigViewButtonPic);
+            // TODO: SaveDataImage 制作
         }
 
         public IArchitecture GetArchitecture()

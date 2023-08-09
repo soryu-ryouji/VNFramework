@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
 
 namespace VNFramework
 {
     public class GameSaveViewGalleryItemHandle : MonoBehaviour, IController
     {
-        private Button _gameGalleryButton;
+        public int Index { get; set; }
+        public Button btn;
         private Image _gameGalleryImage;
         private Image _resumePic;
         private TMP_Text _resumeText;
@@ -15,7 +17,7 @@ namespace VNFramework
 
         private void Awake()
         {
-            _gameGalleryButton = this.GetComponent<Button>();
+            btn = this.GetComponent<Button>();
             _gameGalleryImage = this.GetComponent<Image>();
             _resumePic = transform.Find("ResumePic").GetComponent<Image>();
             _resumeText = transform.Find("ResumeText").GetComponent<TMP_Text>();
@@ -37,7 +39,11 @@ namespace VNFramework
             else
             {
                 var tool = this.GetUtility<GameDataStorage>();
-                _resumePic.sprite = tool.LoadSprite(gameSave.ResumePic);
+                if (!string.IsNullOrWhiteSpace(gameSave.ResumePic))
+                {
+                    Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!");
+                    _resumePic.sprite = tool.LoadSprite(gameSave.ResumePic);
+                }
                 _resumeText.text = gameSave.ResumeText;
                 _mermaidName.text = gameSave.MermaidNode;
                 _dateText.text = gameSave.SaveDate;

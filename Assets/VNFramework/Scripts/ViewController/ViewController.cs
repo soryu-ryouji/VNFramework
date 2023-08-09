@@ -59,10 +59,17 @@ public class ViewController : MonoBehaviour, IController
             Transform ui = GameObject.Find("UI").transform;
             _performanceView = Instantiate(_performanceViewPrefab, ui);
         }).UnRegisterWhenGameObjectDestroyed(gameObject);
-        this.RegisterEvent<ShowGameSaveViewEvent>(_ =>
+        this.RegisterEvent<ShowSaveGameSaveViewEvent>(_ =>
         {
             Transform ui = GameObject.Find("UI").transform;
             _gameSaveView = Instantiate(_gameSaveViewPrefab, ui);
+            _gameSaveView.GetComponent<GameSaveViewController>().viewType = GameSaveViewController.GameSaveViewType.Save;
+        }).UnRegisterWhenGameObjectDestroyed(gameObject);
+        this.RegisterEvent<ShowLoadGameSaveViewEvent>(_ =>
+        {
+            Transform ui = GameObject.Find("UI").transform;
+            _gameSaveView = Instantiate(_gameSaveViewPrefab, ui);
+            _gameSaveView.GetComponent<GameSaveViewController>().viewType = GameSaveViewController.GameSaveViewType.Load;
         }).UnRegisterWhenGameObjectDestroyed(gameObject);
         this.RegisterEvent<ShowChooseViewEvent>(_ =>
         {

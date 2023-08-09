@@ -193,12 +193,21 @@ namespace VNFramework
         }
     }
 
-    class ShowGameSaveViewCommand : AbstractCommand
+    class ShowLoadGameSaveViewCommand : AbstractCommand
     {
         protected override void OnExecute()
         {
             this.GetUtility<GameLog>().RunningLog("Show Save File View Command");
-            this.SendEvent<ShowGameSaveViewEvent>();
+            this.SendEvent<ShowLoadGameSaveViewEvent>();
+        }
+    }
+
+    class ShowSaveGameSaveViewCommand : AbstractCommand
+    {
+        protected override void OnExecute()
+        {
+            this.GetUtility<GameLog>().RunningLog("Show Save File View Command");
+            this.SendEvent<ShowSaveGameSaveViewEvent>();
         }
     }
 

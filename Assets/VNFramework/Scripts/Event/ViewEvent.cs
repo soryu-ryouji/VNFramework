@@ -1,8 +1,9 @@
 namespace VNFramework
 {
-    struct ShowGameSaveViewEvent { }
+    struct ShowLoadGameSaveViewEvent { }
+    struct ShowSaveGameSaveViewEvent { }
     struct HideGameSaveViewEvent { }
-
+    
     struct ShowBacklogViewEvent { }
     struct HideBacklogViewEvent { }
 
