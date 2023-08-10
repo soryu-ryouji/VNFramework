@@ -332,7 +332,7 @@ namespace VNFramework.Core
                         _ => AsmObj.ch_mid
                     },
                         "show",
-                        ilUnit.Parameters));
+                        new () {ilUnit.Parameters[1], ilUnit.Parameters[2]}));
                     break;
                 case "role_pic_hide":
                     asmList.Add(new VNScriptAsm(ilUnit.Parameters[0] switch
@@ -343,7 +343,7 @@ namespace VNFramework.Core
                         _ => AsmObj.ch_mid
                     },
                         "hide",
-                        ilUnit.Parameters));
+                        new () {ilUnit.Parameters[1] }));
                     break;
                 case "role_act":
                     asmList.Add(new VNScriptAsm(ilUnit.Parameters[0] switch

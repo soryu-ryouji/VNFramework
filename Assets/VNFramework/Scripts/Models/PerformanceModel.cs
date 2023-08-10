@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace VNFramework
@@ -8,7 +9,7 @@ namespace VNFramework
         private int _performingIndex;
         private string _dialogue;
         public bool IsOpenChooseView;
-        
+
         private float _performingBgmVolume;
         private float _performingBgsVolume;
         private float _performingChsVolume;
@@ -141,6 +142,22 @@ namespace VNFramework
             BgsVolume = 1;
             ChsVolume = 1;
             GmsVolume = 1;
+
+            GameState.BgpChanged += OnBgpChanged;
+        }
+
+        public void OnBgpChanged(Hashtable hash)
+        {
+            var action = (SpriteAction)hash["action"];
+
+            if (action == SpriteAction.Show)
+            {
+                BgpName = (string)hash["sprite_name"];
+            }
+            else if (action == SpriteAction.Hide)
+            {
+                BgpName = "";
+            }
         }
     }
 }
