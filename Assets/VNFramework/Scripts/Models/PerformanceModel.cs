@@ -25,7 +25,6 @@ namespace VNFramework
             set
             {
                 _performingMermaidName = value;
-                this.SendEvent<PerformanceMermaidNameChangeEvent>();
             }
         }
 

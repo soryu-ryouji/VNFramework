@@ -30,11 +30,15 @@ namespace VNFramework
                 button.GetComponentInChildren<TMP_Text>().text = btnData.optionText;
                 button.onClick.AddListener(() =>
                 {
-                    this.GetModel<PerformanceModel>().PerformingMermaidName = btnData.mermaidName;
+                    var performanceModel = this.GetModel<PerformanceModel>();
+                    performanceModel.PerformingMermaidName = btnData.mermaidName;
+                    performanceModel.PerformingIndex = 0;
+
                     _btnListLayoutGroup.CalculateLayoutInputVertical();
                     _btnListLayoutGroup.SetLayoutVertical();
 
                     this.SendCommand<HideChooseViewCommand>();
+                    this.SendCommand<InitPerformanceCommand>();
                 });
             }
         }

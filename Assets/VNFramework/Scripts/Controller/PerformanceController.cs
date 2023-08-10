@@ -15,7 +15,7 @@ namespace VNFramework
         private void Start()
         {
             this.RegisterEvent<LoadNextPerformanceEvent>(_ => NextPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<PerformanceMermaidNameChangeEvent>(_ => InitPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<InitPerformanceEvent>(_ => InitPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
 
             InitPerformance();
         }

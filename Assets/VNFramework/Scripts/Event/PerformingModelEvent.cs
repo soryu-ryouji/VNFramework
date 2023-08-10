@@ -5,7 +5,7 @@ namespace VNFramework
 
     }
 
-    struct PerformanceMermaidNameChangeEvent
+    struct InitPerformanceEvent
     {
         
     }
