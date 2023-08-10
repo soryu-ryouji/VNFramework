@@ -16,7 +16,9 @@
 - [x] 视觉小说资源的AB包加载
 - [x] 实现全屏文字的文本演出模式
 - [x] 窗口多分辨率切换
-- [ ] 剧情的多分支支持
+- [x] 剧情的多分支支持
+- [ ] 编写游戏资源管理插件
+- [ ] 为 VNMermaid 语法添加可视化支持
 - [ ] 为 VSCode 编写 VNScript 语法检查插件
 - [ ] `game_info` 增加更多自定义属性
 - [ ] Dialogue Box 中，对话中的英文单词在行末自动添加换行符
@@ -26,21 +28,31 @@
 由于没有美术，所以当前版本的界面比较丑，请见谅。。。
 
 **Chapter View**
+
 ![ChapterView](./docs/img/chapter_view.png)
 
+**Game Save View**
+
+![GameSaveView](./docs//img/game_save_view.png)
+
 **Norm Performance View**
+
 ![NormPerformanceView](./docs/img/norm_performance_view.png)
 
 **Full Performance View**
+
 ![FullPerformanceView](./docs/img/full_performance_view.png)
 
 **Backlog View**
+
 ![BacklogView](./docs/img/backlog_view.png)
 
 **Config View**
+
 ![ConfigView](./docs/img/config_view.png)
 
 **Menu View**
+
 ![MenuView](./docs/img/menu_view.png)
 
 ## VN Mermaid
@@ -109,11 +121,9 @@ fromNode --> toNode
 线路2_第一章 --> 第二章
 ```
 
-![Example_VNMermaid](Docs/Img/Example_VNMermaid.svg)
+![Example_VNMermaid](./docs/img/Example_VNMermaid.svg)
 
 ## VNScript Syntax
-
-### Script Syntax Design
 
 一个好的视觉小说的剧本格式应该达到以下三点要求。
 
@@ -142,7 +152,7 @@ fromNode --> toNode
 [ bgm_vol: 0.4 ] [ bgm_play: goodbye_black_bird ]
 ```
 
-#### 对话语句
+### 对话语句
 
 对话语句有两种格式，一种格式是，一行单独的字符串，用于表现主视角角色的陈述或者内心想法。
 
@@ -156,7 +166,7 @@ fromNode --> toNode
 江南: 在寂静的夜里点燃蜡烛放在栏杆上，心就安静下来。
 ```
 
-#### 继续输出语句
+### 继续输出语句
 
 有的时候我们会希望在文字输出的中间添加一个暂停，等到用户输入一个回车或者是空格之后再继续打印接下来的字符，这样的使用场景下，我们可以使用继续输出的语法。
 
@@ -175,7 +185,22 @@ fromNode --> toNode
 > 仿佛一种仪式开始，神秘的气息氤氲的降下，可以开始缓缓的讲诉平生。
 ```
 
-#### 角色语音语句
+### 全屏文字演出模式
+
+如果不希望使用底部文本框，而希望使用全屏文本框来输出剧本，可使用全屏文本语法。
+
+全屏文本语法与其他语法的区别在于在句子开头添加 `|` 符号，用于提示语法编辑器此处为全屏文本区域
+
+```
+| 写下这篇序言的时候我在赤道以南的巴厘岛，这是我今年第二次来印度尼西亚。
+| -> 这边的酒店都会给客人准备一个很宽敞的露台，露台上放一盏烛和一盒火柴，
+| -> 外面是星垂平野，或者雷电打落在海面上，黑暗那么深邃。
+
+| 江南 : (chapter01_001)在寂静的夜里点燃蜡烛放在栏杆上，心就安静下来。
+| > (chapter01_002)仿佛一种仪式开始，神秘的气息氤氲的降下，可以开始缓缓的讲诉平生。
+```
+
+### 角色语音语句
 
 如果希望在输出某段对话时同步播放角色语音，可以在对话的开头使用角色语音语法，即使用圆括号将需要调用的语音名称括起来。
 
@@ -185,7 +210,7 @@ fromNode --> toNode
 (chapter01_002)仿佛一种仪式开始，神秘的气息氤氲的降下，可以开始缓缓的讲诉平生。
 ```
 
-#### 剧本中使用Function
+### 方法语句
 
 在一部视觉小说中，不可避免的需要在剧情的进行途中加载背景图片、加载图片立绘、播放音乐。因此剧本格式应该提供一个简便的语法去实现这些功能。
 
@@ -226,112 +251,25 @@ fromNode --> toNode
 [ role_vol: vol_value ]
 ```
 
-#### 全屏文字演出模式
+关于 `VNScript` 的更多方法，可参考 [VNScript Document](./docs/VNScriptDocument.md)
 
-如果不希望使用底部文本框，而希望使用全屏文本框来输出剧本，可使用全屏文本语法。
+## Game Config File
 
-全屏文本语法与其他语法的区别在于在句子开头添加 `|` 符号，用于提示语法编辑器此处为全屏文本区域
+### VNFramework Resources
 
-```
-| 写下这篇序言的时候我在赤道以南的巴厘岛，这是我今年第二次来印度尼西亚。
-| -> 这边的酒店都会给客人准备一个很宽敞的露台，露台上放一盏烛和一盒火柴，
-| -> 外面是星垂平野，或者雷电打落在海面上，黑暗那么深邃。
+`Resources` 文件夹是游戏运行时加载资源的文件夹，所有的图片，音频，视频，剧本，配置文件等都以 `AB` 的形式存放在其中。
 
-| 江南 : (chapter01_001)在寂静的夜里点燃蜡烛放在栏杆上，心就安静下来。
-| > (chapter01_002)仿佛一种仪式开始，神秘的气息氤氲的降下，可以开始缓缓的讲诉平生。
-```
+每次添加了新的文件，都需要对资源进行重新的打包操作才能在游戏中生效。
 
-### IL Command
+为了让资源管理更方便，因此图像，音频，视频等文件请分别放入对应的文件夹，程序会根据文件夹自动为文件打上标签，并在游戏中以标签对文件进行加载。
 
-一条VNScript对应一条或多条ILCommand
+![ResourcesFolder](./docs/img/vnframework_resources_folder.png)
 
-VNScript中的空白将默认解释为 `[ clear_dialogue ]` 与 `[ clear_name ]` 两条命令。
-
-若空白多行连续，则会忽略多余的空白。
-
-以下是 IL Command 的列表。
-
-| IL Command                                     | Description                                      |
-| ---------------------------------------------- | ------------------------------------------------ |
-| [ dialogue: dialogue_content ]                 | 在对话框逐字显示文本                             |
-| [ role_dialogue: role_name, dialogue_content ] | 在对话框逐字显示文本, 同时在姓名框显示角色的名称 |
-| [ dialogue_continue: dialogue_content ]        | 新文本会在当前文本框的文本后追加                 |
-| [ dialogue_newline ]                           | 将文本框内的文本进行换行                         |
-| [ clear_dialogue ]                             | 清除对话框中所有的内容                           |
-| [ name: role_name]                             | 在姓名框显示角色姓名                             |
-| [ clear_name ]                                 | 清除名称框中所有的内容                           |
-| [ bgp: pic_name, mode]                         | 以指定的方式显示图片到背景图                     |
-| [ bgp_hide: mode ]                             | 以指定的方式将背景图片隐藏                       |
-| [ role_pic: pos, pic_name , mode ]             | 在指定的位置以指定的方式显示图片到人物立绘       |
-| [ role_pic_hide: pos, mode ]                   | 以指定的方式隐藏指定位置的人物立绘               |
-| [ role_act: pos, mode ]                        | 以指定的方式来让人物立绘做出特定的动作           |
-| [ bgm_play: audio_name ]                       | 播放背景音乐                                     |
-| [ bgm_stop ]                                   | 停止播放背景音乐                                 |
-| [ bgm_continue ]                               | 播放被暂停的的背景音乐                           |
-| [ bgm_vol: audio_vol ]                         | 设置背景音乐音量大小                             |
-| [ bgs_play: audio_name]                        | 播放游戏背景音效                                 |
-| [ bgs_stop ]                                   | 停止播放游戏背景音效                             |
-| [ gms_play: audio_name ]                       | 播放游戏音效                                     |
-| [ gms_stop ]                                   | 停止播放背景音效                                 |
-| [ role_say: audio_name ]                       | 播放角色语音                                     |
-| [ role_vol: audio_vol ]                        | 设置角色语音音量大小                             |
-
-虽然ILScript 中的命令是剧本的最小单元，可它并不是程序执行时的最小单元。程序执行时的最小单元被称为 Asm Command （assembler command）。
-
-ILScript会被转换为Asm Command，程序为每一个 Asm Command 生成一个 Hash table，然后交给 Performance Controller 执行。
-
-
-### Asm Command
-
-Asm Command 是剧本最小的执行单元，命令的基本格式为 **对象 操作 参数（可选）**
-
-主要的对象主要有以下十一个
-
-- name：角色名称框
-- dialogue：对话框
-- bgm：背景音乐
-- bgs：背景音效
-- chs：角色语音
-- gms：游戏音效
-- gm：游戏管理员
-- ch_left：人物立绘_左
-- ch_right：人物立绘_右
-- ch_mid：人物立绘_中
-- bgp：背景图片
-
-IL Command 与 Asm 的对应关系如下图
-
-| IL Command                                     | Asm                                                                                       |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| [ dialogue: dialogue_content ]                 | name clear<br>dialogue clear<br>dialogue append dialogue_content<br>gm stop               |
-| [ role_dialogue: role_name, dialogue_content ] | name clear<br>dialogue clear<br>name append role_name<br>dialogue append dialogue_content |
-| [ dialogue_append: dialogue_content ]          | dialogue append dialogue_content                                                          |
-| [ dialogue_newline ]                           | dialogue newline                                                                          |
-| [ clear_dialogue ]                             | dialogue clear                                                                            |
-| [ name: role_name]                             | name append role_name                                                                     |
-| [ clear_name ]                                 | name clear                                                                                |
-| [ bgp: pic_name, mode]                         | bgp set pic_name mode                                                                     |
-| [ bgp_hide: mode ]                             | bgp hide mode                                                                             |
-| [ role_pic: pos, pic_name , mode ]             | ch_pos set pic_name mode                                                                  |
-| [ role_pic_hide: pos, mode ]                   | ch_pos hide mode                                                                          |
-| [ role_act: pos, mode ]                        | ch_pos act mode                                                                           |
-| [ bgm_play: audio_name ]                       | bgm play audio_name                                                                       |
-| [ bgm_stop ]                                   | bgm stop                                                                                  |
-| [ bgm_continue ]                               | bgm continue                                                                              |
-| [ bgm_vol: audio_vol ]                         | bgm vol audio_vol                                                                         |
-| [ bgs_play: audio_name]                        | bgs play audio_name                                                                       |
-| [ bgs_stop ]                                   | bgs stop                                                                                  |
-| [ gms_play: audio_name ]                       | gms play audio_name                                                                       |
-| [ gms_stop ]                                   | gms stop                                                                                  |
-| [ role_say: audio_name ]                       | chs play audio_name                                                                       |
-| [ role_vol: audio_vol ]                        | chs vol audio_vol                                                                         |
-
-
-## Game Config
+> Note: 添加新的文件后，可使用编辑器工具栏的 `VNFrameworkTools/Set AB Label` 功能对文件进行快速的添加标签操作。
 
 ### file: game_info
 
-`game_info` 用于简化定制视觉小说UI的步骤
+`game_info` 用于简化定制视觉小说UI的步骤，存放路径为 `Assets/VNFramework/Resources/ProjectData/game_info.txt`
 
 ```
 [ Title View ]
@@ -363,20 +301,33 @@ config_view_button_pic: config_view_button
 
 `save_file.txt` 是视觉小说的存档文件，用于记录游戏的存档信息，存放路径为 `Config/save_file.txt`
 
+此文件会在游戏启动时自动生成，不需要额外的操作。
+
 ```
 <|
-	save_index: 1
-	save_date: 2023-02-03 11:45:23
-	mermaid_node: Prologue
-	script_index: 10
-	resume_pic: 夕阳_01
-	resume_text: 远野志贵，是一个杀人鬼
+    [ save_index: 0 ]
+    [ save_date: 2023-08-10 12:27:27 ]
+    [ mermaid_node: Prologue ]
+    [ script_index: 0 ]
+    [ resume_pic:  ]
+    [ resume_text: 「志贵君，你还记得发生了什么事吗？」 ]
+|>
+<|
+    [ save_index: 1 ]
+    [ save_date: 2023-08-10 14:17:07 ]
+    [ mermaid_node: Prologue ]
+    [ script_index: 40 ]
+    [ resume_pic:  ]
+    [ resume_text: 「————看来脑部果然有异常。 ]
 |>
 ```
 
 ### file: chapter_info（如果使用ChapterView）
 
-`chapter_info.txt` 用于声明视觉小说中会用到的剧本的信息，当前版本的 VNFramework 会将`chapter_info` 中的顺序当作是剧本的顺序
+> 正在将该功能使用 MermaidNode 重新实现，目前暂时废弃
+
+`chapter_info.txt` 用于声明视觉小说中会用到的剧本的信息，当前版本的 VNFramework 会将`chapter_info` 中的顺序当作是剧本的顺序。
+
 
 ```
 <|
@@ -395,6 +346,8 @@ config_view_button_pic: config_view_button
 ```
 
 ### file: chapter_record（如果使用ChapterView）
+
+> 正在将该功能使用 MermaidNode 重新实现，目前暂时废弃
 
 `chapter_record`用于记录玩家当前已完成的章节
 
