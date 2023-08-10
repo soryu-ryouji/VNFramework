@@ -70,16 +70,16 @@ namespace VNFramework.Core
                     if (asm.Obj == AsmObj.bgm && asm.Action == "play") performanceState.Bgm = asm.Parameters[0];
                     else if (asm.Obj == AsmObj.bgm && asm.Action == "Stop") performanceState.Bgm = "";
 
-                    if (asm.Obj == AsmObj.bgp && asm.Action == "set") performanceState.Bgp = asm.Parameters[0];
+                    if (asm.Obj == AsmObj.bgp && asm.Action == "show") performanceState.Bgp = asm.Parameters[0];
                     else if (asm.Obj == AsmObj.bgp && asm.Action == "hide") performanceState.Bgp = "";
 
-                    if (asm.Obj == AsmObj.ch_left && asm.Action == "set") performanceState.ChLeft = asm.Parameters[0];
+                    if (asm.Obj == AsmObj.ch_left && asm.Action == "show") performanceState.ChLeft = asm.Parameters[0];
                     else if (asm.Obj == AsmObj.ch_left && asm.Action == "hide") performanceState.ChLeft = "";
 
-                    if (asm.Obj == AsmObj.ch_right && asm.Action == "set") performanceState.ChRight = asm.Parameters[0];
+                    if (asm.Obj == AsmObj.ch_right && asm.Action == "show") performanceState.ChRight = asm.Parameters[0];
                     else if (asm.Obj == AsmObj.ch_right && asm.Action == "hide") performanceState.ChRight = "";
 
-                    if (asm.Obj == AsmObj.ch_mid && asm.Action == "set") performanceState.ChMid = asm.Parameters[0];
+                    if (asm.Obj == AsmObj.ch_mid && asm.Action == "show") performanceState.ChMid = asm.Parameters[0];
                     else if (asm.Obj == AsmObj.ch_mid && asm.Action == "hide") performanceState.ChMid = "";
 
                     // 文本框状态获取
@@ -246,7 +246,7 @@ namespace VNFramework.Core
             {
                 string[] parts = line.Split(new[] { ':' }, 2);
                 string roleName = parts.Length == 2 ? parts[0].Trim() : "";
-                string dialogueContent = parts[parts.Length - 1].Trim();
+                string dialogueContent = parts[^1].Trim();
 
                 // 当 roleName 参数不为空时，添加 role_name 命令
                 if (roleName != "") ilList.Add(new VNScriptIL("name", new() { roleName }));
@@ -318,7 +318,7 @@ namespace VNFramework.Core
                     asmList.Add(new VNScriptAsm(AsmObj.name, "append", ilUnit.Parameters));
                     break;
                 case "bgp":
-                    asmList.Add(new VNScriptAsm(AsmObj.bgp, "set", ilUnit.Parameters));
+                    asmList.Add(new VNScriptAsm(AsmObj.bgp, "show", ilUnit.Parameters));
                     break;
                 case "bgp_hide":
                     asmList.Add(new VNScriptAsm(AsmObj.bgp, "hide", ilUnit.Parameters));
@@ -331,7 +331,7 @@ namespace VNFramework.Core
                         "right" => AsmObj.ch_right,
                         _ => AsmObj.ch_mid
                     },
-                        "set",
+                        "show",
                         ilUnit.Parameters));
                     break;
                 case "role_pic_hide":

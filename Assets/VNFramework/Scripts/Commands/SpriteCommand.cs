@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace VNFramework
 {
     class ShowSpriteCommand : AbstractCommand

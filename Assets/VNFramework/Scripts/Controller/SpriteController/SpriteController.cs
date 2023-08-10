@@ -25,17 +25,17 @@ namespace VNFramework
         public void OnSpriteChanged(Hashtable hash)
         {
             var action = (SpriteAction)hash["action"];
-            var mode = (SpriteMode)hash["mode"];
+            var mode = (string)hash["mode"];
             
             if (action == SpriteAction.Show)
             {
-                if (mode == SpriteMode.Fading) FadingChangeSprite((string)hash["sprite_name"]);
-                else if (mode == SpriteMode.Immediate) ImmediatelyShowSprite((string)hash["sprite_name"]);
+                if (mode == "fading") FadingChangeSprite((string)hash["sprite_name"]);
+                else if (mode == "immediate") ImmediatelyShowSprite((string)hash["sprite_name"]);
             }
             else if (action == SpriteAction.Hide)
             {
-                if (mode == SpriteMode.Fading) FadingHideSprite();
-                else if (mode == SpriteMode.Immediate) ImmediatelyHideSprite();
+                if (mode == "fading") FadingHideSprite();
+                else if (mode == "immediate") ImmediatelyHideSprite();
             }
         }
 

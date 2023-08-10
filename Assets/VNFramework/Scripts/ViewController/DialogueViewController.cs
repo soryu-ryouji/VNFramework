@@ -64,7 +64,6 @@ namespace VNFramework
             this.RegisterEvent<ChangeNameEvent>(_ => ChangeNameBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<AppendDialogueEvent>(_ =>
             {
-                Debug.Log("Regist Append Dialogue Event");
                 _curDialogue = _dialogueModel.CurrentDialogue;
                 ChangeDisplay();
             }).UnRegisterWhenGameObjectDestroyed(gameObject);
@@ -197,7 +196,6 @@ namespace VNFramework
 
         private void ChangeDisplay()
         {
-            Debug.Log("Change Display Begin");
             if (!_dialogueModel.needAnimation)
             {
                 _curDialogueBoxText.text = _curDialogue;
@@ -210,12 +208,10 @@ namespace VNFramework
             }
 
             StartCharacterAnimation();
-            Debug.Log("Change Display End");
         }
 
         public void StartCharacterAnimation()
         {
-            Debug.Log("StartCharacterAnimation");
             _dialogueModel.isAnimating = true;
             _animationCoroutine = StartCoroutine(CharacterAnimation());
         }
@@ -241,7 +237,6 @@ namespace VNFramework
 
         private IEnumerator CharacterAnimation()
         {
-            Debug.Log("Character Animating Begin");
             while (_curDialogueIndex < _curDialogue.Length)
             {
                 _curDialogueBoxText.text += _curDialogue[_curDialogueIndex];

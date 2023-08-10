@@ -60,7 +60,6 @@ namespace VNFramework
         private void NextILCommand()
         {
             _autoExecuteCommand = true;
-            Debug.Log("NextILCommand -> Dialogue Is Animation : " + _dialogueModel.isAnimating);
             if (_dialogueModel.isAnimating)
             {
                 this.SendCommand<StopDialogueAnimCommand>();
@@ -85,6 +84,7 @@ namespace VNFramework
 
                 foreach (var asm in asmList)
                 {
+                    Debug.Log("asm -> " + asm);
                     ExecuteAsmCommand(asm);
                 }
             }
