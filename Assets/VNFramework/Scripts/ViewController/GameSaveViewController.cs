@@ -95,17 +95,19 @@ namespace VNFramework
         private void SaveGameSave(int index)
         {
             var performanceModel = this.GetModel<PerformanceModel>();
+            var dialogueModel = this.GetModel<DialogueModel>();
             var currentTime = System.DateTime.Now;
             var gameSave = new GameSave()
             {
+                SaveIndex = index,
                 SaveDate = currentTime.ToString("yyyy-MM-dd HH:mm:ss"),
                 MermaidNode = performanceModel.PerformingMermaidName,
                 VNScriptIndex = performanceModel.PerformingIndex,
                 ResumePic = performanceModel.BgpName,
-                ResumeText = performanceModel.PerformingDialogue
+                ResumeText = dialogueModel.CurrentDialogue
             };
 
-            _gameSaveModel.SetGameSave(index, gameSave);
+            _gameSaveModel.SetGameSave(gameSave);
         }
 
         private void LoadGameSave(int index)

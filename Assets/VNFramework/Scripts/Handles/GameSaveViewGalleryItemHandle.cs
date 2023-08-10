@@ -29,7 +29,7 @@ namespace VNFramework
 
         public void SetGameSaveItem(GameSave gameSave)
         {
-            if (gameSave.SaveDate == null)
+            if (gameSave == null || gameSave.SaveDate == null)
             {
                 _resumePic.sprite = null;
                 _resumeText.text = "";

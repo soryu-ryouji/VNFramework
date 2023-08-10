@@ -13,9 +13,9 @@ namespace VNFramework
             get { return _gameSaves; }
         }
 
-        public void SetGameSave(int index, GameSave gameSave)
+        public void SetGameSave(GameSave gameSave)
         {
-            _gameSaves[index] = gameSave;
+            _gameSaves[gameSave.SaveIndex] = gameSave;
             this.GetUtility<GameDataStorage>().SaveGameSave();
         }
 

@@ -150,6 +150,7 @@ ChMid: {ChMid}";
 
     public class GameSave
     {
+        public int SaveIndex;
         public string SaveDate;
         public string MermaidNode;
         public int VNScriptIndex;
@@ -166,6 +167,7 @@ ChMid: {ChMid}";
         }
         public GameSave()
         {
+            SaveIndex = 0;
             SaveDate = null;
             MermaidNode = null;
             VNScriptIndex = 0;

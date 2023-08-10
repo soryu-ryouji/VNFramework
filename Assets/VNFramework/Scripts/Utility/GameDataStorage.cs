@@ -54,35 +54,51 @@ namespace VNFramework
 
         public GameSave[] LoadGameSave()
         {
+            string path = Path.Combine(_configDirPath, "save_file.txt");
+            string gameSaveText = File.ReadAllText(path);
+            string pattern = @"<\|\s*(\[.*?\])\s*\|>";
+            MatchCollection matches = Regex.Matches(gameSaveText, pattern, RegexOptions.Singleline);
+
+            GameSave[] curGameSaves = matches
+                .Select(match => ParseGameSaveItem(match.Groups[1].Value))
+                .ToArray();
+
             var gameSaves = new GameSave[60];
 
-            for (int i = 0; i < gameSaves.Length; i++)
+            foreach (var save in curGameSaves)
             {
-                gameSaves[i] = new GameSave();
-            }
-            
-            if (!File.Exists(Path.Combine(_configDirPath, "save_file.txt"))) return gameSaves;
-
-            var saveText = File.ReadAllText(Path.Combine(_configDirPath, "save_file.txt"));
-
-            var regex = new Regex(@"<\|\s*save_index:(\d+)\s*save_date:(.*?)\s*mermaid_node:(.*?)\s*script_index:(\d+)\s*resume_pic:(.*?)\s*resume_text:(.*?)\s*\|>",
-            RegexOptions.Singleline);
-            var matches = regex.Matches(saveText);
-
-            foreach (Match match in matches.Cast<Match>())
-            {
-                var gameSave = new GameSave();
-                int index = int.Parse(match.Groups[1].Value);
-                gameSave.SaveDate = match.Groups[2].Value.Trim();
-                gameSave.MermaidNode = match.Groups[3].Value.Trim();
-                gameSave.VNScriptIndex = int.Parse(match.Groups[4].Value);
-                gameSave.ResumePic = match.Groups[5].Value.Trim();
-                gameSave.ResumeText = match.Groups[6].Value.Trim();
-
-                gameSaves[index] = gameSave;
+                var index = save.SaveIndex;
+                gameSaves[index] = save;
             }
 
             return gameSaves;
+        }
+
+        private GameSave ParseGameSaveItem(string blockContent)
+        {
+            blockContent = blockContent.Trim();
+            string pattern = @"\[\s*(save_index|save_date|mermaid_node|resume_pic|resume_text)\s*:\s*(.*?)\s*\]";
+            MatchCollection matches = Regex.Matches(blockContent, pattern, RegexOptions.Singleline);
+
+            var gameSave = new GameSave();
+
+            foreach (Match match in matches.Cast<Match>())
+            {
+                string key = match.Groups[1].Value;
+                string value = match.Groups[2].Value;
+
+                switch (key)
+                {
+                    case "save_index": gameSave.SaveIndex = Convert.ToInt32(value.Trim()); break;
+                    case "save_date": gameSave.SaveDate = value.Trim(); break;
+                    case "mermaid_node": gameSave.MermaidNode = value.Trim(); break;
+                    case "script_index": gameSave.VNScriptIndex = Convert.ToInt32(value.Trim()); break;
+                    case "resume_pic": gameSave.ResumePic = value.Trim(); break;
+                    case "resume_text": gameSave.ResumeText = value.Trim(); break;
+                }
+            }
+
+            return gameSave;
         }
 
         public void SaveGameSave()
@@ -91,16 +107,17 @@ namespace VNFramework
             var sb = new StringBuilder();
             for (int i = 0; i < gameSaves.Length; i++)
             {
-                if (!string.IsNullOrWhiteSpace(gameSaves[i].SaveDate))
+                if (gameSaves[i] != null && !string.IsNullOrWhiteSpace(gameSaves[i].SaveDate))
                 {
-                    sb.Append("<|\n" +
-                        $"save_index: {i}\n" +
-                        $"save_date: {gameSaves[i].SaveDate}\n" +
-                        $"mermaid_node: {gameSaves[i].MermaidNode} \n" +
-                        $"script_index: {gameSaves[i].VNScriptIndex} \n" +
-                        $"resume_pic: {gameSaves[i].ResumePic} \n" +
-                        $"resume_text: {gameSaves[i].ResumeText}\n" +
-                        $"|>\n");
+                    sb.Append(@$"<|
+    [ save_index: {i} ]
+    [ save_date: {gameSaves[i].SaveDate} ]
+    [ mermaid_node: {gameSaves[i].MermaidNode} ]
+    [ script_index: {gameSaves[i].VNScriptIndex} ]
+    [ resume_pic: {gameSaves[i].ResumePic} ]
+    [ resume_text: {gameSaves[i].ResumeText} ]
+|>
+");
                 }
             }
 
