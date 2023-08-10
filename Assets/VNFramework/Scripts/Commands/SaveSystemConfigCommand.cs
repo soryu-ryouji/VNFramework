@@ -4,7 +4,6 @@ namespace VNFramework
     { 
         protected override void OnExecute() 
         { 
-            this.GetUtility<GameLog>().RunningLog("Save System Config Command"); 
             this.GetUtility<GameDataStorage>().SaveSystemConfig(); 
         } 
     } 

@@ -76,7 +76,8 @@ namespace VNFramework
     public class PerformanceState
     {
         public string MermaidName;
-        public int ScriptIndex;
+        public bool isFullDialogueBox;
+        public int ScriptIndex = 0;
         public string Bgm;
         public string Bgp;
         public string ChLeft;
@@ -86,6 +87,7 @@ namespace VNFramework
         public PerformanceState()
         {
             MermaidName = "";
+            isFullDialogueBox = true;
             ScriptIndex = 0;
             Bgm = "";
             Bgp = "";

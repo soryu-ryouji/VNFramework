@@ -1,10 +1,11 @@
+using UnityEngine;
+
 namespace VNFramework
 {
     class ShowBacklogViewCommand : AbstractCommand
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Show Backlog View Command");
             this.SendEvent<ShowBacklogViewEvent>();
         }
     }
@@ -13,7 +14,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Hide Backlog View Command");
             this.SendEvent<HideBacklogViewEvent>();
         }
     }
@@ -22,7 +22,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Show Chapter View Command");
             this.SendEvent<ShowChapterViewEvent>();
         }
     }
@@ -31,7 +30,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Hide Chapter View Command");
             this.SendEvent<HideChapterViewEvent>();
         }
     }
@@ -40,7 +38,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Show Config View Command");
             this.SendEvent<ShowConfigViewEvent>();
         }
     }
@@ -49,7 +46,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Hide Config View Command");
             this.SendEvent<HideConfigViewEvent>();
         }
     }
@@ -111,6 +107,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
+            Debug.Log("Trigger Stop Dialogue Anim Event");
             this.SendEvent<StopDialogueAnimEvent>();
         }
     }
@@ -135,7 +132,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Show Menu View Command");
             this.SendEvent<ShowMenuViewEvent>();
         }
     }
@@ -144,7 +140,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Hide Menu View Command");
             this.SendEvent<HideMenuViewEvent>();
         }
     }
@@ -153,7 +148,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Show Dialogue View Command");
             this.SendEvent<ShowDialoguePanelEvent>();
         }
     }
@@ -162,7 +156,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Hide Dialogue View Command");
             this.SendEvent<HideDialoguePanelEvent>();
         }
     }
@@ -171,7 +164,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Toggle Dialogue View Command");
             this.SendEvent<ToggleDialoguePanelEvent>();
         }
     }
@@ -180,7 +172,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Show Performance View Command");
             this.SendEvent<ShowPerformanceViewEvent>();
         }
     }
@@ -188,7 +179,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Hide Performance View Command");
             this.SendEvent<HidePerformanceViewEvent>();
         }
     }
@@ -197,7 +187,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Show Save File View Command");
             this.SendEvent<ShowLoadGameSaveViewEvent>();
         }
     }
@@ -206,7 +195,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Show Save File View Command");
             this.SendEvent<ShowSaveGameSaveViewEvent>();
         }
     }
@@ -215,7 +203,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Hide Save File View Command");
             this.SendEvent<HideGameSaveViewEvent>();
         }
     }
@@ -224,7 +211,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Show Choose View Command");
             this.SendEvent<ShowChooseViewEvent>();
         }
     }
@@ -233,7 +219,6 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetUtility<GameLog>().RunningLog("Hide Choose View Command");
             this.SendEvent<HideChooseViewEvent>();
         }
     }

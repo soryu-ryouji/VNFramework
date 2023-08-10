@@ -8,6 +8,9 @@ namespace VNFramework
 
         private string _currentDialogue;
         private string _currentName;
+        public bool isAnimating = false;
+        public bool needAnimation = true;
+
         public string CurrentDialogue
         {
             get { return _currentDialogue; }
@@ -21,6 +24,21 @@ namespace VNFramework
                 _currentName = value;
                 this.SendEvent<ChangeNameEvent>();
             }
+        }
+
+        public void InitModel()
+        {
+            _currentDialogue = "";
+            _currentName = "";
+            _historicalDialogues.Clear();
+            isAnimating = false;
+            needAnimation = true;
+        }
+
+        public override string ToString()
+        {
+            return $@"Is Animating : {isAnimating}
+needAnimation : {needAnimation}";
         }
 
         public void AddDialogueNode(string dialogue)

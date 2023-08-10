@@ -69,7 +69,7 @@ namespace VNFramework
         private void UpdateView()
         {
             var gameSaves = _gameSaveModel.GameSaves;
-            this.GetUtility<GameLog>().RunningLog("Game Save View Current Page : " + _currentPage);
+            Debug.Log("Game Save View Current Page : " + _currentPage);
             for (int i = 0; i < _galleryBtns.Length; i++)
             {
                 int index = i + _currentPage * 6;

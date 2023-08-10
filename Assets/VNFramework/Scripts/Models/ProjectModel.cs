@@ -20,6 +20,7 @@ namespace VNFramework
         private string _performanceViewMenuViewButtonImage;
         private string _performanceViewBacklogViewButtonImage;
         private string _performanceViewConfigViewButtonImage;
+        private string _performanceViewSaveGameSaveViewButtonImage;
 
         public string TitleViewLogo { get => _titleViewLogo; set => _titleViewLogo = value; }
         public string TitleViewBgp { get => _titleViewBgp; set => _titleViewBgp = value; }
@@ -37,6 +38,7 @@ namespace VNFramework
         public string PerformanceViewBacklogViewButtonPic { get => _performanceViewBacklogViewButtonImage; set => _performanceViewBacklogViewButtonImage = value; }
         public string PerformanceViewConfigViewButtonPic { get => _performanceViewConfigViewButtonImage; set => _performanceViewConfigViewButtonImage = value; }
         public string BacklogViewBackButtonTextColor { get => _backlogViewBackButtonTextColor; set => _backlogViewBackButtonTextColor = value; }
+        public string PerformanceViewSaveGameSaveViewButtonPic { get => _performanceViewSaveGameSaveViewButtonImage; set => _performanceViewSaveGameSaveViewButtonImage = value; }
 
         private void PrintProjectModel()
         {

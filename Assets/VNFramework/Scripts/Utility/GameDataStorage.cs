@@ -19,7 +19,7 @@ namespace VNFramework
         public AudioClip LoadSound(string audioName)
         {
             var ret = abDic["sound"].LoadAsset<AudioClip>(audioName);
-            if (ret == null) this.GetUtility<GameLog>().ErrorLog(string.Format("AudioClip {0} not found", audioName));
+            if (ret == null) Debug.Log(string.Format("AudioClip {0} not found", audioName));
 
             return ret;
         }
@@ -32,7 +32,7 @@ namespace VNFramework
                 return null;
             }
             var ret = abDic["sprite"].LoadAsset<Sprite>(path);
-            if (ret == null) this.GetUtility<GameLog>().ErrorLog(string.Format("Sprite {0} not found", path));
+            if (ret == null) Debug.Log(string.Format("Sprite {0} not found", path));
 
             return ret;
         }
@@ -69,9 +69,9 @@ namespace VNFramework
             RegexOptions.Singleline);
             var matches = regex.Matches(saveText);
 
-            foreach (Match match in matches)
+            foreach (Match match in matches.Cast<Match>())
             {
-                GameSave gameSave = new GameSave();
+                var gameSave = new GameSave();
                 int index = int.Parse(match.Groups[1].Value);
                 gameSave.SaveDate = match.Groups[2].Value.Trim();
                 gameSave.MermaidNode = match.Groups[3].Value.Trim();
@@ -93,15 +93,14 @@ namespace VNFramework
             {
                 if (!string.IsNullOrWhiteSpace(gameSaves[i].SaveDate))
                 {
-                    sb.Append($@"<|
-    save_index: {i}
-    save_date: {gameSaves[i].SaveDate}
-    mermaid_node: {gameSaves[i].MermaidNode}
-    script_index: {gameSaves[i].VNScriptIndex}
-    resume_pic: {gameSaves[i].ResumePic}
-    resume_text: {gameSaves[i].ResumeText}
-|>
-");
+                    sb.Append("<|\n" +
+                        $"save_index: {i}\n" +
+                        $"save_date: {gameSaves[i].SaveDate}\n" +
+                        $"mermaid_node: {gameSaves[i].MermaidNode} \n" +
+                        $"script_index: {gameSaves[i].VNScriptIndex} \n" +
+                        $"resume_pic: {gameSaves[i].ResumePic} \n" +
+                        $"resume_text: {gameSaves[i].ResumeText}\n" +
+                        $"|>\n");
                 }
             }
 
@@ -112,7 +111,6 @@ namespace VNFramework
 
         public void LoadSystemConfig()
         {
-            this.GetUtility<GameLog>().RunningLog("Load System Config");
             var systemConfigModel = this.GetModel<ConfigModel>();
             Dictionary<string, float> defaultConfig = new Dictionary<string, float>
             {
@@ -286,6 +284,7 @@ text_speed : {systemConfigModel.TextSpeed}";
                     gameInfoModel.PerformanceViewMenuViewButtonPic = property["menu_view_button_pic"];
                     gameInfoModel.PerformanceViewBacklogViewButtonPic = property["backlog_view_button_pic"];
                     gameInfoModel.PerformanceViewConfigViewButtonPic = property["config_view_button_pic"];
+                    gameInfoModel.PerformanceViewSaveGameSaveViewButtonPic = property["save_view_button_pic"];
                 }
                 else if (blockType == GameInfoType.BacklogView)
                 {
@@ -300,7 +299,7 @@ text_speed : {systemConfigModel.TextSpeed}";
         {
             GameObject obj = abDic["prefab"].LoadAsset<GameObject>(prefabName);
 
-            if (obj == null) this.GetUtility<GameLog>().ErrorLog("AB Prefab Resources Not Found");
+            if (obj == null) Debug.Log("AB Prefab Resources Not Found");
 
             return obj;
         }

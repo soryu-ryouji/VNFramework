@@ -14,7 +14,6 @@ namespace VNFramework
             set
             {
                 _bgmVolume = value;
-                this.GetUtility<GameLog>().RunningLog("Bgm Volume Changed -> " + value);
                 this.SendEvent<ConfigChangedEvent>();
             }
         }

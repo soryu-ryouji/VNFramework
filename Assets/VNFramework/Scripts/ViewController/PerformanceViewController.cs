@@ -36,7 +36,7 @@ namespace VNFramework
             _menuViewBtnImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.PerformanceViewMenuViewButtonPic);
             _backlogViewBtnImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.PerformanceViewBacklogViewButtonPic);
             _configViewBtnImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.PerformanceViewConfigViewButtonPic);
-            // TODO: SaveDataImage 制作
+            _saveDataBtnImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.PerformanceViewSaveGameSaveViewButtonPic);
         }
 
         public IArchitecture GetArchitecture()

@@ -41,7 +41,6 @@ namespace VNFramework
                 var tool = this.GetUtility<GameDataStorage>();
                 if (!string.IsNullOrWhiteSpace(gameSave.ResumePic))
                 {
-                    Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!");
                     _resumePic.sprite = tool.LoadSprite(gameSave.ResumePic);
                 }
                 _resumeText.text = gameSave.ResumeText;

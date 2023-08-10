@@ -36,6 +36,7 @@ namespace VNFramework
                 var mermaidModel = this.GetModel<MermaidModel>();
                 var performanceModel = this.GetModel<PerformanceModel>();
                 performanceModel.PerformingMermaidName = mermaidModel.GetFirstMermaidName();
+                performanceModel.PerformingIndex = 0;
                 this.SendCommand<LoadGameSceneCommand>();
             });
 

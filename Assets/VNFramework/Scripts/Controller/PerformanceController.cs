@@ -1,39 +1,54 @@
 using UnityEngine;
 using VNFramework.Core;
+using System.Collections.Generic;
 
 namespace VNFramework
 {
     public class PerformanceController : MonoBehaviour, IController
     {
-        private DialogueViewController _dialogueViewController;
         private bool _autoExecuteCommand;
         private PerformanceModel _performanceModel;
         private MermaidModel _mermaidModel;
         private VNScriptCompiler _compiler;
+        private DialogueModel _dialogueModel;
 
         private void Start()
         {
-            _dialogueViewController = transform.Find("DialogueView").GetComponent<DialogueViewController>();
+            this.RegisterEvent<LoadNextPerformanceEvent>(_ => NextPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<PerformanceMermaidNameChangeEvent>(_ => InitPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
 
-            _performanceModel = this.GetModel<PerformanceModel>();
-            _mermaidModel = this.GetModel<MermaidModel>();
-
-            var fileName = _mermaidModel.GetFileName(_performanceModel.PerformingMermaidName);
-            var fileLines = this.GetUtility<GameDataStorage>().LoadVNScript(fileName);
-            _compiler = new(fileLines);
-
-            this.RegisterEvent<LoadNextPerformanceEvent>(_ => NextPerformance());
-            this.RegisterEvent<PerformanceMermaidNameChangeEvent>(_ => InitPerformance());
-            NextPerformance();
+            InitPerformance();
         }
 
         private void InitPerformance()
         {
+            _performanceModel = this.GetModel<PerformanceModel>();
+            _mermaidModel = this.GetModel<MermaidModel>();
+            _dialogueModel = this.GetModel<DialogueModel>();
+            _dialogueModel.InitModel();
+
             var nodeName = _performanceModel.PerformingMermaidName;
-            Debug.Log("nodeName -> " + nodeName);
             var fileName = _mermaidModel.GetFileName(nodeName);
             var fileLines = this.GetUtility<GameDataStorage>().LoadVNScript(fileName);
-            _compiler = new VNScriptCompiler(fileLines);
+            
+            // 对演出进行初始化
+            var performanceState = VNScriptCompiler.GetPerformanceStateByIndex(fileLines, _performanceModel.PerformingIndex, out _compiler);
+            _compiler.InitByLine(performanceState.ScriptIndex);
+
+            if (performanceState.isFullDialogueBox) ExecuteDialogueCommand(new VNScriptAsm(AsmObj.dialogue, "switch", new() { "full" }));
+            else { ExecuteDialogueCommand(new VNScriptAsm(AsmObj.dialogue, "switch", new() { "norm" })); }
+
+            if (!string.IsNullOrWhiteSpace(performanceState.Bgm))
+                ExecuteAudioCommand(new VNScriptAsm(AsmObj.bgm, "play", new() { performanceState.Bgm }));
+            if (!string.IsNullOrWhiteSpace(performanceState.Bgp))
+                ExecuteSpriteCommand(new VNScriptAsm(AsmObj.bgp, "show", new List<string> { performanceState.Bgp, "immediate" }));
+            if (!string.IsNullOrWhiteSpace(performanceState.ChMid))
+                ExecuteSpriteCommand(new VNScriptAsm(AsmObj.ch_mid, "show", new List<string> { performanceState.ChMid, "immediate" }));
+            if (!string.IsNullOrWhiteSpace(performanceState.ChRight))
+                ExecuteSpriteCommand(new VNScriptAsm(AsmObj.ch_right, "show", new List<string> { performanceState.ChRight, "immediate" }));
+            if (!string.IsNullOrWhiteSpace(performanceState.ChLeft))
+                ExecuteSpriteCommand(new VNScriptAsm(AsmObj.ch_left, "show", new List<string> { performanceState.ChLeft, "immediate" }));
+
             NextPerformance();
         }
 
@@ -45,7 +60,8 @@ namespace VNFramework
         private void NextILCommand()
         {
             _autoExecuteCommand = true;
-            if (_dialogueViewController.IsAnimating)
+            Debug.Log("NextILCommand -> Dialogue Is Animation : " + _dialogueModel.isAnimating);
+            if (_dialogueModel.isAnimating)
             {
                 this.SendCommand<StopDialogueAnimCommand>();
                 return;
@@ -65,10 +81,10 @@ namespace VNFramework
             while (_autoExecuteCommand && _compiler.ScriptCountDown() > 0)
             {
                 var asmList = _compiler.NextAsmList();
+                _performanceModel.PerformingIndex = _compiler.ScriptIndex;
 
                 foreach (var asm in asmList)
                 {
-                    Debug.Log("asm -> " + asm);
                     ExecuteAsmCommand(asm);
                 }
             }
@@ -115,31 +131,31 @@ namespace VNFramework
         }
 
         #region Execute Picture box Command
-        private void ExecuteSpriteCommand(VNScriptAsm hash)
+        private void ExecuteSpriteCommand(VNScriptAsm asm)
         {
-            if (hash.Action == "show")
-                this.SendCommand(new ShowSpriteCommand(hash.Obj, hash.Parameters[0], hash.Parameters[1]));
-            else if (hash.Action == "hide")
-                this.SendCommand(new HideSpriteCommand(hash.Obj, hash.Parameters[0]));
+            if (asm.Action == "show")
+                this.SendCommand(new ShowSpriteCommand(asm.Obj, asm.Parameters[0], asm.Parameters[1]));
+            else if (asm.Action == "hide")
+                this.SendCommand(new HideSpriteCommand(asm.Obj, asm.Parameters[0]));
         }
         #endregion
 
         #region Execute Text box Command
-        private void ExecuteNameCommand(VNScriptAsm hash)
+        private void ExecuteNameCommand(VNScriptAsm asm)
         {
-            if (hash.Action == "append") this.SendCommand(new ChangeNameCommand(hash.Parameters[0]));
-            else if (hash.Action == "clear") this.SendCommand(new ChangeNameCommand(""));
+            if (asm.Action == "append") this.SendCommand(new ChangeNameCommand(asm.Parameters[0]));
+            else if (asm.Action == "clear") this.SendCommand(new ChangeNameCommand(""));
         }
 
-        private void ExecuteDialogueCommand(VNScriptAsm hash)
+        private void ExecuteDialogueCommand(VNScriptAsm asm)
         {
-            if (hash.Action == "append") this.SendCommand(new AppendDialogueCommand(hash.Parameters[0]));
-            else if (hash.Action == "clear") this.SendCommand<ClearDialogueCommand>();
-            else if (hash.Action == "newline") this.SendCommand<AppendNewlineToDialogueCommand>();
-            else if (hash.Action == "switch")
+            if (asm.Action == "append") this.SendCommand(new AppendDialogueCommand(asm.Parameters[0]));
+            else if (asm.Action == "clear") this.SendCommand<ClearDialogueCommand>();
+            else if (asm.Action == "newline") this.SendCommand<AppendNewlineToDialogueCommand>();
+            else if (asm.Action == "switch")
             {
-                if (hash.Parameters[0] == "full") this.SendCommand<OpenFullDialogueBoxCommand>();
-                else if (hash.Parameters[0] == "norm") this.SendCommand<OpenNormDialogueBoxCommand>();
+                if (asm.Parameters[0] == "full") this.SendCommand<OpenFullDialogueBoxCommand>();
+                else if (asm.Parameters[0] == "norm") this.SendCommand<OpenNormDialogueBoxCommand>();
             }
         }
         #endregion
@@ -150,13 +166,13 @@ namespace VNFramework
             else if (asm.Action == "stop") this.SendCommand(new StopAudioCommand(asm.Obj));
         }
 
-        private void ExecuteGmCommand(VNScriptAsm hash)
+        private void ExecuteGmCommand(VNScriptAsm asm)
         {
-            if (hash.Action == "stop")
+            if (asm.Action == "stop")
             {
                 _autoExecuteCommand = false;
             }
-            if (hash.Action == "finish")
+            if (asm.Action == "finish")
             {
                 this.SendCommand(new UnlockedChapterCommand(this.GetModel<ChapterModel>().CurrentChapter));
                 this.SendCommand<ShowChapterViewCommand>();

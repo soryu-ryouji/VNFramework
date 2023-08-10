@@ -14,7 +14,6 @@ namespace VNFramework
             rootNode = mermaid.mermaidNodes[0];
 
             var paths = rootNode.GetNodePaths();
-            UnityEngine.Debug.Log("Mermaid Path:\n" + string.Join("\n", paths));
         }
 
         public string GetFirstMermaidName()

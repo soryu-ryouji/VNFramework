@@ -45,13 +45,21 @@ namespace VNFramework.Core
             NormDialogue,
         }
 
-        public static PerformanceState GetPerformanceStateByIndex(string[] vnScript, int index)
+        public void InitByLine(int index)
+        {
+            _scriptIndex = 0;
+            while (_scriptIndex < index)
+            {
+                NextAsmList();
+            }
+        }
+
+        public static PerformanceState GetPerformanceStateByIndex(string[] vnScript, int index, out VNScriptCompiler vnScriptCompiler)
         {
             var performanceState = new PerformanceState();
             var compiler = new VNScriptCompiler(vnScript);
 
             int lastBlock = 0;
-            bool isOpenFullDialogueBox = false;
 
             for (int i = 0; compiler.ScriptCountDown() > 0 && i < index; i++)
             {
@@ -79,11 +87,11 @@ namespace VNFramework.Core
                     if (asm.Obj == AsmObj.dialogue && asm.Action == "switch" && asm.Parameters[0] == "full")
                     {
                         lastBlock = i;
-                        isOpenFullDialogueBox = true;
+                        performanceState.isFullDialogueBox = true;
                     }
                     else if (asm.Obj == AsmObj.dialogue && asm.Action == "switch" && asm.Parameters[0] == "norm")
                     {
-                        isOpenFullDialogueBox = false;
+                        performanceState.isFullDialogueBox = false;
                     }
                     else if (asm.Obj == AsmObj.dialogue && asm.Action == "clear")
                     {
@@ -91,10 +99,11 @@ namespace VNFramework.Core
                     }
                 }
 
-                if (isOpenFullDialogueBox == false) lastBlock = i;
+                if (performanceState.isFullDialogueBox == false) lastBlock = i;
             }
 
             performanceState.ScriptIndex = lastBlock;
+            vnScriptCompiler = compiler;
             return performanceState;
         }
 

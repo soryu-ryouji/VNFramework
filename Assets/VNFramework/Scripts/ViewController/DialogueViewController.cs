@@ -12,8 +12,6 @@ namespace VNFramework
         private GameObject _curDialogueBox;
         private TMP_Text _curDialogueBoxText;
 
-        private bool _isAnimating = false;
-        private bool _needAnimation = true;
         private Coroutine _animationCoroutine;
         private float _textSpeed;
         private string _curDialogue;
@@ -66,16 +64,17 @@ namespace VNFramework
             this.RegisterEvent<ChangeNameEvent>(_ => ChangeNameBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<AppendDialogueEvent>(_ =>
             {
+                Debug.Log("Regist Append Dialogue Event");
                 _curDialogue = _dialogueModel.CurrentDialogue;
                 ChangeDisplay();
-            }).UnRegisterWhenGameObjectDestroyed(gameObject); ;
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
             this.RegisterEvent<ClearDialogueEvent>(_ =>
             {
                 _curDialogue = "";
                 _curDialogueIndex = 0;
                 if (_curDialogueBoxText != null) _curDialogueBoxText.text = "";
-            }).UnRegisterWhenGameObjectDestroyed(gameObject); ;
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
             this.RegisterEvent<AppendNewLineToDialogueEvent>(_ =>
             {
@@ -162,7 +161,7 @@ namespace VNFramework
         private void HideDialogueView()
         {
             _dialogueViewActive = false;
-            if (_isAnimating) StopCharacterAnimation();
+            if (_dialogueModel.isAnimating) StopCharacterAnimation();
 
             SetDialogueViewActive(_dialogueViewActive);
         }
@@ -196,36 +195,34 @@ namespace VNFramework
 
         # region DialogueBox
 
-        public bool IsAnimating
-        {
-            get { return _isAnimating; }
-        }
-
         private void ChangeDisplay()
         {
-            if (!_needAnimation)
+            Debug.Log("Change Display Begin");
+            if (!_dialogueModel.needAnimation)
             {
                 _curDialogueBoxText.text = _curDialogue;
                 return;
             }
 
-            if (_isAnimating)
+            if (_dialogueModel.isAnimating)
             {
                 StopCharacterAnimation();
             }
 
             StartCharacterAnimation();
+            Debug.Log("Change Display End");
         }
 
         public void StartCharacterAnimation()
         {
-            _isAnimating = true;
+            Debug.Log("StartCharacterAnimation");
+            _dialogueModel.isAnimating = true;
             _animationCoroutine = StartCoroutine(CharacterAnimation());
         }
 
         private void StopCharacterAnimation()
         {
-            if (!_isAnimating)
+            if (!_dialogueModel.isAnimating)
             {
                 return;
             }
@@ -236,13 +233,15 @@ namespace VNFramework
                 _animationCoroutine = null;
             }
 
-            _isAnimating = false;
+            _dialogueModel.isAnimating = false;
+            Debug.Log("Dialogue View is Animating : " + _dialogueModel.isAnimating);
             _curDialogueBoxText.text = _curDialogue;
             _curDialogueIndex = _curDialogue.Length;
         }
 
         private IEnumerator CharacterAnimation()
         {
+            Debug.Log("Character Animating Begin");
             while (_curDialogueIndex < _curDialogue.Length)
             {
                 _curDialogueBoxText.text += _curDialogue[_curDialogueIndex];
@@ -251,7 +250,7 @@ namespace VNFramework
             }
 
             // Animation stop
-            _isAnimating = false;
+            _dialogueModel.isAnimating = false;
         }
         # endregion
 
