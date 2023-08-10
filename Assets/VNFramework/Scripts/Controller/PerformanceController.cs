@@ -54,7 +54,7 @@ namespace VNFramework
 
         private void NextPerformance()
         {
-            NextILCommand();
+            if (_performanceModel.IsOpenChooseView == false) NextILCommand();
         }
 
         private void NextILCommand()
@@ -68,12 +68,30 @@ namespace VNFramework
 
             if (_compiler.ScriptCountDown() <= 0)
             {
+                _performanceModel.IsOpenChooseView = true;
                 var children = _mermaidModel.GetMermaidChildren(_performanceModel.PerformingMermaidName);
                 if (children.Count > 0)
                 {
-                   _performanceModel.ChooseList = children;
-                    this.SendCommand<ShowChooseViewCommand>();
+                    // 当只有一个选项时，直接跳转到下一个演出
+                    if (children.Count == 1 || children[0].optionText == "")
+                    {
+                        _performanceModel.PerformingMermaidName = children[0].childMermaidName;
+                        _performanceModel.PerformingIndex = 0;
+                        _performanceModel.IsOpenChooseView = false;
+                        InitPerformance();
+                    }
+                    else
+                    {
+                        _performanceModel.ChooseList = children;
+                        this.SendCommand<ShowChooseViewCommand>();
+                    }
                 }
+                else
+                {
+                    // 演出结束，回到开始界面
+                    this.SendCommand<LoadStartUpSceneCommand>();
+                }
+
                 return;
             }
 

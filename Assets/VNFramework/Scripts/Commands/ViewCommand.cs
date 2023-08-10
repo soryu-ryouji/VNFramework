@@ -219,6 +219,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
+            this.GetModel<PerformanceModel>().IsOpenChooseView = false;
             this.SendEvent<HideChooseViewEvent>();
         }
     }
