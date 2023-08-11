@@ -1,17 +1,8 @@
 namespace VNFramework
 {
-    struct PerformingModelChangedEvent
-    {
+    struct PerformingModelChangedEvent { }
 
-    }
+    struct InitPerformanceEvent { }
 
-    struct InitPerformanceEvent
-    {
-        
-    }
-
-    struct PerformingMermaidNameChangeEvent
-    {
-
-    }
+    struct PerformingMermaidNameChangeEvent { }
 }

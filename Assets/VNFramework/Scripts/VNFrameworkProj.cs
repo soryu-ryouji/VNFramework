@@ -14,7 +14,6 @@ namespace VNFramework
             this.RegisterModel(new ChapterModel());
             this.RegisterModel(new MermaidModel());
             this.RegisterModel(new DialogueModel());
-
         }
     }
 }

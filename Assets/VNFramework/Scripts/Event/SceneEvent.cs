@@ -1,11 +1,6 @@
 namespace VNFramework
 {
-    struct LoadGameSceneEvent
-    {
-    }
+    struct LoadGameSceneEvent { }
 
-    struct CloseGameSceneEvent
-    {
-
-    }
+    struct CloseGameSceneEvent { }
 }

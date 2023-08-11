@@ -1,7 +1,4 @@
 namespace VNFramework
 {
-    struct ConfigChangedEvent
-    {
-        
-    }
+    struct ConfigChangedEvent { }
 }

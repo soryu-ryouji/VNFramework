@@ -9,6 +9,7 @@ namespace VNFramework
         private int _performingIndex;
         private string _dialogue;
         public bool IsOpenChooseView;
+        public bool IsAutoExecuteCommand;
 
         private float _performingBgmVolume;
         private float _performingBgsVolume;

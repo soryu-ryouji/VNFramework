@@ -12,8 +12,6 @@ namespace VNFramework
             string mermaidText = this.GetUtility<GameDataStorage>().LoadVNMermaid("VNMermaid");
             mermaid.ParseVNMermaid(mermaidText);
             rootNode = mermaid.mermaidNodes[0];
-
-            var paths = rootNode.GetNodePaths();
         }
 
         public string GetFirstMermaidName()

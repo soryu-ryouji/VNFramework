@@ -40,22 +40,6 @@ namespace VNFramework
         public string BacklogViewBackButtonTextColor { get => _backlogViewBackButtonTextColor; set => _backlogViewBackButtonTextColor = value; }
         public string PerformanceViewSaveGameSaveViewButtonPic { get => _performanceViewSaveGameSaveViewButtonImage; set => _performanceViewSaveGameSaveViewButtonImage = value; }
 
-        private void PrintProjectModel()
-        {
-            Debug.Log(@$"TitleViewLogo: {TitleViewLogo}
-TitleViewBgp: {TitleViewBgp}
-TitleViewBgm: {TitleViewBgm}
-GameSaveViewBgp: {GameSaveViewBgp}
-GameSaveViewBgm: {GameSaveViewBgm}
-GameSaveViewGalleryItemPic: {GameSaveViewGalleryItemPic}
-GameSaveViewGalleryListPic: {GameSaveViewGalleryListPic}
-BacklogViewBgp: {BacklogViewBgp}
-BacklogViewTextColor: {BacklogViewTextColor}
-NormDialogueBoxPic: {NormDialogueBoxPic}
-FullDialogueBoxPic: {FullDialogueBoxPic}
-NameBoxPic: {NormNameBoxPic}");
-        }
-
         protected override void OnInit()
         {
             this.GetUtility<GameDataStorage>().LoadProjectData();

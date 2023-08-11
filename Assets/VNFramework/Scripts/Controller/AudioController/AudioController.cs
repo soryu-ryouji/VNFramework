@@ -6,14 +6,8 @@ namespace VNFramework
 {
     public class AudioController : MonoBehaviour, IController
     {
-        private string _currentAudioName;
         private float _currentVolume;
         protected AudioSource audioPlayer;
-
-        public string CurrentAudioName
-        {
-            get => _currentAudioName;
-        }
 
         public float CurrentVolume
         {
@@ -28,13 +22,6 @@ namespace VNFramework
             else if (action == AudioAction.Stop) StopAudio();
             else if (action == AudioAction.Vol) SetVolume(Convert.ToSingle(hash["volume"]));
             else if (action == AudioAction.Loop) SetLoop((string)hash["is_loop"]);
-        }
-
-        public void SetVolume(string volume)
-        {
-            var vol = Convert.ToInt64(volume);
-            _currentVolume = vol;
-            audioPlayer.volume = _currentVolume;
         }
 
         public void SetVolume(float volume)

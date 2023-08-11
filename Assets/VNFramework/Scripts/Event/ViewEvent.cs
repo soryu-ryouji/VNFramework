@@ -31,6 +31,5 @@ namespace VNFramework
     struct HideMenuViewEvent { }
 
     struct ShowChooseViewEvent { }
-
     struct HideChooseViewEvent { }
 }
