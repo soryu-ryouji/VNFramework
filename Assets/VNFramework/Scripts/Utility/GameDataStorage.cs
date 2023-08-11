@@ -126,6 +126,44 @@ namespace VNFramework
             File.WriteAllText(path,gameSaveText);
         }
 
+        public List<string> LoadUnlockedChapterList()
+        {
+            Debug.Log(string.Format("<color=green>{0}</color>", "Load Unlocked Chapter List"));
+            string path = Path.Combine(_configDirPath, "unlocked_chapter.txt");
+            if (!File.Exists(path)) return new List<string>();
+
+            var fileText = File.ReadAllText(path);
+
+            var unlockedChapterList = new List<string>();
+            string pattern = @"\[\s*mermaid_name\s*:\s*(.*?)\s*\]";
+            MatchCollection matches = Regex.Matches(fileText, pattern, RegexOptions.Singleline);
+
+            foreach (Match match in matches.Cast<Match>())
+            {
+                string value = match.Groups[1].Value;
+                unlockedChapterList.Add(value);
+            }
+
+            return unlockedChapterList;
+        }
+
+        public void SaveUnlockedChapterList()
+        {
+            Debug.Log(string.Format("<color=green>{0}</color>","Save Unlocked Chapter List"));
+            var unlockedChapterList = this.GetModel<ChapterModel>().UnlockedChapterList;
+
+            if (unlockedChapterList.Count == 0) return;
+
+            var sb = new StringBuilder();
+            foreach(var chapter in unlockedChapterList)
+            {
+                sb.AppendLine($"[mermaid_name:{chapter}]");
+            }
+
+            string path = Path.Combine(_configDirPath, "unlocked_chapter.txt");
+            File.WriteAllText(path, sb.ToString());
+        }
+
         public void LoadSystemConfig()
         {
             var systemConfigModel = this.GetModel<ConfigModel>();
@@ -178,78 +216,24 @@ text_speed : {systemConfigModel.TextSpeed}";
             File.WriteAllText(_systemConfigPath, configStr);
         }
 
-        /// <summary>
-        /// 加载已解锁的游戏章节的名称
-        /// </summary>
-        public string[] LoadUnlockedChapterList()
-        {
-            // 若存档文件不存在，则在指定目录创建存档文件
-            if (!File.Exists(_chapterRecordPath)) CreateBasicUnlockedRecordFile();
-
-            string fileContent = File.ReadAllText(_chapterRecordPath);
-
-            string pattern = @"\[\s*chapter_name\s:\s*(.*?)\s*\]";
-            MatchCollection matches = Regex.Matches(fileContent, pattern);
-
-            var unlockedList = matches
-                .Select(match => match.Groups[1].Value.Trim())
-                .ToArray();
-
-            // 如果unlockedList结果为空，则将文件覆盖并重新读取
-            if (unlockedList.Length == 0)
-            {
-                CreateBasicUnlockedRecordFile();
-                fileContent = File.ReadAllText(_chapterRecordPath);
-                matches = Regex.Matches(fileContent, pattern);
-                unlockedList = matches
-                    .Select(match => match.Groups[1].Value.Trim())
-                    .ToArray();
-            }
-
-            return unlockedList;
-        }
-
-        private void CreateBasicUnlockedRecordFile()
-        {
-            var infoList = LoadChapterInfoList();
-            try
-            {
-                File.WriteAllText(_chapterRecordPath, $"[ chapter_name : {infoList[0].ChapterName} ]");
-            }
-            catch (Exception ex)
-            {
-                // 处理可能的异常，比如权限问题等
-                Console.WriteLine($"Error creating unlock config file: {ex.Message}");
-            }
-        }
-
-        public ChapterInfo[] LoadChapterInfoList()
+        public List<ChapterInfo> LoadChapterInfoList()
         {
             string content = abDic["vnscript"].LoadAsset<TextAsset>("chapter_info").text;
 
             string pattern = @"<\|\s*(\[.*?\])\s*\|>";
             MatchCollection matches = Regex.Matches(content, pattern, RegexOptions.Singleline);
 
-            ChapterInfo[] chapterInfoList = matches
+            List<ChapterInfo> chapterInfoList = matches
                 .Select(match => ParseChapterInfo(match.Groups[1].Value))
-                .ToArray();
+                .ToList();
 
             return chapterInfoList;
-        }
-
-        public void SaveUnlockedChapterList()
-        {
-            var unlockedChapterList = this.GetModel<ChapterModel>().UnlockedChapterList;
-
-            StringBuilder sb = new();
-            var linesToWrite = unlockedChapterList.Select(chapterName => $"[ chapter_name : {chapterName} ]");
-            File.WriteAllLines(_chapterRecordPath, linesToWrite);
         }
 
         private ChapterInfo ParseChapterInfo(string blockContent)
         {
             blockContent = blockContent.Trim();
-            string pattern = @"\[\s*(chapter_name|file_name|resume|resume_pic)\s*:\s*(.*?)\s*\]";
+            string pattern = @"\[\s*(mermaid_name|resume|resume_pic)\s*:\s*(.*?)\s*\]";
             MatchCollection matches = Regex.Matches(blockContent, pattern, RegexOptions.Singleline);
 
             ChapterInfo chapterInfo = new();
@@ -261,9 +245,8 @@ text_speed : {systemConfigModel.TextSpeed}";
 
                 switch (key)
                 {
-                    case "chapter_name": chapterInfo.ChapterName = value.Trim(); break;
-                    case "file_name": chapterInfo.FileName = value.Trim(); break;
-                    case "resume": chapterInfo.Resume = value.Trim(); break;
+                    case "mermaid_name": chapterInfo.MermaidName = value.Trim(); break;
+                    case "resume": chapterInfo.ResumeText = value.Trim(); break;
                     case "resume_pic": chapterInfo.ResumePic = value.Trim(); break;
                 }
             }

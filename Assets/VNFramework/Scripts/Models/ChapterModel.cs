@@ -1,51 +1,76 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
+using UnityEngine;
+using VNFramework.Core;
 
 namespace VNFramework
 {
-    public class ChapterInfo
-    {
-        public string ChapterName;
-        public string FileName;
-        public string Resume;
-        public string ResumePic;
-    }
-
     class ChapterModel : AbstractModel
     {
+        private List<ChapterInfo> _chapterInfoList;
         private List<string> _unlockedChapterList;
-        private ChapterInfo[] _chapterInfoList;
 
-        private string mCurrentChapter;
+        public string CurrentChapter;
 
-        public List<string> UnlockedChapterList { get => _unlockedChapterList; set => _unlockedChapterList = value; }
-        public ChapterInfo[] ChapterInfoList { get => _chapterInfoList; set => _chapterInfoList = value; }
-        public string CurrentChapter { get => mCurrentChapter; set => mCurrentChapter = value; }
-
-        public string GetFileName(string chapterName)
+        public List<ChapterInfo> ChapterInfoList
         {
-            ChapterInfo chapterInfo = ChapterInfoList.FirstOrDefault(info => info.ChapterName == chapterName);
-
-            return chapterInfo?.FileName ?? "";
+            get { return _chapterInfoList; }
         }
 
-        public ChapterInfo GetChapterInfo(string chapterName)
+        public List<string> UnlockedChapterList
         {
-            ChapterInfo chapterInfo = ChapterInfoList.FirstOrDefault(info => info.ChapterName == chapterName);
-
-            return chapterInfo;
+            get { return _unlockedChapterList; }
         }
 
-        public void AddUnlockedChapter(string chapterName)
+        public ChapterInfo GetChapterInfo(string mermaidName)
         {
-            _unlockedChapterList.Add(chapterName);
-            // 更新本地记录
-            this.GetUtility<GameDataStorage>().SaveUnlockedChapterList();
+            foreach (var chapterInfo in ChapterInfoList)
+            {
+                if (chapterInfo.MermaidName == mermaidName)
+                {
+                    return chapterInfo;
+                }
+            }
+
+            return null;
         }
+
+        public void TryAddUnlockedChapter(string mermaidName)
+        {
+            
+            Debug.Log(string.Format("<color=green>{0}</color>", $"Try Add Unlocked Chapter : {mermaidName}"));
+            if (_unlockedChapterList.Contains(mermaidName)) return;
+
+            foreach (var chapter in ChapterInfoList)
+            {
+                if (chapter.MermaidName ==mermaidName)
+                {
+                    Debug.Log(string.Format("<color=green>{0}</color>", $"Add Unlocked Chapter : {mermaidName} Success"));
+                    _unlockedChapterList.Add(mermaidName);
+                    this.GetUtility<GameDataStorage>().SaveUnlockedChapterList();
+                }
+            }
+        }
+
+        public string PrintChapterInfoList()
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine("Chapter Info List");
+            foreach (var chapter in ChapterInfoList)
+            {
+                sb.AppendLine(chapter.MermaidName);
+            }
+
+            return sb.ToString();
+        }
+
         protected override void OnInit()
         {
-            _unlockedChapterList = new(this.GetUtility<GameDataStorage>().LoadUnlockedChapterList());
             _chapterInfoList = this.GetUtility<GameDataStorage>().LoadChapterInfoList();
+            _unlockedChapterList = this.GetUtility<GameDataStorage>().LoadUnlockedChapterList();
+
+            Debug.Log(string.Format("<color=green>{0}</color>", PrintChapterInfoList()));
         }
     }
 }

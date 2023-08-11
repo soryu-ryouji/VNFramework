@@ -30,6 +30,9 @@ namespace VNFramework
             var nodeName = _performanceModel.PerformingMermaidName;
             var fileName = _mermaidModel.GetFileName(nodeName);
             var fileLines = this.GetUtility<GameDataStorage>().LoadVNScript(fileName);
+
+            // 每次演出进行初始化时，尝试将当前的章节添加进UnlockedChapterList中
+            this.GetModel<ChapterModel>().TryAddUnlockedChapter(_performanceModel.PerformingMermaidName);
             
             // 对演出进行初始化
             var performanceState = VNScriptCompiler.GetPerformanceStateByIndex(fileLines, _performanceModel.PerformingIndex, out _compiler);
@@ -189,11 +192,6 @@ namespace VNFramework
             if (asm.Action == "stop")
             {
                 _autoExecuteCommand = false;
-            }
-            if (asm.Action == "finish")
-            {
-                this.SendCommand(new UnlockedChapterCommand(this.GetModel<ChapterModel>().CurrentChapter));
-                this.SendCommand<ShowChapterViewCommand>();
             }
         }
 

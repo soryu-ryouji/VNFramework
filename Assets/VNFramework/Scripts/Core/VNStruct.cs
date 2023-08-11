@@ -148,6 +148,13 @@ ChMid: {ChMid}";
         MoveLR,
     }
 
+    public class ChapterInfo
+    {
+        public string MermaidName;
+        public string ResumeText;
+        public string ResumePic;
+    }
+
     public class GameSave
     {
         public int SaveIndex;

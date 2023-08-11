@@ -322,39 +322,43 @@ config_view_button_pic: config_view_button
 |>
 ```
 
-### file: chapter_info（如果使用ChapterView）
+### file: chapter_info
 
-> 正在将该功能使用 MermaidNode 重新实现，目前暂时废弃
+该文件为选择性填写，如果需要将某些特定章节在Chapter View 中展示，那么可以使用 `chapter_info` 文件。
 
-`chapter_info.txt` 用于声明视觉小说中会用到的剧本的信息，当前版本的 VNFramework 会将`chapter_info` 中的顺序当作是剧本的顺序。
+当文件执行到相应的 Mermaid 节点后，程序会将该节点的信息记录到 `unlocked chapter` 中，并保存在本地。
+
+`chapter_info.txt` 用于声明视觉小说中会用到的剧本的信息，`Chapter View` 会根据该文件填写的内容来选择展示的信息。
 
 
 ```
 <|
-    [ chapter_name: xxxxxx ]
-    [ file_name: xxxxxx ]
-    [ resume: xxxxxxxxxx ]
-    [ resume_pic: xxxxxx ]
+    [ mermaid_name: Prologue ]
+    [ resume: “远野志贵，是一个杀人鬼” ]
+    [ resume_pic: 夕阳_1 ]
 |>
 
 <|
-    [ chapter_name: xxxxxx ]
-    [ file_name: xxxxxx ]
-    [ resume: xxxxxxxxxx ]
-    [ resume_pic: xxxxxx ]
+    [ mermaid_name: Chapter01 ]
+    [ resume: “真的永远都不会把我忘掉？”她耳语似的低声询问。<br>“永远不会忘，对你我怎么能忘呢！” ]
+    [ resume_pic: 夕阳_1 ]
+|>
+
+<|
+    [ mermaid_name: Chapter02 ]
+    [ resume: 死并非生的对立面，而作为生的一部分永存 ]
+    [ resume_pic: black_city ]
 |>
 ```
 
-### file: chapter_record（如果使用ChapterView）
+### file: unlocked_chapter
 
-> 正在将该功能使用 MermaidNode 重新实现，目前暂时废弃
-
-`chapter_record`用于记录玩家当前已完成的章节
+`unlocked_chapter`用于记录玩家当前已完成的章节，存放路径为 `Config/unlocked_chapter.txt`
 
 ```
-[ chapter_name:  chapter_01 ]
-[ chapter_name:  chapter_02 ]
-[ chapter_name:  chapter_03 ]
+[ mermaid_name:  chapter_01 ]
+[ mermaid_name:  chapter_02 ]
+[ mermaid_name:  chapter_03 ]
 ```
 
 ## License

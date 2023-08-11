@@ -41,28 +41,34 @@ namespace VNFramework
                 {
                     this.SendCommand<HidePerformanceViewCommand>();
                 }
+
+                var performanceModel = this.GetModel<PerformanceModel>();
+                performanceModel.PerformingMermaidName = _chapterModel.CurrentChapter;
+                performanceModel.PerformingIndex = 0;
+
                 this.SendCommand<LoadGameSceneCommand>();
             });
 
             var firstChapter = _chapterModel.ChapterInfoList[0];
             _resumePic.sprite = this.GetUtility<GameDataStorage>().LoadSprite(firstChapter.ResumePic);
-            _resumeText.text = firstChapter.Resume;
+            _resumeText.text = firstChapter.ResumeText;
 
             GenerateChapterList(_chapterModel.UnlockedChapterList);
             _buttonListScrollbar.value = 1;
         }
 
-        public void GenerateChapterList(List<string> chapterNameList)
+        public void GenerateChapterList(List<string> unlockedChapterList)
         {
-            foreach (var chapterName in chapterNameList)
+            foreach (var mermaidName in unlockedChapterList)
             {
                 // 创建按钮实例
                 GameObject buttonObject = Instantiate(_buttonPrefab, _buttonListContent.transform);
 
                 // 对按钮进行初始化
+                var chapterInfo = this.GetModel<ChapterModel>().GetChapterInfo(mermaidName);
                 Button button = buttonObject.GetComponent<Button>();
-                button.GetComponentInChildren<TMP_Text>().text = chapterName;
-                button.onClick.AddListener(() => OnClickChapterButton(chapterName));
+                button.GetComponentInChildren<TMP_Text>().text = chapterInfo.MermaidName;
+                button.onClick.AddListener(() => OnClickChapterButton(chapterInfo));
 
                 // 调整布局
                 _buttonListLayoutGroup.CalculateLayoutInputVertical();
@@ -78,13 +84,11 @@ namespace VNFramework
             }
         }
 
-        public void OnClickChapterButton(string chapterName)
+        public void OnClickChapterButton(ChapterInfo chapterInfo)
         {
-            _chapterModel.CurrentChapter = chapterName;
-
-            var info = _chapterModel.GetChapterInfo(chapterName);
-            _resumeText.text = info.Resume;
-            _resumePic.sprite = this.GetUtility<GameDataStorage>().LoadSprite(info.ResumePic);
+            _chapterModel.CurrentChapter = chapterInfo.MermaidName;
+            _resumeText.text = chapterInfo.ResumeText;
+            _resumePic.sprite = this.GetUtility<GameDataStorage>().LoadSprite(chapterInfo.ResumePic);
         }
 
         public IArchitecture GetArchitecture()
