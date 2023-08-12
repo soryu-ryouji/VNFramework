@@ -16,4 +16,16 @@ namespace VNFramework
             SceneManager.LoadScene("Game");
         }
     }
+
+    class ExitGameCommand : AbstractCommand
+    {
+        protected override void OnExecute()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
+        }
+    }
 }

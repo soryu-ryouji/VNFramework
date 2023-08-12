@@ -1,4 +1,3 @@
-using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,6 +23,7 @@ namespace VNFramework
             _titleBtn.onClick.AddListener(this.SendCommand<LoadStartUpSceneCommand>);
             _chapterBtn.onClick.AddListener(this.SendCommand<ShowChapterViewCommand>);
             _configViewBtn.onClick.AddListener(this.SendCommand<ShowConfigViewCommand>);
+            _exitBtn.onClick.AddListener(this.SendCommand<ExitGameCommand>);
             _backMenuBtn.onClick.AddListener(this.SendCommand<HideMenuViewCommand>);
         }
 
