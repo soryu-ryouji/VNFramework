@@ -13,7 +13,6 @@ namespace VNFramework
     {
         private string _configDirPath = Path.Combine(Application.dataPath, "Config");
         private string _systemConfigPath = Path.Combine(Application.dataPath, "Config", "game_config.txt");
-        private string _chapterRecordPath = Path.Combine(Application.dataPath, "Config", "chapter_record.txt");
 
         Dictionary<string, AssetBundle> abDic = new();
         public AudioClip LoadSound(string audioName)
