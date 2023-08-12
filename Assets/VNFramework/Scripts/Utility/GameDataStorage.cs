@@ -54,6 +54,8 @@ namespace VNFramework
         public GameSave[] LoadGameSave()
         {
             string path = Path.Combine(_configDirPath, "save_file.txt");
+            if (!File.Exists(path)) return new GameSave[60];
+
             string gameSaveText = File.ReadAllText(path);
             string pattern = @"<\|\s*(\[.*?\])\s*\|>";
             MatchCollection matches = Regex.Matches(gameSaveText, pattern, RegexOptions.Singleline);
