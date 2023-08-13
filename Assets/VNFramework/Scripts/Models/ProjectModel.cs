@@ -42,7 +42,7 @@ namespace VNFramework
 
         protected override void OnInit()
         {
-            this.GetUtility<GameDataStorage>().LoadProjectData();
+            this.GetUtility<GameDataStorage>().LoadProjectConfig();
         }
     }
 }

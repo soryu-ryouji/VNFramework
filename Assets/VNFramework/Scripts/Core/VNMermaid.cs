@@ -42,7 +42,7 @@ namespace VNFramework.Core
             Children.Add((node: node, optionText: optionText));
         }
 
-        public MermaidNode GetMermaidNode(string nodeName)
+        public MermaidNode? GetMermaidNode(string nodeName)
         {
             if (NodeName == nodeName) return this;
 
@@ -56,7 +56,7 @@ namespace VNFramework.Core
             return null;
         }
 
-        public static MermaidNode GetMermaidNode(MermaidNode parentNode, string nodeName)
+        public static MermaidNode? GetMermaidNode(MermaidNode parentNode, string nodeName)
         {
             if (parentNode.NodeName == nodeName) return parentNode;
 
@@ -66,7 +66,7 @@ namespace VNFramework.Core
             return null;
         }
 
-        public static MermaidNode GetMermaidNode(List<MermaidNode> parentNode, string nodeName)
+        public static MermaidNode? GetMermaidNode(List<MermaidNode> parentNode, string nodeName)
         {
             foreach (var node in parentNode)
             {
@@ -152,7 +152,7 @@ namespace VNFramework.Core
 
         public void LinkMermaidNode(string from, string to, string optionText)
         {
-            MermaidNode fromNode = MermaidNode.GetMermaidNode(mermaidNodes, from);
+            MermaidNode? fromNode = MermaidNode.GetMermaidNode(mermaidNodes, from);
             if (fromNode == null)
             {
                 // 若 mermaidNotes 中不存在 fromNode 节点，则尝试从 ghost中创建
@@ -168,7 +168,7 @@ namespace VNFramework.Core
                 ghostNodes.RemoveAt(index);
             }
 
-            MermaidNode toNode;
+            MermaidNode? toNode;
             int toNodeIndex = GetMermaidNodeIndex(to);
 
             if (toNodeIndex == -1)

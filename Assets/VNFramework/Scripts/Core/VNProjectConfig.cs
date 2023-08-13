@@ -3,19 +3,19 @@ using System.Text.RegularExpressions;
 
 namespace VNFramework.Core
 {
-    public enum GameInfoType
+    class VNProjectConfig
     {
-        TitleView,
-        BacklogView,
-        PerformanceView,
-        GameSaveView,
-    }
-
-    class VNGameInfo
-    {
-        public static List<(GameInfoType blockType, Dictionary<string, string> property)> ExtractGameInfo(string configText)
+        public enum ProjectConfigType
         {
-            var result = new List<(GameInfoType blockType, Dictionary<string, string> property)>();
+            TitleView,
+            BacklogView,
+            PerformanceView,
+            GameSaveView,
+        }
+
+        public static List<(ProjectConfigType blockType, Dictionary<string, string> property)> ExtractProjectConfig(string configText)
+        {
+            var result = new List<(ProjectConfigType blockType, Dictionary<string, string> property)>();
             var blocks = ExtractConfigBlock(configText);
 
             foreach (var (blockType, blockText) in blocks)
@@ -27,22 +27,22 @@ namespace VNFramework.Core
             return result;
         }
 
-        public static List<(GameInfoType blockType, string blockText)> ExtractConfigBlock(string configText)
+        public static List<(ProjectConfigType blockType, string blockText)> ExtractConfigBlock(string configText)
         {
             string pattern = @"\[(.*?)\]\s*(.*?)\s*(?=\[|\z)";
             MatchCollection matches = Regex.Matches(configText, pattern, RegexOptions.Singleline);
-            var result = new List<(GameInfoType blockType, string)>();
+            var result = new List<(ProjectConfigType blockType, string)>();
 
             foreach (Match match in matches)
             {
                 string blockTypeStr = match.Groups[1].Value.Trim();
                 string blockText = match.Groups[2].Value.Trim();
 
-                GameInfoType blockType;
-                if (blockTypeStr == "Title View") blockType = GameInfoType.TitleView;
-                else if (blockTypeStr == "Game Save View") blockType = GameInfoType.GameSaveView;
-                else if (blockTypeStr == "Backlog View") blockType = GameInfoType.BacklogView;
-                else if (blockTypeStr == "Performance View") blockType = GameInfoType.PerformanceView;
+                ProjectConfigType blockType;
+                if (blockTypeStr == "Title View") blockType = ProjectConfigType.TitleView;
+                else if (blockTypeStr == "Game Save View") blockType = ProjectConfigType.GameSaveView;
+                else if (blockTypeStr == "Backlog View") blockType = ProjectConfigType.BacklogView;
+                else if (blockTypeStr == "Performance View") blockType = ProjectConfigType.PerformanceView;
                 else continue;
 
                 result.Add((blockType, blockText));
@@ -62,7 +62,7 @@ namespace VNFramework.Core
             {
                 string propertyName = match.Groups[1].Value.Trim();
                 string propertyValue = match.Groups[2].Value.Trim();
-                
+
                 result.Add(propertyName, propertyValue);
             }
 

@@ -153,6 +153,13 @@ ChMid: {ChMid}";
         public string MermaidName;
         public string ResumeText;
         public string ResumePic;
+
+        public ChapterInfo()
+        {
+            MermaidName = "";
+            ResumeText = "";
+            ResumePic = "";
+        }
     }
 
     public class GameSave
@@ -172,14 +179,15 @@ ChMid: {ChMid}";
             ResumePic = resumePic;
             ResumeText = resumeText;
         }
+
         public GameSave()
         {
             SaveIndex = 0;
-            SaveDate = null;
-            MermaidNode = null;
+            SaveDate = "";
+            MermaidNode = "";
             VNScriptIndex = 0;
-            ResumePic = null;
-            ResumeText = null;
+            ResumePic = "";
+            ResumeText = "";
         }
     }
 }
