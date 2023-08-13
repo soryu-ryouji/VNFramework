@@ -20,7 +20,7 @@ namespace VNFramework
             }
 
             var ret = _abDic["sound"].LoadAsset<AudioClip>(audioName);
-            if (ret) Debug.Log($"<color=red>AudioClip {audioName} Not Found</color>");
+            if (ret == null) Debug.Log($"<color=red>AudioClip {audioName} Not Found</color>");
 
             return ret;
         }
@@ -34,7 +34,7 @@ namespace VNFramework
             }
 
             var ret = _abDic["sprite"].LoadAsset<Sprite>(spriteName);
-            if (ret) Debug.Log($"<color=red>Sprite {spriteName} not found</color>");
+            if (ret == null) Debug.Log($"<color=red>Sprite {spriteName} not found</color>");
 
             return ret;
         }
