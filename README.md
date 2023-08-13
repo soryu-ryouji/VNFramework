@@ -4,7 +4,7 @@
 
 ## Program Architecture
 
-![VNFrameworkStructure](./docs/img/VNFramework_Struct.svg)
+![VNFrameworkStruct](./docs/img/VNFrameworkStruct.svg)
 
 ## Todo List
 
