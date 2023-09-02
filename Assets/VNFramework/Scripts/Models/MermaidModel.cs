@@ -10,7 +10,7 @@ namespace VNFramework
         {
             Mermaid mermaid = new();
             string mermaidText = this.GetUtility<GameDataStorage>().LoadVNMermaid("VNMermaid");
-            mermaid.ParseVNMermaid(mermaidText);
+            mermaid.ParseVNMermaid(mermaidText.Split('\n'));
             rootNode = mermaid.mermaidNodes[0];
         }
 

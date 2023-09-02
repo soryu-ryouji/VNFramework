@@ -51,7 +51,7 @@ namespace VNFramework.Core
         private static ChapterInfo ParseChapterInfo(string blockContent)
         {
             blockContent = blockContent.Trim();
-            string pattern = @"\[\s*(mermaid_name|resume|resume_pic)\s*:\s*(.*?)\s*\]";
+            string pattern = @"\[\s*(show_name|mermaid_name|resume|resume_pic)\s*:\s*(.*?)\s*\]";
             MatchCollection matches = Regex.Matches(blockContent, pattern, RegexOptions.Singleline);
 
             ChapterInfo chapterInfo = new();
@@ -63,6 +63,7 @@ namespace VNFramework.Core
 
                 switch (key)
                 {
+                    case "show_name": chapterInfo.ShowName = value.Trim(); break;
                     case "mermaid_name": chapterInfo.MermaidName = value.Trim(); break;
                     case "resume": chapterInfo.ResumeText = value.Trim(); break;
                     case "resume_pic": chapterInfo.ResumePic = value.Trim(); break;

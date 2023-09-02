@@ -19,11 +19,11 @@ namespace VNFramework
         }
     }
 
-    public class InitPerformanceEnvironment : AbstractCommand
+    public class InitPerformanceEnvironmentCommand : AbstractCommand
     {
         private PerformanceState _state;
 
-        public InitPerformanceEnvironment(PerformanceState state)
+        public InitPerformanceEnvironmentCommand(PerformanceState state)
         {
             _state = state;
         }
@@ -36,14 +36,13 @@ namespace VNFramework
             if (!string.IsNullOrWhiteSpace(_state.Bgm))
                 this.SendCommand(new ExecuteAudioCommand(new VNScriptAsm(AsmObj.bgm, "play", new() { _state.Bgm })));
             if (!string.IsNullOrWhiteSpace(_state.Bgp))
-                this.SendCommand(new ExecuteSpriteCommand(new VNScriptAsm(AsmObj.bgp, "show", new List<string> { _state.Bgm, "immediate" })));
+                this.SendCommand(new ExecuteSpriteCommand(new VNScriptAsm(AsmObj.bgp, "show", new List<string> { _state.Bgp, "immediate" })));
             if (!string.IsNullOrWhiteSpace(_state.ChMid))
                 this.SendCommand(new ExecuteSpriteCommand(new VNScriptAsm(AsmObj.ch_mid, "show", new List<string> { _state.ChMid, "immediate" })));
             if (!string.IsNullOrWhiteSpace(_state.ChRight))
                 this.SendCommand(new ExecuteSpriteCommand(new VNScriptAsm(AsmObj.ch_right, "show", new List<string> { _state.ChRight, "immediate" })));
             if (!string.IsNullOrWhiteSpace(_state.ChLeft))
                 this.SendCommand(new ExecuteSpriteCommand(new VNScriptAsm(AsmObj.ch_left, "show", new List<string> { _state.ChLeft, "immediate" })));
-
         }
     }
 
@@ -96,10 +95,12 @@ namespace VNFramework
             {
                 case AsmObj.dialogue: this.SendCommand(new ExecuteDialogueCommand(_asm)); break;
                 case AsmObj.name: this.SendCommand(new ExecuteNameCommand(_asm)); break;
+                
                 case AsmObj.bgm: this.SendCommand(new ExecuteAudioCommand(_asm)); break;
                 case AsmObj.bgs: this.SendCommand(new ExecuteAudioCommand(_asm)); break;
                 case AsmObj.chs: this.SendCommand(new ExecuteAudioCommand(_asm)); break;
                 case AsmObj.gms: this.SendCommand(new ExecuteAudioCommand(_asm)); break;
+
                 case AsmObj.ch_left: this.SendCommand(new ExecuteSpriteCommand(_asm)); break;
                 case AsmObj.ch_mid: this.SendCommand(new ExecuteSpriteCommand(_asm)); break;
                 case AsmObj.ch_right: this.SendCommand(new ExecuteSpriteCommand(_asm)); break;

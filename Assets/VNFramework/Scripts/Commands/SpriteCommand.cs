@@ -1,3 +1,4 @@
+using AssetBundleBrowser.AssetBundleModel;
 using UnityEngine;
 
 namespace VNFramework
@@ -19,38 +20,35 @@ namespace VNFramework
         {
             if (_spriteObj == AsmObj.bgp)
             {
-                GameState.BgpChanged(VNutils.Hash(
-                    "action", SpriteAction.Show,
-                    "sprite_name", _spriteName,
-                    "mode", _spriteMode
-                ));
+                this.GetModel<PerformanceModel>().BgpName = _spriteName;
+
+                if (_spriteMode == "fading") this.SendEvent<BgpFadingShowEvent>();
+                else if (_spriteMode == "immediate") this.SendEvent<BgpImmediateShowEvent>();
+                else this.SendEvent<BgpImmediateShowEvent>();
             }
 
             else if (_spriteObj == AsmObj.ch_left)
             {
-                GameState.ChlpChanged(VNutils.Hash(
-                    "action", SpriteAction.Show,
-                    "sprite_name", _spriteName,
-                    "mode", _spriteMode
-                ));
+                this.GetModel<PerformanceModel>().ChLeft = _spriteName;
+
+                if (_spriteMode == "fading") this.SendEvent<ChLeftFadingShowEvent>();
+                else if (_spriteMode == "immediate") this.SendEvent<ChLeftImmediateShowEvent>();
             }
 
             else if (_spriteObj == AsmObj.ch_mid)
             {
-                GameState.ChmpChanged(VNutils.Hash(
-                    "action", SpriteAction.Show,
-                    "sprite_name", _spriteName,
-                    "mode", _spriteMode
-                ));
+                this.GetModel<PerformanceModel>().ChMid = _spriteName;
+
+                if (_spriteMode == "fading") this.SendEvent<ChMidFadingShowEvent>();
+                else if (_spriteMode == "immediate") this.SendEvent<ChMidImmediateShowEvent>();
             }
 
             else if (_spriteObj == AsmObj.ch_right)
             {
-                GameState.ChrpChanged(VNutils.Hash(
-                    "action", SpriteAction.Show,
-                    "sprite_name", _spriteName,
-                    "mode", _spriteMode
-                ));
+                this.GetModel<PerformanceModel>().ChRight = _spriteName;
+
+                if (_spriteMode == "fading") this.SendEvent<ChRightFadingShowEvent>();
+                else if (_spriteMode == "immediate") this.SendEvent<ChRightImmediateShowEvent>();
             }
         }
     }
@@ -70,36 +68,35 @@ namespace VNFramework
         {
             if (_spriteObj == AsmObj.bgp)
             {
-                GameState.BgpChanged(VNutils.Hash(
-                    "action", SpriteAction.Hide,
-                    "mode", _spriteMode
-                ));
+                this.GetModel<PerformanceModel>();
+
+                if (_spriteMode == "fading") this.SendEvent<BgpFadingHideEvent>();
+                else if (_spriteMode == "immediate") this.SendEvent<BgpImmediateHideEvent>();
             }
 
             else if (_spriteObj == AsmObj.ch_left)
             {
-                GameState.ChlpChanged(VNutils.Hash(
-                    "action", SpriteAction.Hide,
-                    "mode", _spriteMode
-                ));
+                this.GetModel<PerformanceModel>().ChLeft = "";
+
+                if (_spriteMode == "fading") this.SendEvent<ChLeftFadingHideEvent>();
+                else if (_spriteMode == "immediate") this.SendEvent<ChLeftImmediateHideEvent>();
             }
 
             else if (_spriteObj == AsmObj.ch_mid)
             {
-                GameState.ChmpChanged(VNutils.Hash(
-                    "action", SpriteAction.Hide,
-                    "mode", _spriteMode
-                ));
+                this.GetModel<PerformanceModel>().ChMid = "";
+
+                if (_spriteMode == "fading") this.SendEvent<ChMidFadingHideEvent>();
+                else if (_spriteMode == "immediate") this.SendEvent<ChMidImmediateHideEvent>();
             }
 
             else if (_spriteObj == AsmObj.ch_right)
             {
-                GameState.ChrpChanged(VNutils.Hash(
-                    "action", SpriteAction.Hide,
-                    "mode", _spriteMode
-                ));
-            }
+                this.GetModel<PerformanceModel>().ChRight = "";
 
+                if (_spriteMode == "fading") this.SendEvent<ChRightFadingHideEvent>();
+                else if (_spriteMode == "immediate") this.SendEvent<ChRightImmediateHideEvent>();
+            }
         }
     }
 }

@@ -16,10 +16,14 @@ namespace VNFramework
         private float _performingChsVolume;
         private float _performingGmsVolume;
         private string _bgpName;
-        private string _bgmName;
         private string _chLeft;
         private string _chMid;
         private string _chRight;
+
+        private string _bgmName;
+        private string _bgsName;
+        private string _chsName;
+        private string _gmsName;
         private List<(string mermaidName, string optionText)> _chooseList;
 
         public string PerformingMermaidName
@@ -101,6 +105,33 @@ namespace VNFramework
             }
         }
 
+        public string BgsName
+        {
+            get { return _bgsName; }
+            set
+            {
+                _bgsName = value;
+            }
+        }
+
+        public string ChsName
+        {
+            get { return _chsName; }
+            set
+            {
+                _chsName = value;
+            }
+        }
+
+        public string GmsName
+        {
+            get { return _gmsName; }
+            set
+            {
+                _gmsName = value;
+            }
+        }
+
         public string BgpName
         {
             get { return _bgpName; }
@@ -143,22 +174,6 @@ namespace VNFramework
             BgsVolume = 1;
             ChsVolume = 1;
             GmsVolume = 1;
-
-            GameState.BgpChanged += OnBgpChanged;
-        }
-
-        public void OnBgpChanged(Hashtable hash)
-        {
-            var action = (SpriteAction)hash["action"];
-
-            if (action == SpriteAction.Show)
-            {
-                BgpName = (string)hash["sprite_name"];
-            }
-            else if (action == SpriteAction.Hide)
-            {
-                BgpName = "";
-            }
         }
     }
 }

@@ -18,6 +18,11 @@ namespace VNFramework.Core
 
             var gameSaves = new GameSave[60];
 
+            for (int i = 0; i < gameSaves.Length; i++)
+            {
+                gameSaves[i] = new GameSave();
+            }
+
             foreach (var save in curGameSaves)
             {
                 var index = save.SaveIndex;
@@ -30,7 +35,7 @@ namespace VNFramework.Core
         private static GameSave ParseGameSaveItem(string blockContent)
         {
             blockContent = blockContent.Trim();
-            string pattern = @"\[\s*(save_index|save_date|mermaid_node|resume_pic|resume_text)\s*:\s*(.*?)\s*\]";
+            string pattern = @"\[\s*(save_index|save_date|mermaid_node|script_index|resume_pic|resume_text)\s*:\s*(.*?)\s*\]";
             MatchCollection matches = Regex.Matches(blockContent, pattern, RegexOptions.Singleline);
 
             var gameSave = new GameSave();

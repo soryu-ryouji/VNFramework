@@ -1,62 +1,44 @@
-using System;
 using UnityEngine;
-using System.Collections;
 
 namespace VNFramework
 {
     public class AudioController : MonoBehaviour, IController
     {
-        private float _currentVolume;
-        protected AudioSource audioPlayer;
+        private AudioHandler _bgmController;
+        private AudioHandler _bgsController;
+        private AudioHandler _chsController;
+        private AudioHandler _gmsController;
 
-        public float CurrentVolume
-        {
-            get => _currentVolume;
-        }
-        
-        public void OnAudioChanged(Hashtable hash)
-        {
-            var action = (AudioAction)hash["action"];
+        private PerformanceModel _performModel;
 
-            if (action == AudioAction.Play) PlayAudio((string)hash["audio_name"]);
-            else if (action == AudioAction.Stop) StopAudio();
-            else if (action == AudioAction.Vol) SetVolume(Convert.ToSingle(hash["volume"]));
-            else if (action == AudioAction.Loop) SetLoop((string)hash["is_loop"]);
+        private void Awake()
+        {
+            _bgmController = this.transform.Find("Bgm").GetComponent<AudioHandler>();
+            _bgsController = this.transform.Find("Bgs").GetComponent<AudioHandler>();
+            _chsController = this.transform.Find("Chs").GetComponent<AudioHandler>();
+            _gmsController = this.transform.Find("Gms").GetComponent<AudioHandler>();
         }
 
-        public void SetVolume(float volume)
+        private void Start()
         {
-            _currentVolume = volume;
-            audioPlayer.volume = _currentVolume;
-        }
+            _performModel = this.GetModel<PerformanceModel>();
+            this.RegisterEvent<BgmPlayEvent>(_=> _bgmController.PlayAudio(_performModel.BgmName))
+                .UnRegisterWhenGameObjectDestroyed(this);
+            this.RegisterEvent<BgsPlayEvent>(_=> _bgsController.PlayAudio(_performModel.BgsName))
+                .UnRegisterWhenGameObjectDestroyed(this);;
+            this.RegisterEvent<ChsPlayEvent>(_=> _chsController.PlayAudio(_performModel.ChsName))
+                .UnRegisterWhenGameObjectDestroyed(this);;
+            this.RegisterEvent<GmsPlayEvent>(_=> _gmsController.PlayAudio(_performModel.GmsName))
+                .UnRegisterWhenGameObjectDestroyed(this);;
 
-        public void SetLoop(string value)
-        {
-            var isLoop = Convert.ToBoolean(value);
-            audioPlayer.loop = isLoop;
-        }
-
-
-        public void PlayAudio(string audioName)
-        {
-            audioPlayer.clip = GetAudioClip(audioName);
-            audioPlayer.Play();
-        }
-
-        public void StopAudio()
-        {
-            audioPlayer.Stop();
-        }
-
-        public void Continue()
-        {
-            audioPlayer.Play();
-        }
-
-        private AudioClip GetAudioClip(string audioName)
-        {
-            var audio = this.GetUtility<GameDataStorage>().LoadSound(audioName);
-            return audio;
+            this.RegisterEvent<BgmStopEvent>(_=> _bgmController.StopAudio())
+                .UnRegisterWhenGameObjectDestroyed(this);;
+            this.RegisterEvent<BgsStopEvent>(_=> _bgsController.StopAudio())
+                .UnRegisterWhenGameObjectDestroyed(this);;
+            this.RegisterEvent<ChsStopEvent>(_=> _chsController.StopAudio())
+                .UnRegisterWhenGameObjectDestroyed(this);;
+            this.RegisterEvent<GmsStopEvent>(_=> _gmsController.StopAudio())
+                .UnRegisterWhenGameObjectDestroyed(this);;
         }
 
         public IArchitecture GetArchitecture()

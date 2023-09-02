@@ -15,34 +15,30 @@ namespace VNFramework
         {
             if (_playerName == AsmObj.bgm)
             {
-                GameState.BgmChanged(VNutils.Hash(
-                    "action", AudioAction.Play,
-                    "audio_name", _audioName
-                ));
+                this.GetModel<PerformanceModel>().BgmName = _audioName;
+
+                this.SendEvent<BgmPlayEvent>();
             }
 
             else if (_playerName == AsmObj.bgs)
             {
-                GameState.BgsChanged(VNutils.Hash(
-                    "action", AudioAction.Play,
-                    "audio_name", _audioName
-                ));
+                this.GetModel<PerformanceModel>().BgsName = _audioName;
+
+                this.SendEvent<BgsPlayEvent>();
             }
 
             else if (_playerName == AsmObj.chs)
             {
-                GameState.ChsChanged(VNutils.Hash(
-                    "action", AudioAction.Play,
-                    "audio_name", _audioName
-                ));
+                this.GetModel<PerformanceModel>().ChsName = _audioName;
+
+                this.SendEvent<ChsPlayEvent>();
             }
 
             else if (_playerName == AsmObj.gms)
             {
-                GameState.GmsChanged(VNutils.Hash(
-                    "action", AudioAction.Play,
-                    "audio_name", _audioName
-                ));
+                this.GetModel<PerformanceModel>().GmsName = _audioName;
+
+                this.SendEvent<GmsPlayEvent>();
             }
         }
     }
@@ -58,33 +54,10 @@ namespace VNFramework
 
         protected override void OnExecute()
         {
-            if (_playerName == AsmObj.bgm)
-            {
-                GameState.BgmChanged(VNutils.Hash(
-                    "action", AudioAction.Stop
-                ));
-            }
-
-            else if (_playerName == AsmObj.bgs)
-            {
-                GameState.BgsChanged(VNutils.Hash(
-                    "action", AudioAction.Stop
-                ));
-            }
-
-            else if (_playerName == AsmObj.chs)
-            {
-                GameState.ChsChanged(VNutils.Hash(
-                    "action", AudioAction.Stop
-                ));
-            }
-
-            else if (_playerName == AsmObj.gms)
-            {
-                GameState.GmsChanged(VNutils.Hash(
-                    "action", AudioAction.Stop
-                ));
-            }
+            if (_playerName == AsmObj.bgm) this.SendEvent<BgmStopEvent>();
+            else if (_playerName == AsmObj.bgs) this.SendEvent<BgsStopEvent>();
+            else if (_playerName == AsmObj.chs) this.SendEvent<ChsStopEvent>();
+            else if (_playerName == AsmObj.gms) this.SendEvent<GmsStopEvent>();
         }
     }
 }

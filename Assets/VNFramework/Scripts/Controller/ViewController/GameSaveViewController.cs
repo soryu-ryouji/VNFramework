@@ -23,6 +23,8 @@ namespace VNFramework
 
         private void Start()
         {
+            _gameSaveModel = this.GetModel<GameSaveModel>();
+
             _galleryBtns[0] = transform.Find("Gallery/Item00").GetComponent<GameSaveViewGalleryItemHandle>();
             _galleryBtns[1] = transform.Find("Gallery/Item01").GetComponent<GameSaveViewGalleryItemHandle>();
             _galleryBtns[2] = transform.Find("Gallery/Item02").GetComponent<GameSaveViewGalleryItemHandle>();
@@ -62,7 +64,6 @@ namespace VNFramework
             _backBtn = transform.Find("BackButton").GetComponent<Button>();
             _backBtn.onClick.AddListener(() => this.SendCommand<HideGameSaveViewCommand>());
             
-            _gameSaveModel = this.GetModel<GameSaveModel>();
             UpdateView();
         }
 

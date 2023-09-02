@@ -55,25 +55,6 @@ namespace VNFramework
             else if (action == SpriteAction.MoveLR) Move();
         }
 
-        public void OnSpriteChanged(Hashtable hash)
-        {
-            Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
-            var action = (SpriteAction)hash["action"];
-            var mode = (string)hash["mode"];
-            
-            if (action == SpriteAction.Show)
-            {
-                if (mode == "fading") FadingChangeSprite((string)hash["sprite_name"]);
-                else if (mode == "immediate") ImmediatelyShowSprite((string)hash["sprite_name"]);
-            }
-            else if (action == SpriteAction.Hide)
-            {
-                if (mode == "fading") FadingHideSprite();
-                else if (mode == "immediate") ImmediatelyHideSprite();
-            }
-            else if (action == SpriteAction.Shake) Shake();
-            else if (action == SpriteAction.MoveLR) Move();
-        }
 
         private Coroutine fadingCoroutine;
 

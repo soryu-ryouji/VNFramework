@@ -28,13 +28,16 @@ namespace VNFramework
 
             foreach (var coupleFolder in resFolderPaths)
             {
-                CopyFolderFilesToTargetFolder(coupleFolder.Item1, coupleFolder.Item2);
+                if (Directory.Exists(coupleFolder.Item1))
+                {
+                    CopyFolderFilesToTargetFolder(coupleFolder.Item1, coupleFolder.Item2);
+                }
             }
 
             Debug.Log("Resources Loaded!");
         }
 
-        private static void CopyFolderFilesToTargetFolder(string sourceFolderPath, string targetFolderPath)
+        private static void CopyFolderFilesToTargetFolder(string sourceFolderPath, string targetFolderPath) 
         {
             string[] allResourcePaths = Directory.GetFiles(sourceFolderPath, "*", SearchOption.AllDirectories);
 
@@ -46,7 +49,46 @@ namespace VNFramework
                 string exportDirectory = Path.GetDirectoryName(exportPath);
                 Directory.CreateDirectory(exportDirectory);
 
-                File.Copy(resourcePath, exportPath, true);
+                if (File.Exists(exportPath))
+                {
+                    // 检查 resourcePath 和 exportPath 是否引用了相同的文件
+                    if (!FileCompare(resourcePath, exportPath))
+                    {
+                        // 删除 exportPath 的文件
+                        File.Delete(exportPath);
+
+                        // 复制 resourcePath 的文件到 exportPath
+                        File.Copy(resourcePath, exportPath);
+                    }
+                }
+                else
+                {
+                    // 如果 exportPath 不存在，直接复制 resourcePath 的文件到 exportPath
+                    File.Copy(resourcePath, exportPath);
+                }
+            }
+        }
+
+        private static bool FileCompare(string file1, string file2)
+        {
+            int file1byte;
+            int file2byte;
+
+            using (FileStream fs1 = new FileStream(file1, FileMode.Open))
+            using (FileStream fs2 = new FileStream(file2, FileMode.Open))
+            {
+                if (fs1.Length != fs2.Length)
+                {
+                    return false;
+                }
+
+                do
+                {
+                    file1byte = fs1.ReadByte();
+                    file2byte = fs2.ReadByte();
+                } while ((file1byte == file2byte) && (file1byte != -1));
+
+                return (file1byte - file2byte) == 0;
             }
         }
 

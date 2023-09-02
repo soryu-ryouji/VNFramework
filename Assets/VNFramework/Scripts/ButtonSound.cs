@@ -1,17 +1,19 @@
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace VNFramework
 {
-    public class ButtonSound : MonoBehaviour,IPointerEnterHandler
+    public class ButtonSound : MonoBehaviour, IPointerEnterHandler, ICanSendCommand
     {
         public void OnPointerEnter(PointerEventData eventData)
         {
-            GameState.GmsChanged(VNutils.Hash(
-                "object", AudioPlayer.Gms,
-                "action", AudioAction.Play,
-                "audio_name","click-button"
-            ));
+            this.SendCommand(new PlayAudioCommand("click-button", AsmObj.gms));
+        }
+
+        public IArchitecture GetArchitecture()
+        {
+            return VNFrameworkProj.Interface;
         }
     }
 }

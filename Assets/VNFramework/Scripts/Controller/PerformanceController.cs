@@ -12,6 +12,10 @@ namespace VNFramework
 
         private void Start()
         {
+            _performanceModel = this.GetModel<PerformanceModel>();
+            _mermaidModel = this.GetModel<MermaidModel>();
+            _dialogueModel = this.GetModel<DialogueModel>();
+
             this.RegisterEvent<LoadNextPerformanceEvent>(_ => NextPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<InitPerformanceEvent>(_ => InitPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
 
@@ -20,9 +24,6 @@ namespace VNFramework
 
         private void InitPerformance()
         {
-            _performanceModel = this.GetModel<PerformanceModel>();
-            _mermaidModel = this.GetModel<MermaidModel>();
-            _dialogueModel = this.GetModel<DialogueModel>();
             _dialogueModel.InitModel();
 
             var nodeName = _performanceModel.PerformingMermaidName;
@@ -33,10 +34,11 @@ namespace VNFramework
             this.GetModel<ChapterModel>().TryAddUnlockedChapter(_performanceModel.PerformingMermaidName);
             
             // 对演出进行初始化
-            var performanceState = VNScriptCompiler.GetPerformanceStateByIndex(fileLines, _performanceModel.PerformingIndex, out _compiler);
+            var performanceState = VNScriptCompiler.GetPerformanceStateByIndex(fileLines, _performanceModel.PerformingIndex);
+            _compiler = new VNScriptCompiler(fileLines);
             _compiler.InitByLine(performanceState.ScriptIndex);
 
-            this.SendCommand(new InitPerformanceEnvironment(performanceState));
+            this.SendCommand(new InitPerformanceEnvironmentCommand(performanceState));
 
             NextPerformance();
         }

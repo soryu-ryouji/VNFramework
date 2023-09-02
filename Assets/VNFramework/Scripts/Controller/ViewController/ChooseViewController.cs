@@ -13,7 +13,7 @@ namespace VNFramework
 
         private void Start()
         {
-            _btnPrefab = this.GetUtility<GameDataStorage>().LoadPrefab("ChapterButton");
+            _btnPrefab = this.GetUtility<GameDataStorage>().LoadPrefab("ChooseButton");
             _btnListContent = transform.Find("ButtonList/Content").gameObject;
             _btnListLayoutGroup = _btnListContent.GetComponent<VerticalLayoutGroup>();
 

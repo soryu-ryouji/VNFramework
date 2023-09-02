@@ -67,7 +67,7 @@ namespace VNFramework
                 // 对按钮进行初始化
                 var chapterInfo = this.GetModel<ChapterModel>().GetChapterInfo(mermaidName);
                 Button button = buttonObject.GetComponent<Button>();
-                button.GetComponentInChildren<TMP_Text>().text = chapterInfo.MermaidName;
+                button.GetComponentInChildren<TMP_Text>().text = chapterInfo.ShowName;
                 button.onClick.AddListener(() => OnClickChapterButton(chapterInfo));
 
                 // 调整布局
