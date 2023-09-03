@@ -100,7 +100,17 @@ fromNode -->|optionText| toNode
 fromNode --> toNode
 ```
 
-![Example_VNMermaid](./docs/img/Example_VNMermaid.svg)
+```mermaid
+graph TD
+
+Prologue -->|"听她们的话，离开家躲起来"| 决定离开
+Prologue -->|"不...这是我的家，我不放心你们"| Route_1
+Route_1 -->|"还是听她们的话吧..."| 决定离开
+Route_1 -->|"不，我要跟着去"| Route_2
+
+```
+
+
 
 ## VNScript Syntax
 
@@ -309,24 +319,31 @@ config_view_button_pic: config_view_button
 
 `chapter_info.txt` 用于声明视觉小说中会用到的剧本的信息，`Chapter View` 会根据该文件填写的内容来选择展示的信息。
 
+- show_name：在 `Chapter View` 上显示的名称
+
+- mermaid_name: 当前章节对应的 `MermaidNode` 的名称
+
 
 ```
 <|
+    [ show_name: Prologue ]
     [ mermaid_name: Prologue ]
-    [ resume: “远野志贵，是一个杀人鬼” ]
-    [ resume_pic: 夕阳_1 ]
+    [ resume: 那个少女的眼眸是冰山一般的苍蓝 ]
+    [ resume_pic: 神社外_夜 ]
 |>
 
 <|
-    [ mermaid_name: Chapter01 ]
+    [ show_name: 线路一 ]
+    [ mermaid_name: Route_1 ]
     [ resume: “真的永远都不会把我忘掉？”她耳语似的低声询问。<br>“永远不会忘，对你我怎么能忘呢！” ]
-    [ resume_pic: 夕阳_1 ]
+    [ resume_pic: suka ]
 |>
 
 <|
-    [ mermaid_name: Chapter02 ]
-    [ resume: 死并非生的对立面，而作为生的一部分永存 ]
-    [ resume_pic: black_city ]
+    [ show_name: 线路二 ]
+    [ mermaid_name: Route_2]
+    [ resume: 那天晚上，神社的火光照亮了整个夜空<br>没人知道为什么火能如此凶猛，简直...就如同是从地狱烧上来的一样 ]
+    [ resume_pic: city_00 ]
 |>
 ```
 
