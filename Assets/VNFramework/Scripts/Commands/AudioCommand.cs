@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace VNFramework
 {
     class PlayAudioCommand : AbstractCommand
@@ -15,6 +17,7 @@ namespace VNFramework
         {
             if (_playerName == AsmObj.bgm)
             {
+                Debug.Log("Play BGM: " + _audioName);
                 this.GetModel<PerformanceModel>().BgmName = _audioName;
 
                 this.SendEvent<BgmPlayEvent>();

@@ -4,18 +4,14 @@ namespace VNFramework
 {
     class DialogueModel : AbstractModel
     {
-        private List<string> _historicalDialogues;
+        public List<string> HistoricalDialogues { get; private set; }
 
-        private string _currentDialogue;
+        public bool IsAnimating = false;
+        public bool NeedAnimation = true;
+
         private string _currentName;
-        public bool isAnimating = false;
-        public bool needAnimation = true;
+        public string CurrentDialogue { get; set; }
 
-        public string CurrentDialogue
-        {
-            get { return _currentDialogue; }
-            set { _currentDialogue = value; }
-        }
         public string CurrentName
         {
             get { return _currentName; }
@@ -26,34 +22,21 @@ namespace VNFramework
             }
         }
 
-        public void InitModel()
-        {
-            _currentDialogue = "";
-            _currentName = "";
-            _historicalDialogues.Clear();
-            isAnimating = false;
-            needAnimation = true;
-        }
-
-        public override string ToString()
-        {
-            return $@"Is Animating : {isAnimating}
-needAnimation : {needAnimation}";
-        }
-
         public void AddDialogueNode(string dialogue)
         {
-            _historicalDialogues.Add(dialogue);
+            HistoricalDialogues.Add(dialogue);
         }
 
-        public string[] GetHistoricalDialogues()
+        public void InitModel()
         {
-            return _historicalDialogues.ToArray();
+            CurrentDialogue = "";
+            CurrentName = "";
+            HistoricalDialogues.Clear();
         }
 
         protected override void OnInit()
         {
-            _historicalDialogues = new();
+            HistoricalDialogues = new();
         }
     }
 }

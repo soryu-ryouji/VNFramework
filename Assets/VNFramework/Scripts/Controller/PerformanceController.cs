@@ -52,7 +52,7 @@ namespace VNFramework
             _performanceModel.IsAutoExecuteCommand = true;
 
             // 当对话动画正在播放时，此次只负责结束对话动画
-            if (_dialogueModel.isAnimating) { this.SendCommand<StopDialogueAnimCommand>(); return; }
+            if (_dialogueModel.IsAnimating) { this.SendCommand<StopDialogueAnimCommand>(); return; }
 
             // 当剧本已经演出完毕时，尝试加载下一章动画，或者回到开始界面
             if (_compiler.ScriptCountDown() <= 0) { this.SendCommand<LoadNextMermaidOrEndGameCommand>(); return; }

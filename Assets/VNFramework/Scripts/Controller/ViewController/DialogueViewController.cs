@@ -175,7 +175,7 @@ namespace VNFramework
         private void HideDialogueView()
         {
             _dialogueViewActive = false;
-            if (_dialogueModel.isAnimating) StopCharacterAnimation();
+            if (_dialogueModel.IsAnimating) StopCharacterAnimation();
 
             SetDialogueViewActive(_dialogueViewActive);
         }
@@ -211,13 +211,13 @@ namespace VNFramework
 
         private void ChangeDisplay()
         {
-            if (!_dialogueModel.needAnimation)
+            if (!_dialogueModel.NeedAnimation)
             {
                 _curDialogueBoxText.text = _curDialogue;
                 return;
             }
 
-            if (_dialogueModel.isAnimating)
+            if (_dialogueModel.IsAnimating)
             {
                 StopCharacterAnimation();
             }
@@ -227,13 +227,13 @@ namespace VNFramework
 
         public void StartCharacterAnimation()
         {
-            _dialogueModel.isAnimating = true;
+            _dialogueModel.IsAnimating = true;
             _animationCoroutine = StartCoroutine(CharacterAnimation());
         }
 
         private void StopCharacterAnimation()
         {
-            if (!_dialogueModel.isAnimating)
+            if (!_dialogueModel.IsAnimating)
             {
                 return;
             }
@@ -244,8 +244,8 @@ namespace VNFramework
                 _animationCoroutine = null;
             }
 
-            _dialogueModel.isAnimating = false;
-            Debug.Log("Dialogue View is Animating : " + _dialogueModel.isAnimating);
+            _dialogueModel.IsAnimating = false;
+            Debug.Log("Dialogue View is Animating : " + _dialogueModel.IsAnimating);
             _curDialogueBoxText.text = _curDialogue;
             _curDialogueIndex = _curDialogue.Length;
         }
@@ -260,7 +260,7 @@ namespace VNFramework
             }
 
             // Animation stop
-            _dialogueModel.isAnimating = false;
+            _dialogueModel.IsAnimating = false;
         }
         # endregion
 

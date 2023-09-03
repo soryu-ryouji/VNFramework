@@ -30,25 +30,6 @@ namespace VNFramework
             this.GetUtility<GameDataStorage>().SaveGameSave();
         }
 
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-
-            for (int i = 0; i <  _gameSaves.Length; i++)
-            {
-                sb.Append(
-@$"<|\
-    save_index: {i}
-    save_date: {_gameSaves[i].SaveDate}
-    mermaid_node: {_gameSaves[i].MermaidNode}
-    script_index: {_gameSaves[i].VNScriptIndex}
-    resume_pic: {_gameSaves[i].ResumePic}
-    resume_text: {_gameSaves[i].ResumeText}
-|>");
-            }
-
-            return sb.ToString();
-        }
         public void InitModel()
         {
             _gameSaves = this.GetUtility<GameDataStorage>().LoadGameSave();

@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -46,7 +45,6 @@ namespace VNFramework
 
         public void InitGame()
         {
-            Debug.Log("<color=green>Init Game</color>");
             this.RegisterEvent<LoadGameSceneEvent>(_ => LoadGameScene());
             this.RegisterEvent<LoadStartupSceneEvent>(_ => LoadStartupScene());
             this.RegisterEvent<ExitGameEvent>(_ => ExitGame());
@@ -61,10 +59,13 @@ namespace VNFramework
             this.GetModel<ChapterModel>().InitModel();
             this.GetModel<MermaidModel>().InitModel();
 
-            Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("AudioController"));
+            var audioController = Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("AudioController")).GetComponent<AudioController>();
+            audioController.InitAudioController();
             var viewController = Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("ViewController")).GetComponent<ViewController>();
             viewController.InitViewController();
             viewController.ShowTitleView();
+
+            Debug.Log("<color=green>Init Game Success</color>");
         }
 
         public void LoadStartupScene()
@@ -82,10 +83,13 @@ namespace VNFramework
                 yield return null;
             }
 
-            Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("AudioController"));
+            var audioController = Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("AudioController")).GetComponent<AudioController>();
+            audioController.InitAudioController();
             var viewController = Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("ViewController")).GetComponent<ViewController>();
             viewController.InitViewController();
             viewController.ShowTitleView();
+
+            Debug.Log("<color=green>Load Startup Scene Success</color>");
         }
 
         public void LoadGameScene()
@@ -102,10 +106,13 @@ namespace VNFramework
                 yield return null;
             }
 
-            Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("AudioController"));
+            var audioController = Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("AudioController")).GetComponent<AudioController>();
+            audioController.InitAudioController();
             var viewController = Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("ViewController")).GetComponent<ViewController>();
             viewController.InitViewController();
             viewController.ShowPerformanceView();
+
+            Debug.Log("<color=green>Load Game Scene Success</color>");
         }
 
         public void ExitGame()

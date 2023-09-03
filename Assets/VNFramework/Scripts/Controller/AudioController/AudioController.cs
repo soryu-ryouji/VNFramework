@@ -20,7 +20,7 @@ namespace VNFramework
             _gmsController = this.transform.Find("Gms").GetComponent<AudioHandler>();
         }
 
-        private void Start()
+        public void InitAudioController()
         {
             _performModel = this.GetModel<PerformanceModel>();
             _configModel = this.GetModel<ConfigModel>();
