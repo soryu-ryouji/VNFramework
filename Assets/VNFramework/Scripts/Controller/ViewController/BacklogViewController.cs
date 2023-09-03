@@ -25,7 +25,7 @@ namespace VNFramework
             _backBtnText = _backBtn.transform.Find("Text").GetComponent<TMP_Text>();
 
             // 对 BacklogView 外观进行初始化
-            _backlogTextBox.text = string.Join("\n\n", _dialogueModel.GetHistoricalDialogues());
+            _backlogTextBox.text = string.Join("\n", _dialogueModel.HistoricalDialogues);
             _backlogBgp.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.BacklogViewBgp);
             _backlogTextBox.color = VNutils.StrToColor(projectModel.BacklogViewTextColor);
             _backBtnText.color = VNutils.StrToColor(projectModel.BacklogViewBackButtonTextColor);

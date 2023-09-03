@@ -105,7 +105,8 @@ namespace VNFramework
                 MermaidNode = performanceModel.PerformingMermaidName,
                 VNScriptIndex = performanceModel.PerformingIndex,
                 ResumePic = performanceModel.BgpName,
-                ResumeText = dialogueModel.CurrentDialogue
+                ResumeText =  dialogueModel.CurrentDialogue.Length > 15 ?
+                    $"{dialogueModel.CurrentDialogue[0..15]}..." : dialogueModel.CurrentDialogue
             };
 
             _gameSaveModel.SetGameSave(gameSave);
