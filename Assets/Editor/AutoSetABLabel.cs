@@ -9,7 +9,7 @@ public class AutoSetABLabel
     public static void SetABLabel()
     {
         string resPath = Path.Combine(Application.dataPath, "VNFramework", "Resources");
-        string prefabPath = Path.Combine(resPath, "Prefabs");
+        string prefabPath = Path.Combine(Application.dataPath,"VNFramework", "Prefabs");
         string vnScriptPath = Path.Combine(resPath, "VNScripts");
         string spritePath = Path.Combine(resPath, "Sprites");
         string soundPath = Path.Combine(resPath, "Sounds");
