@@ -49,11 +49,13 @@ namespace VNFramework
 
             return sb.ToString();
         }
+        public void InitModel()
+        {
+            _gameSaves = this.GetUtility<GameDataStorage>().LoadGameSave();
+        }
 
         protected override void OnInit()
         {
-            _gameSaves = this.GetUtility<GameDataStorage>().LoadGameSave();
-            Debug.Log(ToString());
         }
     }
 }

@@ -6,7 +6,8 @@ namespace VNFramework
     class MermaidModel : AbstractModel
     {
         private MermaidNode rootNode;
-        protected override void OnInit()
+
+        public void InitModel()
         {
             Mermaid mermaid = new();
             string mermaidText = this.GetUtility<GameDataStorage>().LoadVNMermaid("VNMermaid");
@@ -30,6 +31,10 @@ namespace VNFramework
         {
             var curNode = rootNode.GetMermaidNode(mermaidName);
             return curNode.ChapterName;
+        }
+
+        protected override void OnInit()
+        {
         }
     }
 }

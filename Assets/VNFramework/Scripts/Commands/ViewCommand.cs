@@ -2,6 +2,21 @@ using UnityEngine;
 
 namespace VNFramework
 {
+    class ShowTitleViewCommand : AbstractCommand
+    {
+        protected override void OnExecute()
+        {
+            Debug.Log("<color=green>Command: Show Title View</color>");
+            this.SendEvent<ShowTitleViewEvent>();
+        }
+    }
+    class HideTitleViewCommand : AbstractCommand
+    {
+        protected override void OnExecute()
+        {
+            this.SendEvent<HideTitleViewEvent>();
+        }
+    }
     class ShowBacklogViewCommand : AbstractCommand
     {
         protected override void OnExecute()
@@ -221,6 +236,14 @@ namespace VNFramework
         {
             this.GetModel<PerformanceModel>().IsOpenChooseView = false;
             this.SendEvent<HideChooseViewEvent>();
+        }
+    }
+
+    class InitViewControllerCommand : AbstractCommand
+    {
+        protected override void OnExecute()
+        {
+            this.SendEvent<InitViewControllerEvent>();
         }
     }
 }

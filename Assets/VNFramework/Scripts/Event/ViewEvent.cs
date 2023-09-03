@@ -1,5 +1,7 @@
 namespace VNFramework
 {
+    struct ShowTitleViewEvent { }
+    struct HideTitleViewEvent { }
     struct ShowLoadGameSaveViewEvent { }
     struct ShowSaveGameSaveViewEvent { }
     struct HideGameSaveViewEvent { }
@@ -32,4 +34,6 @@ namespace VNFramework
 
     struct ShowChooseViewEvent { }
     struct HideChooseViewEvent { }
+
+    struct InitViewControllerEvent {}
 }

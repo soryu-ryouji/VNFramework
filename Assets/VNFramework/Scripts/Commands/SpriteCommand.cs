@@ -1,6 +1,3 @@
-using AssetBundleBrowser.AssetBundleModel;
-using UnityEngine;
-
 namespace VNFramework
 {
     class ShowSpriteCommand : AbstractCommand

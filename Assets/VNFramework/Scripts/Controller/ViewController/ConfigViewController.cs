@@ -7,6 +7,8 @@ namespace VNFramework
 {
     public class ConfigViewController : MonoBehaviour, IController
     {
+        private Button _fullScreenBtn;
+        private Button _windowBtn;
         private Scrollbar _bgmVolumeScrollbar;
         private Scrollbar _bgsVolumeScrollbar;
         private Scrollbar _chsVolumeScrollbar;
@@ -23,6 +25,9 @@ namespace VNFramework
         {
             _configModel = this.GetModel<ConfigModel>();
 
+            _fullScreenBtn = transform.Find("ScreenConfig/FullScreenModeBtn").GetComponent<Button>();
+            _windowBtn = transform.Find("ScreenConfig/WindowModeBtn").GetComponent<Button>();
+
             _bgmVolumeScrollbar = transform.Find("AudioConfig/BgmVolume/Scrollbar").GetComponent<Scrollbar>();
             _bgsVolumeScrollbar = transform.Find("AudioConfig/BgsVolume/Scrollbar").GetComponent<Scrollbar>();
             _chsVolumeScrollbar = transform.Find("AudioConfig/ChsVolume/Scrollbar").GetComponent<Scrollbar>();
@@ -32,6 +37,9 @@ namespace VNFramework
             _mediumBtn = transform.Find("DialogueConfig/MediumSpeedButton").GetComponent<Button>();
             _lowBtn = transform.Find("DialogueConfig/LowSpeedButton").GetComponent<Button>();
             _backConfigViewBtn = transform.Find("BackButton").GetComponent<Button>();
+
+            _fullScreenBtn.onClick.AddListener(() => this.SendCommand<SwitchToFullScreenCommand>());
+            _windowBtn.onClick.AddListener(() => this.SendCommand<SwitchToWindowCommand>());
 
             _bgmVolumeScrollbar.value = _configModel.BgmVolume;
             _bgsVolumeScrollbar.value = _configModel.BgsVolume;

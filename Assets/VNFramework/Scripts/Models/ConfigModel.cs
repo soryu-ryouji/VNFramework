@@ -58,9 +58,13 @@ namespace VNFramework
             }
         }
 
-        protected override void OnInit()
+        public void InitModel()
         {
             this.GetUtility<GameDataStorage>().LoadSystemConfig();
+        }
+
+        protected override void OnInit()
+        {
         }
     }
 }

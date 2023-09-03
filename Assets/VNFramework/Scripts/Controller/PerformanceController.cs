@@ -10,7 +10,7 @@ namespace VNFramework
         private VNScriptCompiler _compiler;
         private DialogueModel _dialogueModel;
 
-        private void Start()
+        public void InitPerformanceController()
         {
             _performanceModel = this.GetModel<PerformanceModel>();
             _mermaidModel = this.GetModel<MermaidModel>();
@@ -32,13 +32,15 @@ namespace VNFramework
 
             // 每次演出进行初始化时，尝试将当前的章节添加进UnlockedChapterList中
             this.GetModel<ChapterModel>().TryAddUnlockedChapter(_performanceModel.PerformingMermaidName);
-            
+
             // 对演出进行初始化
             var performanceState = VNScriptCompiler.GetPerformanceStateByIndex(fileLines, _performanceModel.PerformingIndex);
             _compiler = new VNScriptCompiler(fileLines);
             _compiler.InitByLine(performanceState.ScriptIndex);
 
             this.SendCommand(new InitPerformanceEnvironmentCommand(performanceState));
+
+            Debug.Log("<color=green>Init Performance</color>");
 
             NextPerformance();
         }
@@ -48,7 +50,7 @@ namespace VNFramework
             if (_performanceModel.IsOpenChooseView) return;
 
             _performanceModel.IsAutoExecuteCommand = true;
-            
+
             // 当对话动画正在播放时，此次只负责结束对话动画
             if (_dialogueModel.isAnimating) { this.SendCommand<StopDialogueAnimCommand>(); return; }
 

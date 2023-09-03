@@ -33,9 +33,9 @@ namespace VNFramework
         // Dialogue Model
         private DialogueModel _dialogueModel;
 
-        private void Start()
+        private void Awake()
         {
-            // 获取 View 组件            
+            // 获取 View 组件
             _fullDialogueBox = transform.Find("FullDialogueBox").gameObject;
             _fullDialogueBoxText = _fullDialogueBox.transform.Find("DialogueBoxText").GetComponent<TMP_Text>();
             _fullDialogueBoxImage = _fullDialogueBox.transform.Find("DialogueBoxBgp").GetComponent<Image>();
@@ -47,6 +47,13 @@ namespace VNFramework
             _normDialogueBoxText = _normDialogueBox.transform.Find("DialogueBox/DialogueBoxText").GetComponent<TMP_Text>();
             _normDialogueBoxImage = _normDialogueBox.transform.Find("DialogueBox/DialogueBoxBgp").GetComponent<Image>();
 
+            var result = _fullDialogueBox != null && _fullDialogueBoxText != null && _fullDialogueBoxImage != null &&
+                         _normDialogueBox != null && _normNameBox != null && _normNameBoxText != null && _normNameBoxImage != null &&
+                         _normDialogueBoxText != null && _normDialogueBoxImage != null;
+
+            if (!result) Debug.LogError("Dialogue View Component Init Failed");
+            else Debug.Log("<color=green>Dialogue View Component Init Success</color>");
+
             // 对 DialogueView 进行初始化
             _dialogueModel = this.GetModel<DialogueModel>();
             _textSpeed = this.GetModel<ConfigModel>().TextSpeed;
@@ -57,35 +64,16 @@ namespace VNFramework
             _fullDialogueBoxImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.FullDialogueBoxPic);
 
             // 注册 DialogueView 相关事件
-            this.RegisterEvent<ConfigChangedEvent>(_ => _textSpeed = this.GetModel<ConfigModel>().TextSpeed).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<ConfigChangedEvent>(_ => UpdateTextSpeed()).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<ShowDialoguePanelEvent>(_ => ShowDialogueView()).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<HideDialoguePanelEvent>(_ => HideDialogueView()).UnRegisterWhenGameObjectDestroyed(gameObject); ;
             this.RegisterEvent<ToggleDialoguePanelEvent>(_ => ToggleDialogueView()).UnRegisterWhenGameObjectDestroyed(gameObject); ;
             this.RegisterEvent<ChangeNameEvent>(_ => ChangeNameBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<AppendDialogueEvent>(_ =>
-            {
-                _curDialogue = _dialogueModel.CurrentDialogue;
-                ChangeDisplay();
-            }).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<AppendDialogueEvent>(_ => AppendDialogue()).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<ClearDialogueEvent>(_ => ClearDialogue()).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<AppendNewLineToDialogueEvent>(_ => AppendNewLineToDialogue()).UnRegisterWhenGameObjectDestroyed(gameObject); ;
 
-            this.RegisterEvent<ClearDialogueEvent>(_ =>
-            {
-                _curDialogue = "";
-                _curDialogueIndex = 0;
-                if (_curDialogueBoxText != null) _curDialogueBoxText.text = "";
-            }).UnRegisterWhenGameObjectDestroyed(gameObject);
-
-            this.RegisterEvent<AppendNewLineToDialogueEvent>(_ =>
-            {
-                _curDialogue = _dialogueModel.CurrentDialogue;
-                _curDialogueIndex += 4;
-                _curDialogueBoxText.text = _curDialogue;
-            }).UnRegisterWhenGameObjectDestroyed(gameObject); ;
-
-            this.RegisterEvent<StopDialogueAnimEvent>(_ =>
-            {
-                StopCharacterAnimation();
-            }).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<StopDialogueAnimEvent>(_ => StopCharacterAnimation()).UnRegisterWhenGameObjectDestroyed(gameObject);
 
             this.RegisterEvent<OpenFullDialogueBoxEvent>(_ => OpenFullDialogueBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<OpenNormDialogueBoxEvent>(_ => OpenNormDialogueBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
@@ -100,10 +88,36 @@ namespace VNFramework
             }
         }
 
+        private void UpdateTextSpeed()
+        {
+            _textSpeed = this.GetModel<ConfigModel>().TextSpeed;
+        }
+
+        private void AppendDialogue()
+        {
+            _curDialogue = _dialogueModel.CurrentDialogue;
+            ChangeDisplay();
+        }
+
+        private void ClearDialogue()
+        {
+            _curDialogue = "";
+            _curDialogueIndex = 0;
+            if (_curDialogueBoxText != null) _curDialogueBoxText.text = "";
+        }
+
+        private void AppendNewLineToDialogue()
+        {
+            _curDialogue = _dialogueModel.CurrentDialogue;
+            _curDialogueIndex += 4;
+            _curDialogueBoxText.text = _curDialogue;
+        }
+
         # region Dialogue View Controller
 
         private void OpenNormDialogueBox()
         {
+            Debug.Log("Dialogue Controller: Open Norm Dialogue Box");
             HideFullDialogueBox();
             ShowNormDialogueBox();
 
@@ -116,9 +130,10 @@ namespace VNFramework
 
         private void OpenFullDialogueBox()
         {
+            Debug.Log("Dialogue Controller: Open Full Dialogue Box");
             HideNormDialogueBox();
             ShowFullDialogueBox();
-            
+
             _curDialogueBox = _fullDialogueBox;
             _curDialogueBoxText = _fullDialogueBoxText;
             _dialogueModel.CurrentName = "";

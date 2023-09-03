@@ -3,10 +3,11 @@ using UnityEngine;
 using System.Linq;
 using System.IO;
 using VNFramework.Core;
+using Unity.VisualScripting;
 
 namespace VNFramework
 {
-    class GameDataStorage : IUtility, ICanGetModel, ICanGetUtility
+    class GameDataStorage : IUtility, ICanGetModel, ICanGetUtility, ICanSendEvent
     {
         private readonly string _configDirPath = Path.Combine(Application.dataPath, "Config");
 
@@ -72,12 +73,11 @@ namespace VNFramework
 
             var gameSaveText = VNGameSave.GameSavesToText(gameSaves);
             var path = Path.Combine(_configDirPath, "save_file.txt");
-            File.WriteAllText(path,gameSaveText);
+            File.WriteAllText(path, gameSaveText);
         }
 
         public List<string> LoadUnlockedChapterList()
         {
-            Debug.Log(string.Format("<color=green>{0}</color>", "Load Unlocked Chapter List"));
             string path = Path.Combine(_configDirPath, "unlocked_chapter.txt");
             if (!File.Exists(path)) return new List<string>();
 
@@ -88,9 +88,8 @@ namespace VNFramework
 
         public void SaveUnlockedChapterList()
         {
-            Debug.Log(string.Format("<color=green>{0}</color>","Save Unlocked Chapter List"));
             string path = Path.Combine(_configDirPath, "unlocked_chapter.txt");
-            
+
             var unlockedChapterList = this.GetModel<ChapterModel>().UnlockedChapterList;
             var text = VNChapter.UnlockedChapterListToText(unlockedChapterList);
 
@@ -139,7 +138,7 @@ namespace VNFramework
         public void SaveSystemConfig()
         {
             string path = Path.Combine(_configDirPath, "game_config.txt");
-            
+
             var systemConfigModel = this.GetModel<ConfigModel>();
             var configStr = @$"bgm_volume : {systemConfigModel.BgmVolume}
 bgs_volume : {systemConfigModel.BgsVolume}
@@ -156,16 +155,16 @@ text_speed : {systemConfigModel.TextSpeed}";
         {
             string content = _abDic["vnscript"].LoadAsset<TextAsset>("chapter_info").text;
             var chapterInfoList = VNChapter.ExtractChapterInfo(content);
-            
+
             return chapterInfoList;
         }
 
         public void LoadProjectConfig()
         {
             var configFile = _abDic["projectdata"].LoadAsset<TextAsset>("game_info").text;
-            
+
             var gameInfoModel = this.GetModel<ProjectModel>();
-            
+
             var gameInfo = VNProjectConfig.ExtractProjectConfig(configFile);
             foreach (var (blockType, property) in gameInfo)
             {
@@ -205,7 +204,7 @@ text_speed : {systemConfigModel.TextSpeed}";
         {
             GameObject obj = _abDic["prefab"].LoadAsset<GameObject>(prefabName);
 
-            if (obj == null) Debug.Log("AB Prefab Resources Not Found");
+            if (obj == null) Debug.Log($"<color=red>Prefab 「{prefabName}」 Not Found</color>");
 
             return obj;
         }
@@ -214,11 +213,25 @@ text_speed : {systemConfigModel.TextSpeed}";
         {
             string resPath = Application.streamingAssetsPath + "/";
 
-            _abDic.Add("vnscript", AssetBundle.LoadFromFile(resPath + "vnscript"));
-            _abDic.Add("sound", AssetBundle.LoadFromFile(resPath + "sound"));
-            _abDic.Add("sprite", AssetBundle.LoadFromFile(resPath + "sprite"));
-            _abDic.Add("projectdata", AssetBundle.LoadFromFile(resPath + "projectdata"));
-            _abDic.Add("prefab", AssetBundle.LoadFromFile(resPath + "prefab"));
+            LoadRes("vnscript", resPath + "vnscript");
+            LoadRes("sound", resPath + "sound");
+            LoadRes("sprite", resPath + "sprite");
+            LoadRes("projectdata", resPath + "projectdata");
+            LoadRes("prefab", resPath + "prefab");
+        }
+
+        private void LoadRes(string assetBundleName, string path)
+        {
+            if (_abDic.ContainsKey(assetBundleName)) return;
+            {
+                // 进行加载
+                AssetBundle assetBundle = AssetBundle.LoadFromFile(path);
+                if (assetBundle != null)
+                {
+                    // 将AssetBundle添加到管理器中
+                    _abDic.Add(assetBundleName, assetBundle);
+                }
+            }
         }
 
         public IArchitecture GetArchitecture()

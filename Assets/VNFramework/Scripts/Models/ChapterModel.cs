@@ -49,10 +49,14 @@ namespace VNFramework
             }
         }
 
-        protected override void OnInit()
+        public void InitModel()
         {
             _chapterInfoList = this.GetUtility<GameDataStorage>().LoadChapterInfoList();
             _unlockedChapterList = this.GetUtility<GameDataStorage>().LoadUnlockedChapterList();
+        }
+
+        protected override void OnInit()
+        {
         }
     }
 }

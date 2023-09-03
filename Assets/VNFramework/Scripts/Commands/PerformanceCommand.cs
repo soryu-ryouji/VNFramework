@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Burst.Intrinsics;
 
 namespace VNFramework
 {
@@ -95,7 +94,7 @@ namespace VNFramework
             {
                 case AsmObj.dialogue: this.SendCommand(new ExecuteDialogueCommand(_asm)); break;
                 case AsmObj.name: this.SendCommand(new ExecuteNameCommand(_asm)); break;
-                
+
                 case AsmObj.bgm: this.SendCommand(new ExecuteAudioCommand(_asm)); break;
                 case AsmObj.bgs: this.SendCommand(new ExecuteAudioCommand(_asm)); break;
                 case AsmObj.chs: this.SendCommand(new ExecuteAudioCommand(_asm)); break;
@@ -105,6 +104,7 @@ namespace VNFramework
                 case AsmObj.ch_mid: this.SendCommand(new ExecuteSpriteCommand(_asm)); break;
                 case AsmObj.ch_right: this.SendCommand(new ExecuteSpriteCommand(_asm)); break;
                 case AsmObj.bgp: this.SendCommand(new ExecuteSpriteCommand(_asm)); break;
+
                 case AsmObj.gm: this.SendCommand(new ExecuteGmCommand(_asm)); break;
             }
         }

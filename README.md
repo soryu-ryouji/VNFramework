@@ -63,62 +63,41 @@
 
 `VNMermaid` 语法中，在行的开始位置使用「`#`」 字符，则表示当前行是注释行，在进行语法解析时会将这行忽略。
 
-### Define Mermaid Node
-
-要定义 Mermaid 节点，需要使用 `[Define]` 标识符，该标识符以下的所有文本都将被当作节点定义语句。
+### VNMermaid Example
 
 ```
-[Define]
-序章[Chapter00]
-线路1_第一章[Route1_Chapter01]
-线路2_第二章[Route2_Chapter01]
+# 这部分是定义
+Prologue[Prologue]
+Route_1[prologue_route_1_1]
+第二次拒绝离开[prologue_route_1_1_1]
+决定离开[prologue_route_1_2]
+Route_2[prologue_route_2]
+
+# 这部分是链接
+Prologue -->|听她们的话，离开家躲起来| 决定离开
+Prologue -->|不......这是我的家，我不放心你们| Route_1
+Route_1 -->|还是听她们的话吧...| 决定离开
+Route_1 -->|不，我要跟着去| Route_2
 ```
 
 #### Define Syntax
 
 ```
+# 节点名称[VNScript脚本名称]
 mermaidNodeName[VNScriptChapterName]
-```
-
-### Link Mermaid Node
-
-要连接 Mermaid 节点，需要使用 `[Link]` 标识符，该标识符以下的所有文本都将被当作节点连接语句。
-
-
-```
-[Link]
-序章 --> 线路1_第一章(跟上去)
-序章 --> 线路2_第一章(不跟上去)
 ```
 
 #### Link Syntax
 
-如果一个 `fromNode` 的 `toNode` 的 `optionText` 为空，则该 `fromNode` 只能有这一个 `toNode`。
+如果一个 `fromNode` 的 `toNode` 的 `optionText` 为空，则该 `fromNode` 只能有这一个 `toNode`。这表示该 `fromNode` 在执行完之后将直接加载 `toNode`，而不会弹出任何选项。
 
-这表示该 `fromNode` 在执行完之后将直接加载 `toNode`，而不会弹出任何选项。
-
+如果一个 `fromNode` 的 `toNode` 的 `optionText` 不为空，则 `fromNode` 会在执行完之后弹出一个选项，选项的文本为 `optionText`，选项的跳转目标为 `toNode`。
 ```
 # case 1
-fromNode --> toNode(optionText)
+fromNode -->|optionText| toNode
 
 # case 2
 fromNode --> toNode
-```
-
-### VNMermaid Example
-
-```
-[Define]
-序章[Chapter00]
-线路1_第一章[Route1_Chapter01]
-线路2_第一章[Route2_Chapter01]
-第二章[Chapter02]
-
-[Link]
-序章 --> 线路1_第一章(跟上去)
-序章 --> 线路2_第一章(不跟上去)
-线路1_第一章 --> 第二章
-线路2_第一章 --> 第二章
 ```
 
 ![Example_VNMermaid](./docs/img/Example_VNMermaid.svg)
