@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace VNFramework
 {
-    public class AudioController : MonoBehaviour, IController
+    public class AudioController : MonoBehaviour
     {
         private static AudioController instance;
         public static AudioController Instance
@@ -11,14 +11,8 @@ namespace VNFramework
             {
                 if (instance == null)
                 {
-                    instance = FindObjectOfType<AudioController>();
-                    if (instance == null)
-                    {
-                        GameObject obj = new GameObject();
-                        obj.name = typeof(AudioController).Name;
-                        instance = obj.AddComponent<AudioController>();
-                        instance.InitController();
-                    }
+                    instance = new GameObject(typeof(AudioController).Name).AddComponent<AudioController>();
+                    instance.InitController();
                 }
                 return instance;
             }
@@ -39,24 +33,12 @@ namespace VNFramework
             _bgsController = CreateAudioHandler("Bgs");
             _chsController = CreateAudioHandler("Chs");
             _gmsController = CreateAudioHandler("Gms");
-
-            _performModel = this.GetModel<PerformanceModel>();
-            _configModel = this.GetModel<ConfigModel>();
-            UpdateAudioVolume();
-
-            this.RegisterEvent<ConfigChangedEvent>(_ => UpdateAudioVolume());
         }
 
         private AudioHandler CreateAudioHandler(string controllerName)
         {
-            // 创建一个空的 GameObject 来代表每个 AudioHandler
-            GameObject controllerObj = new GameObject(controllerName);
-
-            controllerObj.AddComponent<AudioSource>();
-            // 添加 AudioHandler 组件到 GameObject
-            AudioHandler audioHandler = controllerObj.AddComponent<AudioHandler>();
-
-            // 设置 AudioHandler 的父对象为 AudioController
+            var controllerObj = new GameObject(controllerName);
+            var audioHandler = controllerObj.AddComponent<AudioHandler>();
             controllerObj.transform.SetParent(transform);
 
             return audioHandler;
@@ -84,17 +66,15 @@ namespace VNFramework
             }
         }
 
-        private void UpdateAudioVolume()
+        private void SetAudioVolume(float volume, AsmObj audioType)
         {
-            _bgmController.SetVolume(_configModel.BgmVolume);
-            _bgsController.SetVolume(_configModel.BgsVolume);
-            _chsController.SetVolume(_configModel.ChsVolume);
-            _gmsController.SetVolume(_configModel.GmsVolume);
-        }
-
-        public IArchitecture GetArchitecture()
-        {
-            return VNFrameworkProj.Interface;
+            switch (audioType)
+            {
+                case AsmObj.bgm: _bgmController.SetVolume(volume); break;
+                case AsmObj.bgs: _bgsController.SetVolume(volume); break;
+                case AsmObj.chs: _chsController.SetVolume(volume); break;
+                case AsmObj.gms: _gmsController.SetVolume(volume); break;
+            }
         }
     }
 }

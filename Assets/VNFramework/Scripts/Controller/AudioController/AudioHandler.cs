@@ -2,38 +2,40 @@ using UnityEngine;
 
 namespace VNFramework
 {
+    [RequireComponent(typeof(AudioSource))]
     class AudioHandler: MonoBehaviour, ICanGetUtility
     {
-        private AudioSource audioPlayer;
+        private AudioSource _audioPlayer;
+
         private void Awake()
         {
-            audioPlayer = this.GetComponent<AudioSource>();
+            _audioPlayer = this.GetComponent<AudioSource>();
         }
 
         public void SetVolume(float volume)
         {
-            audioPlayer.volume = volume;
+            _audioPlayer.volume = volume;
         }
 
         public void SetLoop(bool isLoop)
         {
-            audioPlayer.loop = isLoop;
+            _audioPlayer.loop = isLoop;
         }
 
         public void PlayAudio(string audioName)
         {
-            audioPlayer.clip = this.GetUtility<GameDataStorage>().LoadSound(audioName);
-            audioPlayer.Play();
+            _audioPlayer.clip = this.GetUtility<GameDataStorage>().LoadSound(audioName);
+            _audioPlayer.Play();
         }
 
         public void StopAudio()
         {
-            audioPlayer.Stop();
+            _audioPlayer.Stop();
         }
 
         public void Continue()
         {
-            audioPlayer.Play();
+            _audioPlayer.Play();
         }
 
         public IArchitecture GetArchitecture()
