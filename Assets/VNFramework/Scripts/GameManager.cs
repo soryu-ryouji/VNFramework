@@ -59,11 +59,7 @@ namespace VNFramework
             this.GetModel<ChapterModel>().InitModel();
             this.GetModel<MermaidModel>().InitModel();
 
-            var audioController = Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("AudioController")).GetComponent<AudioController>();
-            audioController.InitAudioController();
-            var viewController = Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("ViewController")).GetComponent<ViewController>();
-            viewController.InitViewController();
-            viewController.ShowTitleView();
+            ViewController.Instance.ShowTitleView();
 
             Debug.Log("<color=green>Init Game Success</color>");
         }
@@ -83,11 +79,7 @@ namespace VNFramework
                 yield return null;
             }
 
-            var audioController = Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("AudioController")).GetComponent<AudioController>();
-            audioController.InitAudioController();
-            var viewController = Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("ViewController")).GetComponent<ViewController>();
-            viewController.InitViewController();
-            viewController.ShowTitleView();
+            ViewController.Instance.ShowTitleView();
 
             Debug.Log("<color=green>Load Startup Scene Success</color>");
         }
@@ -106,11 +98,7 @@ namespace VNFramework
                 yield return null;
             }
 
-            var audioController = Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("AudioController")).GetComponent<AudioController>();
-            audioController.InitAudioController();
-            var viewController = Instantiate(this.GetUtility<GameDataStorage>().LoadPrefab("ViewController")).GetComponent<ViewController>();
-            viewController.InitViewController();
-            viewController.ShowPerformanceView();
+            ViewController.Instance.ShowPerformanceView();
 
             Debug.Log("<color=green>Load Game Scene Success</color>");
         }

@@ -76,7 +76,7 @@ namespace VNFramework
 
         protected override void OnExecute()
         {
-            this.GetModel<DialogueModel>().CurrentName = name;
+            this.GetModel<DialogModel>().CurrentName = name;
         }
     }
 
@@ -92,9 +92,9 @@ namespace VNFramework
         protected override void OnExecute()
         {
 
-            var dialogueModel = this.GetModel<DialogueModel>();
-            dialogueModel.CurrentDialogue += dialogue;
-            this.SendEvent<AppendDialogueEvent>();
+            var dialogueModel = this.GetModel<DialogModel>();
+            dialogueModel.CurrentDialogue = dialogue;
+            this.SendEvent<AppendDialogEvent>();
         }
     }
 
@@ -102,10 +102,10 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            var dialogueModel = this.GetModel<DialogueModel>();
+            var dialogueModel = this.GetModel<DialogModel>();
             dialogueModel.AddDialogueNode(dialogueModel.CurrentDialogue);
             dialogueModel.CurrentDialogue = "";
-            this.SendEvent<ClearDialogueEvent>();
+            this.SendEvent<ClearDialogEvent>();
         }
     }
 
@@ -113,8 +113,8 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.GetModel<DialogueModel>().CurrentDialogue += "<br>";
-            this.SendEvent<AppendNewLineToDialogueEvent>();
+            this.GetModel<DialogModel>().CurrentDialogue += "<br>";
+            this.SendEvent<AppendNewLineToDialogEvent>();
         }
     }
 
@@ -131,7 +131,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.SendEvent<OpenFullDialogueBoxEvent>();
+            this.SendEvent<OpenFullDialogViewEvent>();
         }
     }
 
@@ -139,7 +139,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.SendEvent<OpenNormDialogueBoxEvent>();
+            this.SendEvent<OpenNormDialogViewEvent>();
         }
     }
 
@@ -163,7 +163,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.SendEvent<ShowDialoguePanelEvent>();
+            this.SendEvent<ShowDialogPanelEvent>();
         }
     }
 
@@ -171,7 +171,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.SendEvent<HideDialoguePanelEvent>();
+            this.SendEvent<HideDialogPanelEvent>();
         }
     }
 
@@ -179,7 +179,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
-            this.SendEvent<ToggleDialoguePanelEvent>();
+            this.SendEvent<ToggleDialogPanelEvent>();
         }
     }
 
@@ -229,7 +229,7 @@ namespace VNFramework
             this.SendEvent<ShowChooseViewEvent>();
         }
     }
-    
+
     class HideChooseViewCommand : AbstractCommand
     {
         protected override void OnExecute()

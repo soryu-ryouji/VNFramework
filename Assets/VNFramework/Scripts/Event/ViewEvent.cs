@@ -16,16 +16,16 @@ namespace VNFramework
     struct HideConfigViewEvent { }
 
     struct ChangeNameEvent { }
-    struct AppendDialogueEvent { }
-    struct ClearDialogueEvent { }
-    struct AppendNewLineToDialogueEvent { }
+    struct AppendDialogEvent { }
+    struct ClearDialogEvent { }
+    struct AppendNewLineToDialogEvent { }
     struct StopDialogueAnimEvent { }
-    struct OpenFullDialogueBoxEvent { }
-    struct OpenNormDialogueBoxEvent { }
+    struct OpenFullDialogViewEvent { }
+    struct OpenNormDialogViewEvent { }
 
-    struct ShowDialoguePanelEvent { }
-    struct HideDialoguePanelEvent { }
-    struct ToggleDialoguePanelEvent { }
+    struct ShowDialogPanelEvent { }
+    struct HideDialogPanelEvent { }
+    struct ToggleDialogPanelEvent { }
     struct ShowPerformanceViewEvent { }
     struct HidePerformanceViewEvent { }
 

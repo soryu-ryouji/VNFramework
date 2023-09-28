@@ -5,7 +5,7 @@ using TMPro;
 
 namespace VNFramework
 {
-    public class ChooseViewController : MonoBehaviour,IController
+    public class ChooseViewController : MonoBehaviour, IController
     {
         private GameObject _btnListContent;
         private VerticalLayoutGroup _btnListLayoutGroup;
@@ -25,7 +25,7 @@ namespace VNFramework
             foreach (var btnData in chooseBtnList)
             {
                 GameObject btnObj = Instantiate(_btnPrefab, _btnListContent.transform);
-                
+
                 Button button = btnObj.GetComponent<Button>();
                 button.GetComponentInChildren<TMP_Text>().text = btnData.optionText;
                 button.onClick.AddListener(() =>

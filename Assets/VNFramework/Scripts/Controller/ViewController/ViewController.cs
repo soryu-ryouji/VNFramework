@@ -3,6 +3,27 @@ using VNFramework;
 
 public class ViewController : MonoBehaviour, IController
 {
+    private static ViewController instance;
+
+    public static ViewController Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<ViewController>();
+                if (instance == null)
+                {
+                    GameObject obj = new GameObject();
+                    obj.name = typeof(ViewController).Name;
+                    instance = obj.AddComponent<ViewController>();
+                    instance.InitController();
+                }
+            }
+            return instance;
+        }
+    }
+
     private GameObject _titleViewPrefab;
     private GameObject _configViewPrefab;
     private GameObject _chapterViewPrefab;
@@ -21,7 +42,7 @@ public class ViewController : MonoBehaviour, IController
     private GameObject _gameSaveView;
     private GameObject _chooseView;
 
-    public void InitViewController()
+    public void InitController()
     {
         var gameDataStorage = this.GetUtility<GameDataStorage>();
 

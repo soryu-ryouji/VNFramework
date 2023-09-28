@@ -1,268 +1,144 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 namespace VNFramework
 {
     public class DialogueViewController : MonoBehaviour, IController
     {
-        // Dialogue View
-        private bool _dialogueViewActive = true;
-        private GameObject _curDialogueBox;
-        private TMP_Text _curDialogueBoxText;
+        private bool _viewActive = false;
+        private bool _isFullView = false;
 
-        private Coroutine _animationCoroutine;
-        private float _textSpeed;
-        private string _curDialogue;
-        private int _curDialogueIndex;
+        private TextBox _currentDialogTextBox;
+        private TextBoxHandler _normNameTextBoxHandler;
+        private TextBoxHandler _normDialogTextBoxHandler;
+        private TextBoxHandler _fullDialogTextBoxHandler;
 
-        // Normal Dialogue Box
-        private GameObject _normDialogueBox;
-        private GameObject _normNameBox;
-        private TMP_Text _normDialogueBoxText;
-        private Image _normDialogueBoxImage;
-        private TMP_Text _normNameBoxText;
-        private Image _normNameBoxImage;
+        private DialogModel _dialogModel;
 
-        // Full Dialogue Box
-        private GameObject _fullDialogueBox;
-        private TMP_Text _fullDialogueBoxText;
-        private Image _fullDialogueBoxImage;
-
-        // Dialogue Model
-        private DialogueModel _dialogueModel;
-
-        private void Awake()
+        private void Start()
         {
-            // 获取 View 组件
-            _fullDialogueBox = transform.Find("FullDialogueBox").gameObject;
-            _fullDialogueBoxText = _fullDialogueBox.transform.Find("DialogueBoxText").GetComponent<TMP_Text>();
-            _fullDialogueBoxImage = _fullDialogueBox.transform.Find("DialogueBoxBgp").GetComponent<Image>();
-
-            _normDialogueBox = transform.Find("NormDialogueBox").gameObject;
-            _normNameBox = _normDialogueBox.transform.Find("NameBox").gameObject;
-            _normNameBoxText = _normDialogueBox.transform.Find("NameBox/NameBoxText").GetComponent<TMP_Text>();
-            _normNameBoxImage = _normDialogueBox.transform.Find("NameBox/NameBoxBgp").GetComponent<Image>();
-            _normDialogueBoxText = _normDialogueBox.transform.Find("DialogueBox/DialogueBoxText").GetComponent<TMP_Text>();
-            _normDialogueBoxImage = _normDialogueBox.transform.Find("DialogueBox/DialogueBoxBgp").GetComponent<Image>();
-
-            var result = _fullDialogueBox != null && _fullDialogueBoxText != null && _fullDialogueBoxImage != null &&
-                         _normDialogueBox != null && _normNameBox != null && _normNameBoxText != null && _normNameBoxImage != null &&
-                         _normDialogueBoxText != null && _normDialogueBoxImage != null;
-
-            if (!result) Debug.LogError("Dialogue View Component Init Failed");
-            else Debug.Log("<color=green>Dialogue View Component Init Success</color>");
-
-            // 对 DialogueView 进行初始化
-            _dialogueModel = this.GetModel<DialogueModel>();
-            _textSpeed = this.GetModel<ConfigModel>().TextSpeed;
-
+            InitDialogView();
+            RegisterEvent();
+            _dialogModel = this.GetModel<DialogModel>();
             var projectModel = this.GetModel<ProjectModel>();
-            _normNameBoxImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.NormNameBoxPic);
-            _normDialogueBoxImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.NormDialogueBoxPic);
-            _fullDialogueBoxImage.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.FullDialogueBoxPic);
 
-            // 注册 DialogueView 相关事件
-            this.RegisterEvent<ConfigChangedEvent>(_ => UpdateTextSpeed()).UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<ShowDialoguePanelEvent>(_ => ShowDialogueView()).UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<HideDialoguePanelEvent>(_ => HideDialogueView()).UnRegisterWhenGameObjectDestroyed(gameObject); ;
-            this.RegisterEvent<ToggleDialoguePanelEvent>(_ => ToggleDialogueView()).UnRegisterWhenGameObjectDestroyed(gameObject); ;
+            _normNameTextBoxHandler.img.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.NormNameBoxPic);
+            _normDialogTextBoxHandler.img.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.NormDialogueBoxPic);
+            _fullDialogTextBoxHandler.img.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.FullDialogueBoxPic);
+
+            ShowNormView();
+        }
+
+        private void InitDialogView()
+        {
+            _normDialogTextBoxHandler = transform.Find("NormView/DialogBox").GetComponent<TextBoxHandler>();
+            _normNameTextBoxHandler = transform.Find("NormView/NameBox").GetComponent<TextBoxHandler>();
+            _fullDialogTextBoxHandler = transform.Find("FullView/DialogBox").GetComponent<TextBoxHandler>();
+
+            _fullDialogTextBoxHandler.Hide();
+            _normDialogTextBoxHandler.Hide();
+            _normNameTextBoxHandler.Hide();
+        }
+
+        private void RegisterEvent()
+        {
+            this.RegisterEvent<ShowDialogPanelEvent>(_ => ShowView()).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<HideDialogPanelEvent>(_ => HideView()).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<ToggleDialogPanelEvent>(_ => ToggleView()).UnRegisterWhenGameObjectDestroyed(gameObject);
+
             this.RegisterEvent<ChangeNameEvent>(_ => ChangeNameBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<AppendDialogueEvent>(_ => AppendDialogue()).UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<ClearDialogueEvent>(_ => ClearDialogue()).UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<AppendNewLineToDialogueEvent>(_ => AppendNewLineToDialogue()).UnRegisterWhenGameObjectDestroyed(gameObject); ;
-
-            this.RegisterEvent<StopDialogueAnimEvent>(_ => StopCharacterAnimation()).UnRegisterWhenGameObjectDestroyed(gameObject);
-
-            this.RegisterEvent<OpenFullDialogueBoxEvent>(_ => OpenFullDialogueBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<OpenNormDialogueBoxEvent>(_ => OpenNormDialogueBox()).UnRegisterWhenGameObjectDestroyed(gameObject);
-        }
-
-        private void OnDestroy()
-        {
-            if (_animationCoroutine != null)
+            this.RegisterEvent<AppendDialogEvent>(_ => _currentDialogTextBox.AppendText(_dialogModel.CurrentDialogue)).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<ClearDialogEvent>(_ => _currentDialogTextBox.Text = "").UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<AppendNewLineToDialogEvent>(_ => _currentDialogTextBox.Text += "<br>").UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<StopDialogueAnimEvent>(_ => _currentDialogTextBox.StopCharAnimation()).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<OpenFullDialogViewEvent>(_ =>
             {
-                StopCoroutine(_animationCoroutine);
-                _animationCoroutine = null;
-            }
+                Debug.Log("Dialogue Controller: Open Full Dialogue Box");
+                ShowFullView();
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<OpenNormDialogViewEvent>(_ =>
+            {
+                Debug.Log("Dialogue Controller: Open Norm Dialogue Box");
+                ShowNormView();
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);
         }
 
-        private void UpdateTextSpeed()
+        private void ShowNormView()
         {
-            _textSpeed = this.GetModel<ConfigModel>().TextSpeed;
-        }
+            _isFullView = false;
+            _viewActive = true;
 
-        private void AppendDialogue()
-        {
-            _curDialogue = _dialogueModel.CurrentDialogue;
-            ChangeDisplay();
-        }
+            _fullDialogTextBoxHandler.Hide();
+            _normDialogTextBoxHandler.Show();
+            _normNameTextBoxHandler.Show();
 
-        private void ClearDialogue()
-        {
-            _curDialogue = "";
-            _curDialogueIndex = 0;
-            if (_curDialogueBoxText != null) _curDialogueBoxText.text = "";
-        }
-
-        private void AppendNewLineToDialogue()
-        {
-            _curDialogue = _dialogueModel.CurrentDialogue;
-            _curDialogueIndex += 4;
-            _curDialogueBoxText.text = _curDialogue;
-        }
-
-        # region Dialogue View Controller
-
-        private void OpenNormDialogueBox()
-        {
-            Debug.Log("Dialogue Controller: Open Norm Dialogue Box");
-            HideFullDialogueBox();
-            ShowNormDialogueBox();
-
-            _curDialogueBox = _normDialogueBox;
-            _curDialogueBoxText = _normDialogueBoxText;
-            _dialogueModel.CurrentName = "";
+            _currentDialogTextBox = _normDialogTextBoxHandler.textBox;
+            _dialogModel.CurrentName = "";
 
             ChangeNameBox();
         }
 
-        private void OpenFullDialogueBox()
+        private void HideNormView()
         {
-            Debug.Log("Dialogue Controller: Open Full Dialogue Box");
-            HideNormDialogueBox();
-            ShowFullDialogueBox();
+            _viewActive = false;
+            _normDialogTextBoxHandler.Hide();
+            _normNameTextBoxHandler.Hide();
+        }
 
-            _curDialogueBox = _fullDialogueBox;
-            _curDialogueBoxText = _fullDialogueBoxText;
-            _dialogueModel.CurrentName = "";
+        private void ShowFullView()
+        {
+            _isFullView = true;
+            _viewActive = true;
+
+            _normDialogTextBoxHandler.Hide();
+            _normNameTextBoxHandler.Hide();
+            _fullDialogTextBoxHandler.Show();
+
+            _dialogModel.CurrentName = "";
 
             ChangeNameBox();
         }
 
-        private void ShowNormDialogueBox()
+        private void HideFullView()
         {
-            _normDialogueBox.SetActive(true);
+            _viewActive = false;
+            _fullDialogTextBoxHandler.Hide();
         }
 
-        private void HideNormDialogueBox()
+        private void ShowView()
         {
-            _normDialogueBox.SetActive(false);
-        }
-        private void ShowFullDialogueBox()
-        {
-            _fullDialogueBox.SetActive(true);
-        }
+            _viewActive = true;
 
-        private void HideFullDialogueBox()
-        {
-            _fullDialogueBox.SetActive(false);
+            if (_isFullView) ShowFullView();
+            else ShowNormView();
         }
 
-
-        private void SetDialogueViewActive(bool active)
+        private void HideView()
         {
-            _curDialogueBox.SetActive(active);
+            _viewActive = false;
+
+            if (_isFullView) HideFullView();
+            else HideNormView();
         }
 
-        private void ShowDialogueView()
+        private void ToggleView()
         {
-            _dialogueViewActive = true;
-            SetDialogueViewActive(_dialogueViewActive);
+            if (_viewActive) ShowView();
+            else HideView();
         }
-
-        private void HideDialogueView()
-        {
-            _dialogueViewActive = false;
-            if (_dialogueModel.IsAnimating) StopCharacterAnimation();
-
-            SetDialogueViewActive(_dialogueViewActive);
-        }
-
-        private void ToggleDialogueView()
-        {
-            _dialogueViewActive = !_dialogueViewActive;
-
-            if (_dialogueViewActive) ShowDialogueView();
-            else HideDialogueView();
-        }
-
-        # endregion
-
-        # region NameBox
 
         private void ChangeNameBox()
         {
-            if (_dialogueModel.CurrentName == "")
+            if (_dialogModel.CurrentName == "")
             {
-                _normNameBoxText.text = "";
-                _normNameBox.SetActive(false);
+                _normNameTextBoxHandler.textBox.Text = "";
+                _normNameTextBoxHandler.Hide();
             }
             else
             {
-                _normNameBox.SetActive(true);
-                _normNameBoxText.text = _dialogueModel.CurrentName;
+                _normNameTextBoxHandler.Show();
+                _normNameTextBoxHandler.textBox.Text = _dialogModel.CurrentName;
             }
         }
-        # endregion
-
-        # region DialogueBox
-
-        private void ChangeDisplay()
-        {
-            if (!_dialogueModel.NeedAnimation)
-            {
-                _curDialogueBoxText.text = _curDialogue;
-                return;
-            }
-
-            if (_dialogueModel.IsAnimating)
-            {
-                StopCharacterAnimation();
-            }
-
-            StartCharacterAnimation();
-        }
-
-        public void StartCharacterAnimation()
-        {
-            _dialogueModel.IsAnimating = true;
-            _animationCoroutine = StartCoroutine(CharacterAnimation());
-        }
-
-        private void StopCharacterAnimation()
-        {
-            if (!_dialogueModel.IsAnimating)
-            {
-                return;
-            }
-
-            if (_animationCoroutine != null)
-            {
-                StopCoroutine(_animationCoroutine);
-                _animationCoroutine = null;
-            }
-
-            _dialogueModel.IsAnimating = false;
-            Debug.Log("Dialogue View is Animating : " + _dialogueModel.IsAnimating);
-            _curDialogueBoxText.text = _curDialogue;
-            _curDialogueIndex = _curDialogue.Length;
-        }
-
-        private IEnumerator CharacterAnimation()
-        {
-            while (_curDialogueIndex < _curDialogue.Length)
-            {
-                _curDialogueBoxText.text += _curDialogue[_curDialogueIndex];
-                _curDialogueIndex++;
-                yield return new WaitForSeconds(_textSpeed);
-            }
-
-            // Animation stop
-            _dialogueModel.IsAnimating = false;
-        }
-        # endregion
 
         public IArchitecture GetArchitecture()
         {

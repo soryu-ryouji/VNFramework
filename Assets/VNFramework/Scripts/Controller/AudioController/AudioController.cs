@@ -4,6 +4,26 @@ namespace VNFramework
 {
     public class AudioController : MonoBehaviour, IController
     {
+        private static AudioController instance;
+        public static AudioController Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = FindObjectOfType<AudioController>();
+                    if (instance == null)
+                    {
+                        GameObject obj = new GameObject();
+                        obj.name = typeof(AudioController).Name;
+                        instance = obj.AddComponent<AudioController>();
+                        instance.InitController();
+                    }
+                }
+                return instance;
+            }
+        }
+
         private AudioHandler _bgmController;
         private AudioHandler _bgsController;
         private AudioHandler _chsController;
@@ -12,39 +32,56 @@ namespace VNFramework
         private PerformanceModel _performModel;
         private ConfigModel _configModel;
 
-        private void Awake()
+        private void InitController()
         {
-            _bgmController = this.transform.Find("Bgm").GetComponent<AudioHandler>();
-            _bgsController = this.transform.Find("Bgs").GetComponent<AudioHandler>();
-            _chsController = this.transform.Find("Chs").GetComponent<AudioHandler>();
-            _gmsController = this.transform.Find("Gms").GetComponent<AudioHandler>();
-        }
+            Debug.Log("<color=green>AudioController: Init</color>");
+            _bgmController = CreateAudioHandler("Bgm");
+            _bgsController = CreateAudioHandler("Bgs");
+            _chsController = CreateAudioHandler("Chs");
+            _gmsController = CreateAudioHandler("Gms");
 
-        public void InitAudioController()
-        {
             _performModel = this.GetModel<PerformanceModel>();
             _configModel = this.GetModel<ConfigModel>();
             UpdateAudioVolume();
 
             this.RegisterEvent<ConfigChangedEvent>(_ => UpdateAudioVolume());
+        }
 
-            this.RegisterEvent<BgmPlayEvent>(_ => _bgmController.PlayAudio(_performModel.BgmName))
-                .UnRegisterWhenGameObjectDestroyed(this);
-            this.RegisterEvent<BgsPlayEvent>(_ => _bgsController.PlayAudio(_performModel.BgsName))
-                .UnRegisterWhenGameObjectDestroyed(this); ;
-            this.RegisterEvent<ChsPlayEvent>(_ => _chsController.PlayAudio(_performModel.ChsName))
-                .UnRegisterWhenGameObjectDestroyed(this); ;
-            this.RegisterEvent<GmsPlayEvent>(_ => _gmsController.PlayAudio(_performModel.GmsName))
-                .UnRegisterWhenGameObjectDestroyed(this); ;
+        private AudioHandler CreateAudioHandler(string controllerName)
+        {
+            // 创建一个空的 GameObject 来代表每个 AudioHandler
+            GameObject controllerObj = new GameObject(controllerName);
 
-            this.RegisterEvent<BgmStopEvent>(_ => _bgmController.StopAudio())
-                .UnRegisterWhenGameObjectDestroyed(this); ;
-            this.RegisterEvent<BgsStopEvent>(_ => _bgsController.StopAudio())
-                .UnRegisterWhenGameObjectDestroyed(this); ;
-            this.RegisterEvent<ChsStopEvent>(_ => _chsController.StopAudio())
-                .UnRegisterWhenGameObjectDestroyed(this); ;
-            this.RegisterEvent<GmsStopEvent>(_ => _gmsController.StopAudio())
-                .UnRegisterWhenGameObjectDestroyed(this); ;
+            controllerObj.AddComponent<AudioSource>();
+            // 添加 AudioHandler 组件到 GameObject
+            AudioHandler audioHandler = controllerObj.AddComponent<AudioHandler>();
+
+            // 设置 AudioHandler 的父对象为 AudioController
+            controllerObj.transform.SetParent(transform);
+
+            return audioHandler;
+        }
+
+        public void PlayAudio(string audioName, AsmObj audioType)
+        {
+            switch (audioType)
+            {
+                case AsmObj.bgm: _bgmController.PlayAudio(audioName); break;
+                case AsmObj.bgs: _bgsController.PlayAudio(audioName); break;
+                case AsmObj.chs: _chsController.PlayAudio(audioName); break;
+                case AsmObj.gms: _gmsController.PlayAudio(audioName); break;
+            }
+        }
+
+        public void StopAudio(AsmObj audioType)
+        {
+            switch (audioType)
+            {
+                case AsmObj.bgm: _bgmController.StopAudio(); break;
+                case AsmObj.bgs: _bgsController.StopAudio(); break;
+                case AsmObj.chs: _chsController.StopAudio(); break;
+                case AsmObj.gms: _gmsController.StopAudio(); break;
+            }
         }
 
         private void UpdateAudioVolume()

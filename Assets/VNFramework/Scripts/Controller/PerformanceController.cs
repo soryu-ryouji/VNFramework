@@ -8,13 +8,14 @@ namespace VNFramework
         private PerformanceModel _performanceModel;
         private MermaidModel _mermaidModel;
         private VNScriptCompiler _compiler;
-        private DialogueModel _dialogueModel;
+        private DialogModel _dialogModel;
+        private DialogueViewController _dialogueViewController;
 
         public void InitPerformanceController()
         {
             _performanceModel = this.GetModel<PerformanceModel>();
             _mermaidModel = this.GetModel<MermaidModel>();
-            _dialogueModel = this.GetModel<DialogueModel>();
+            _dialogModel = this.GetModel<DialogModel>();
 
             this.RegisterEvent<LoadNextPerformanceEvent>(_ => NextPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<InitPerformanceEvent>(_ => InitPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
@@ -24,7 +25,7 @@ namespace VNFramework
 
         private void InitPerformance()
         {
-            _dialogueModel.InitModel();
+            _dialogModel.InitModel();
 
             var nodeName = _performanceModel.PerformingMermaidName;
             var fileName = _mermaidModel.GetFileName(nodeName);
@@ -52,7 +53,7 @@ namespace VNFramework
             _performanceModel.IsAutoExecuteCommand = true;
 
             // 当对话动画正在播放时，此次只负责结束对话动画
-            if (_dialogueModel.IsAnimating) { this.SendCommand<StopDialogueAnimCommand>(); return; }
+            if (_dialogModel.IsAnimating) { this.SendCommand<StopDialogueAnimCommand>(); return; }
 
             // 当剧本已经演出完毕时，尝试加载下一章动画，或者回到开始界面
             if (_compiler.ScriptCountDown() <= 0) { this.SendCommand<LoadNextMermaidOrEndGameCommand>(); return; }

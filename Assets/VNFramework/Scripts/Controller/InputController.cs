@@ -6,7 +6,7 @@ namespace VNFramework
     {
         private KeyCode _nextPerformanceKeyCode = KeyCode.Return;
         private KeyCode _toggleDialoguePanelKeycode = KeyCode.Space;
-        
+
         private void Update()
         {
             if (Input.GetKeyDown(_nextPerformanceKeyCode)) this.SendCommand<NextPerformanceCommand>();

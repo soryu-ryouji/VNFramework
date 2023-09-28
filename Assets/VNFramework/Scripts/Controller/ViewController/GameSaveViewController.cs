@@ -96,7 +96,7 @@ namespace VNFramework
         private void SaveGameSave(int index)
         {
             var performanceModel = this.GetModel<PerformanceModel>();
-            var dialogueModel = this.GetModel<DialogueModel>();
+            var dialogueModel = this.GetModel<DialogModel>();
             var currentTime = System.DateTime.Now;
             var gameSave = new GameSave()
             {

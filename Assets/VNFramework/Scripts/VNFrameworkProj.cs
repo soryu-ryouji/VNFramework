@@ -12,7 +12,7 @@ namespace VNFramework
             this.RegisterModel(new PerformanceModel());
             this.RegisterModel(new ChapterModel());
             this.RegisterModel(new MermaidModel());
-            this.RegisterModel(new DialogueModel());
+            this.RegisterModel(new DialogModel());
         }
     }
 }

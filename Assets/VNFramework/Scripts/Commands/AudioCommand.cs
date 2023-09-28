@@ -18,30 +18,29 @@ namespace VNFramework
             if (_playerName == AsmObj.bgm)
             {
                 Debug.Log("Play BGM: " + _audioName);
+                AudioController.Instance.PlayAudio(_audioName, AsmObj.bgm);
                 this.GetModel<PerformanceModel>().BgmName = _audioName;
-
-                this.SendEvent<BgmPlayEvent>();
             }
 
             else if (_playerName == AsmObj.bgs)
             {
+                Debug.Log("Play BGS: " + _audioName);
+                AudioController.Instance.PlayAudio(_audioName, AsmObj.bgs);
                 this.GetModel<PerformanceModel>().BgsName = _audioName;
-
-                this.SendEvent<BgsPlayEvent>();
             }
 
             else if (_playerName == AsmObj.chs)
             {
+                Debug.Log("Play CHS: " + _audioName);
+                AudioController.Instance.PlayAudio(_audioName, AsmObj.chs);
                 this.GetModel<PerformanceModel>().ChsName = _audioName;
-
-                this.SendEvent<ChsPlayEvent>();
             }
 
             else if (_playerName == AsmObj.gms)
             {
+                Debug.Log("Play GMS: " + _audioName);
+                AudioController.Instance.PlayAudio(_audioName, AsmObj.gms);
                 this.GetModel<PerformanceModel>().GmsName = _audioName;
-
-                this.SendEvent<GmsPlayEvent>();
             }
         }
     }
@@ -57,10 +56,10 @@ namespace VNFramework
 
         protected override void OnExecute()
         {
-            if (_playerName == AsmObj.bgm) this.SendEvent<BgmStopEvent>();
-            else if (_playerName == AsmObj.bgs) this.SendEvent<BgsStopEvent>();
-            else if (_playerName == AsmObj.chs) this.SendEvent<ChsStopEvent>();
-            else if (_playerName == AsmObj.gms) this.SendEvent<GmsStopEvent>();
+            if (_playerName == AsmObj.bgm) AudioController.Instance.StopAudio(AsmObj.bgm);
+            else if (_playerName == AsmObj.bgs) AudioController.Instance.StopAudio(AsmObj.bgs);
+            else if (_playerName == AsmObj.chs) AudioController.Instance.StopAudio(AsmObj.chs);
+            else if (_playerName == AsmObj.gms) AudioController.Instance.StopAudio(AsmObj.gms);
         }
     }
 }
