@@ -1,8 +1,9 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace VNFramework
 {
-    public class AudioController : MonoBehaviour
+    public class AudioController : MonoBehaviour, IController
     {
         private static AudioController instance;
         public static AudioController Instance
@@ -33,6 +34,17 @@ namespace VNFramework
             _bgsController = CreateAudioHandler("Bgs");
             _chsController = CreateAudioHandler("Chs");
             _gmsController = CreateAudioHandler("Gms");
+
+            _configModel = this.GetModel<ConfigModel>();
+            this.RegisterEvent<ConfigChangedEvent>(_ => UpdateConfig());
+        }
+
+        private void UpdateConfig()
+        {
+            if (_bgmController.Volume != _configModel.BgmVolume) _bgmController.SetVolume(_configModel.BgmVolume);
+            if (_bgsController.Volume != _configModel.BgsVolume) _bgsController.SetVolume(_configModel.BgsVolume);
+            if (_chsController.Volume != _configModel.ChsVolume) _chsController.SetVolume(_configModel.ChsVolume);
+            if (_gmsController.Volume != _configModel.GmsVolume) _gmsController.SetVolume(_configModel.GmsVolume);
         }
 
         private AudioHandler CreateAudioHandler(string controllerName)
@@ -75,6 +87,11 @@ namespace VNFramework
                 case AsmObj.chs: _chsController.SetVolume(volume); break;
                 case AsmObj.gms: _gmsController.SetVolume(volume); break;
             }
+        }
+
+        public IArchitecture GetArchitecture()
+        {
+            return VNFrameworkProj.Interface;
         }
     }
 }

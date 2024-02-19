@@ -73,9 +73,6 @@ namespace VNFramework
             _chsVolume.onValueChanged.AddListener(value => _configModel.ChsVolume = value);
             _gmsVolume.onValueChanged.AddListener(value => _configModel.GmsVolume = value);
 
-            // _highBtn.onClick.AddListener(SetHightTextSpeed);
-            // _mediumBtn.onClick.AddListener(SetMediumTextSpeed);
-            // _lowBtn.onClick.AddListener(SetLowTextSpeed);
             _backBtn.onClick.AddListener(() =>
             {
                 this.SendCommand<SaveSystemConfigCommand>();

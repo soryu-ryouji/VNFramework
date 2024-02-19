@@ -326,7 +326,7 @@ GameObject:
   - component: {fileID: 851891501}
   m_Layer: 0
   m_Name: GameController
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -370,7 +370,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fda0004d4c99d484f92b06707f10fb35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InputMapper: {fileID: 0}
 --- !u!114 &851891501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -383,7 +382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7845a30a14146a78e9c13bdbeb7306c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultKeyboardMapping: {fileID: 0}
+  defaultKeyboardMapping: {fileID: 4900000, guid: 96196b253268e6e42aff7e3007b51a0e, type: 3}
 --- !u!1 &1077914107
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace VNFramework
@@ -6,6 +7,8 @@ namespace VNFramework
     class AudioHandler: MonoBehaviour, ICanGetUtility
     {
         private AudioSource _audioPlayer;
+
+        public float Volume => _audioPlayer.volume;
 
         private void Awake()
         {

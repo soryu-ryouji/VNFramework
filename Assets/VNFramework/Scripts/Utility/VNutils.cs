@@ -13,6 +13,18 @@ namespace VNFramework
             return color;
         }
 
+
+        public static Color SetAlpha(Color color, float a)
+        {
+            color.a = a;
+            return color;
+        }
+
+        public static Color32 SetAlpha32(Color32 color, byte a)
+        {
+            color.a = a;
+            return color;
+        }
         
         public static IEnumerable<Transform> GetChildren(Transform transform)
         {

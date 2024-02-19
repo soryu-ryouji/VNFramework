@@ -61,10 +61,10 @@ namespace VNFramework
             this.GetModel<MermaidModel>().InitModel();
             this.GetModel<I18nModel>().InitModel();
 
+            this.GetComponent<InputMapper>().Init();
 
             ViewController.Instance.ShowTitleView();
 
-            this.AddComponent<InputMapper>().Init();
             Debug.Log("<color=green>Init Game Success</color>");
         }
 

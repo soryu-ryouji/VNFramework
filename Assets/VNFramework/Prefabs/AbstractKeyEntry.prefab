@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5978957124455474065}
   - component: {fileID: 8773683701362382805}
   - component: {fileID: 4579058432065766440}
+  - component: {fileID: 4846584428529075711}
   m_Layer: 5
   m_Name: AbstractKeyEntry
   m_TagString: Untagged
@@ -68,8 +69,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -121,7 +122,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5978957124455474065}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4579058432065766440}
+        m_TargetAssemblyTypeName: VNFramework.AbstractKeyEntry, Assembly-CSharp
+        m_MethodName: Select
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4579058432065766440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,8 +149,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   label: {fileID: 8884625021840481091}
   background: {fileID: 5978957124455474065}
-  selectedColor: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 0}
-  defaultColor: {r: 0.9245283, g: 0.9245283, b: 0.9245283, a: 0}
+  selectedColor: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}
+  defaultColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+--- !u!114 &4846584428529075711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2190525806815560761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9d05ed80027e5d4eb039fb2876108c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8727926505470566622
 GameObject:
   m_ObjectHideFlags: 0

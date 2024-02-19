@@ -38,7 +38,7 @@ namespace VNFramework
 
             else if (_playerName == AsmObj.gms)
             {
-                Debug.Log("Play GMS: " + _audioName);
+                // Debug.Log("Play GMS: " + _audioName);
                 AudioController.Instance.PlayAudio(_audioName, AsmObj.gms);
                 this.GetModel<PerformanceModel>().GmsName = _audioName;
             }

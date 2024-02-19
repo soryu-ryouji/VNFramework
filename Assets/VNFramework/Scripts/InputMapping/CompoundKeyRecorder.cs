@@ -43,10 +43,10 @@ namespace VNFramework
                 else
                 {
                     int duplicatedIndex = -1;
-                    for (int i = 0; i < controller.CurrentCompoundKeys.Count; ++i)
+                    for (int i = 0; i < controller.currentCompoundKeys.Count; ++i)
                     {
                         // Assuming there can be at most one duplicated key
-                        if (i != entry.index && controller.CurrentCompoundKeys[i].Equals(entry.key))
+                        if (i != entry.index && controller.currentCompoundKeys[i].Equals(entry.key))
                         {
                             duplicatedIndex = i;
                             break;
@@ -79,9 +79,9 @@ namespace VNFramework
 
         public void BeginRecording(InputMappingEntry entry)
         {
-            isPressing = false;
-            this.entry = entry;
-            gameObject.SetActive(true);
+            // isPressing = false;
+            // this.entry = entry;
+            // gameObject.SetActive(true);
         }
 
         private static bool AnyKeyPressing => CompoundKey.KeyboardKeys.Any(Input.GetKey);

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 namespace VNFramework
@@ -34,7 +33,7 @@ namespace VNFramework
         {
             this.controller = controller;
             this.index = index;
-            key = controller.CurrentCompoundKeys[index];
+            key = controller.currentCompoundKeys[index];
             RefreshDisplay();
         }
 
