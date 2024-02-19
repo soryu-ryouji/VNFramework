@@ -7,6 +7,7 @@ namespace VNFramework
         private float _chsVolume;
         private float _gmsVolume;
         private float _textSpeed;
+        private string _language;
 
         public float BgmVolume
         {
@@ -55,6 +56,16 @@ namespace VNFramework
             {
                 _textSpeed = value;
                 this.SendEvent<ConfigChangedEvent>();
+            }
+        }
+
+        public string Language
+        {
+            get { return _language; }
+            set
+            {
+                _language = value;
+                this.SendEvent<LanguageChangedEvent>();
             }
         }
 

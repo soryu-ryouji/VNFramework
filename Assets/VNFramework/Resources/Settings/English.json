@@ -1,0 +1,20 @@
+{
+  "title.menu.start": "Start",
+  "title.menu.load": "Load",
+  "title.menu.chapter": "Chapter",
+  "title.menu.config": "Config",
+  "title.menu.exit": "Exit",
+  "config.common.general": "General",
+  "config.common.volume": "Volume",
+  "config.common.shortcut": "Shortcut",
+  "config..common.back" : "Back",
+  "config.general.display" : "Display",
+  "config.general.chinese" : "Chinese",
+  "config.general.english" : "English",
+  "config.general.fullscreen" : "Full Screen",
+  "config.general.control" : "Control",
+  "config.general.stopAnimWhenClick": "Stop Anim when click",
+  "config.general.stopVoiceWhenClick": "Stop Voice when click",
+  "config.general.dialogbox" : "Dialog Box",
+  "config.general.textspeed" : "Text Speed"
+}

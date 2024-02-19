@@ -58,6 +58,7 @@ namespace VNFramework
             this.GetModel<ProjectModel>().InitModel();
             this.GetModel<ChapterModel>().InitModel();
             this.GetModel<MermaidModel>().InitModel();
+            this.GetModel<I18nModel>().InitModel();
 
             ViewController.Instance.ShowTitleView();
 

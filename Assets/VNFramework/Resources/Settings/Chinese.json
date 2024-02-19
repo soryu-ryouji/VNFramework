@@ -1,0 +1,20 @@
+{
+  "title.menu.start": "开始",
+  "title.menu.load": "加载",
+  "title.menu.chapter": "章节",
+  "title.menu.config": "设置",
+  "title.menu.exit": "退出",
+  "config.common.general": "通用",
+  "config.common.volume": "音量",
+  "config..common.back" : "返回",
+  "config.common.shortcut": "快捷键",
+  "config.general.display" : "显示",
+  "config.general.chinese" : "简体中文",
+  "config.general.english" : "英文",
+  "config.general.fullscreen" : "全屏",
+  "config.general.control" : "控制",
+  "config.general.stopAnimWhenClick": "点击停止动画",
+  "config.general.stopVoiceWhenClick": "点击停止语音",
+  "config.general.dialogbox" : "文本框",
+  "config.general.textspeed" : "文字速度"
+}

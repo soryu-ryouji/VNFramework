@@ -14,6 +14,7 @@ public class AutoSetABLabel
         string spritePath = Path.Combine(resPath, "Sprites");
         string soundPath = Path.Combine(resPath, "Sounds");
         string projectDataPath = Path.Combine(resPath, "ProjectData");
+        string settingsPath = Path.Combine(resPath, "Settings");
 
         List<(string path, string label)> items = new()
         {
@@ -21,7 +22,8 @@ public class AutoSetABLabel
             (prefabPath, "prefab"),
             (spritePath, "sprite"),
             (soundPath, "sound"),
-            (projectDataPath, "projectdata")
+            (projectDataPath, "projectdata"),
+            (settingsPath, "settings")
         };
 
         foreach (var item in items)

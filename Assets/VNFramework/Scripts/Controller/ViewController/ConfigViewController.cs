@@ -2,76 +2,141 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 namespace VNFramework
 {
     public class ConfigViewController : MonoBehaviour, IController
     {
-        private Button _fullScreenBtn;
-        private Button _windowBtn;
-        private Scrollbar _bgmVolumeScrollbar;
-        private Scrollbar _bgsVolumeScrollbar;
-        private Scrollbar _chsVolumeScrollbar;
-        private Scrollbar _gmsVolumeScrollbar;
+        public GameObject generalPanel;
+        public GameObject volumePanel;
+        public GameObject shortcutPanel;
+        public GameObject commonPanel;
 
-        private Button _highBtn;
-        private Button _mediumBtn;
-        private Button _lowBtn;
-        private Button _backConfigViewBtn;
+        public Button generalPanelBtn;
+        public Button volumePanelBtn;
+        public Button shortcutPanelBtn;
+
+        public Toggle _chineseBtn;
+        public Toggle _englishBtn;
+        public Toggle _fullScreenBtn;
+        public Slider _bgmVolume;
+        public Slider _bgsVolume;
+        public Slider _chsVolume;
+        private Slider _gmsVolume;
+
+        // private Button _highBtn;
+        // private Button _mediumBtn;
+        // private Button _lowBtn;
+        private Button _backBtn;
 
         private ConfigModel _configModel;
 
         private void Start()
         {
             _configModel = this.GetModel<ConfigModel>();
+            
+            generalPanel = transform.Find("ConfigPanel/Tabs/GeneralPanel").gameObject;
+            volumePanel = transform.Find("ConfigPanel/Tabs/VolumePanel").gameObject;
+            shortcutPanel = transform.Find("ConfigPanel/Tabs/ShortcutPanel").gameObject;
+            commonPanel = transform.Find("ConfigPanel/Common").gameObject;
 
-            _fullScreenBtn = transform.Find("ScreenConfig/FullScreenModeBtn").GetComponent<Button>();
-            _windowBtn = transform.Find("ScreenConfig/WindowModeBtn").GetComponent<Button>();
+            generalPanelBtn = commonPanel.transform.Find("LeftPanel/General").GetComponent<Button>();
+            volumePanelBtn = commonPanel.transform.Find("LeftPanel/Volume").GetComponent<Button>();
+            shortcutPanelBtn = commonPanel.transform.Find("LeftPanel/Shortcut").GetComponent<Button>();
+            _backBtn = commonPanel.transform.Find("RightPanel/Back").GetComponent<Button>();
 
-            _bgmVolumeScrollbar = transform.Find("AudioConfig/BgmVolume/Scrollbar").GetComponent<Scrollbar>();
-            _bgsVolumeScrollbar = transform.Find("AudioConfig/BgsVolume/Scrollbar").GetComponent<Scrollbar>();
-            _chsVolumeScrollbar = transform.Find("AudioConfig/ChsVolume/Scrollbar").GetComponent<Scrollbar>();
-            _gmsVolumeScrollbar = transform.Find("AudioConfig/GmsVolume/Scrollbar").GetComponent<Scrollbar>();
+            _chineseBtn = generalPanel.transform.Find("LeftPanel/Display/Options/Language/Chinese").GetComponent<Toggle>();
+            _englishBtn = generalPanel.transform.Find("LeftPanel/Display/Options/Language/English").GetComponent<Toggle>();
+            _fullScreenBtn = generalPanel.transform.Find("LeftPanel/Display/Options/FullScreen").GetComponent<Toggle>();
 
-            _highBtn = transform.Find("DialogueConfig/HighSpeedButton").GetComponent<Button>();
-            _mediumBtn = transform.Find("DialogueConfig/MediumSpeedButton").GetComponent<Button>();
-            _lowBtn = transform.Find("DialogueConfig/LowSpeedButton").GetComponent<Button>();
-            _backConfigViewBtn = transform.Find("BackButton").GetComponent<Button>();
+            _bgmVolume = volumePanel.transform.Find("LeftPanel/Volume/Options/BgmVolume/Slider").GetComponent<Slider>();
+            _bgsVolume = volumePanel.transform.Find("LeftPanel/Volume/Options/BgsVolume/Slider").GetComponent<Slider>();
+            _chsVolume = volumePanel.transform.Find("LeftPanel/Volume/Options/ChsVolume/Slider").GetComponent<Slider>();
+            _gmsVolume = volumePanel.transform.Find("LeftPanel/Volume/Options/GmsVolume/Slider").GetComponent<Slider>();
 
-            _fullScreenBtn.onClick.AddListener(() => this.SendCommand<SwitchToFullScreenCommand>());
-            _windowBtn.onClick.AddListener(() => this.SendCommand<SwitchToWindowCommand>());
+            _chineseBtn.onValueChanged.AddListener(_ => SwitchLanguage("Chinese"));
+            _englishBtn.onValueChanged.AddListener(_ => SwitchLanguage("English"));
+            _fullScreenBtn.onValueChanged.AddListener(_ => {
+                if (_fullScreenBtn.isOn) this.SendCommand<SwitchToFullScreenCommand>();
+                else this.SendCommand<SwitchToWindowCommand>();
+            });
 
-            _bgmVolumeScrollbar.value = _configModel.BgmVolume;
-            _bgsVolumeScrollbar.value = _configModel.BgsVolume;
-            _chsVolumeScrollbar.value = _configModel.ChsVolume;
-            _gmsVolumeScrollbar.value = _configModel.GmsVolume;
+            SwitchLanguage(_configModel.Language);
+            _bgmVolume.value = _configModel.BgmVolume;
+            _bgsVolume.value = _configModel.BgsVolume;
+            _chsVolume.value = _configModel.ChsVolume;
+            _gmsVolume.value = _configModel.GmsVolume;
 
-            _bgmVolumeScrollbar.onValueChanged.AddListener(value => _configModel.BgmVolume = value);
-            _bgsVolumeScrollbar.onValueChanged.AddListener(value => _configModel.BgsVolume = value);
-            _chsVolumeScrollbar.onValueChanged.AddListener(value => _configModel.ChsVolume = value);
-            _gmsVolumeScrollbar.onValueChanged.AddListener(value => _configModel.GmsVolume = value);
+            _bgmVolume.onValueChanged.AddListener(value => _configModel.BgmVolume = value);
+            _bgsVolume.onValueChanged.AddListener(value => _configModel.BgsVolume = value);
+            _chsVolume.onValueChanged.AddListener(value => _configModel.ChsVolume = value);
+            _gmsVolume.onValueChanged.AddListener(value => _configModel.GmsVolume = value);
 
-            _highBtn.onClick.AddListener(SetHightTextSpeed);
-            _mediumBtn.onClick.AddListener(SetMediumTextSpeed);
-            _lowBtn.onClick.AddListener(SetLowTextSpeed);
-            _backConfigViewBtn.onClick.AddListener(() =>
+            // _highBtn.onClick.AddListener(SetHightTextSpeed);
+            // _mediumBtn.onClick.AddListener(SetMediumTextSpeed);
+            // _lowBtn.onClick.AddListener(SetLowTextSpeed);
+            _backBtn.onClick.AddListener(() =>
             {
                 this.SendCommand<SaveSystemConfigCommand>();
                 this.SendCommand<HideConfigViewCommand>();
             });
+
+            generalPanelBtn.onClick.AddListener(() => SwitchPanel(1));
+            volumePanelBtn.onClick.AddListener(() => SwitchPanel(2));
+            shortcutPanelBtn.onClick.AddListener(() => SwitchPanel(3));
+
+            SwitchPanel(1);
+            SwitchLanguage(_configModel.Language);
+        }
+
+        private void SwitchLanguage(string language)
+        {
+            if (language == "Chinese")
+            {
+                _chineseBtn.SetIsOnWithoutNotify(true);
+                _configModel.Language = language;
+            }
+            else if (language == "English")
+            {
+                _englishBtn.SetIsOnWithoutNotify(true);
+                _configModel.Language = language;
+            }
+        }
+
+        private void SwitchPanel(int panelNum)
+        {
+            if (panelNum == 1)
+            {
+                generalPanel.SetActive(true);
+                volumePanel.SetActive(false);
+                shortcutPanel.SetActive(false);
+            }
+            else if (panelNum == 2)
+            {
+                generalPanel.SetActive(false);
+                volumePanel.SetActive(true);
+                shortcutPanel.SetActive(false);
+            }
+            else if (panelNum == 3)
+            {
+                generalPanel.SetActive(false);
+                volumePanel.SetActive(false);
+                shortcutPanel.SetActive(true);
+            }
         }
 
         private void OnDestroy()
         {
-            _bgmVolumeScrollbar.onValueChanged.RemoveAllListeners();
-            _bgsVolumeScrollbar.onValueChanged.RemoveAllListeners();
-            _chsVolumeScrollbar.onValueChanged.RemoveAllListeners();
-            _gmsVolumeScrollbar.onValueChanged.RemoveAllListeners();
+            _bgmVolume.onValueChanged.RemoveAllListeners();
+            _bgsVolume.onValueChanged.RemoveAllListeners();
+            _chsVolume.onValueChanged.RemoveAllListeners();
+            _gmsVolume.onValueChanged.RemoveAllListeners();
 
-            _highBtn.onClick.RemoveAllListeners();
-            _mediumBtn.onClick.RemoveAllListeners();
-            _lowBtn.onClick.RemoveAllListeners();
-            _backConfigViewBtn.onClick.RemoveAllListeners();
+            // _highBtn.onClick.RemoveAllListeners();
+            // _mediumBtn.onClick.RemoveAllListeners();
+            // _lowBtn.onClick.RemoveAllListeners();
+            _backBtn.onClick.RemoveAllListeners();
         }
 
         public void SetHightTextSpeed()

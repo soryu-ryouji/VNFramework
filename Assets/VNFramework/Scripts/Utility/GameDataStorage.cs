@@ -99,13 +99,14 @@ namespace VNFramework
         {
             string path = Path.Combine(_configDirPath, "game_config.txt");
             var systemConfigModel = this.GetModel<ConfigModel>();
-            Dictionary<string, float> defaultConfig = new Dictionary<string, float>
+            var defaultConfig = new Dictionary<string, object>
             {
                 { "bgm_volume", 0.8f },
                 { "bgs_volume", 0.5f },
                 { "chs_volume", 1.0f },
                 { "gms_volume", 0.4f },
-                { "text_speed", 0.08f }
+                { "text_speed", 0.08f },
+                { "language", "Chinese"}
             };
 
             if (File.Exists(path))
@@ -125,11 +126,12 @@ namespace VNFramework
             }
 
             // 将配置值设置到 systemConfigModel 中
-            systemConfigModel.BgmVolume = defaultConfig["bgm_volume"];
-            systemConfigModel.BgsVolume = defaultConfig["bgs_volume"];
-            systemConfigModel.ChsVolume = defaultConfig["chs_volume"];
-            systemConfigModel.GmsVolume = defaultConfig["gms_volume"];
-            systemConfigModel.TextSpeed = defaultConfig["text_speed"];
+            systemConfigModel.BgmVolume = (float)defaultConfig["bgm_volume"];
+            systemConfigModel.BgsVolume = (float)defaultConfig["bgs_volume"];
+            systemConfigModel.ChsVolume = (float)defaultConfig["chs_volume"];
+            systemConfigModel.GmsVolume = (float)defaultConfig["gms_volume"];
+            systemConfigModel.TextSpeed = (float)defaultConfig["text_speed"];
+            systemConfigModel.Language = (string)defaultConfig["language"];
 
             SaveSystemConfig();
         }
@@ -143,7 +145,9 @@ namespace VNFramework
 bgs_volume : {systemConfigModel.BgsVolume}
 chs_volume : {systemConfigModel.ChsVolume}
 gms_volume : {systemConfigModel.GmsVolume}
-text_speed : {systemConfigModel.TextSpeed}";
+text_speed : {systemConfigModel.TextSpeed}
+language : {systemConfigModel.Language}"
+;
 
             if (!Directory.Exists(_configDirPath)) Directory.CreateDirectory(_configDirPath);
 
@@ -199,6 +203,20 @@ text_speed : {systemConfigModel.TextSpeed}";
             }
         }
 
+        public string LoadI18nRes(string I18nName)
+        {
+            if (I18nName == "")
+            {
+                Debug.Log("<color=red>I18n Name is Null</color>");
+                return null;
+            }
+
+            var ret = _abDic["settings"].LoadAsset<TextAsset>(I18nName).text;
+            if (ret == null) Debug.Log($"<color=red>I18n {I18nName} Not Found</color>");
+
+            return ret;
+        }
+
         public GameObject LoadPrefab(string prefabName)
         {
             GameObject obj = _abDic["prefab"].LoadAsset<GameObject>(prefabName);
@@ -217,6 +235,7 @@ text_speed : {systemConfigModel.TextSpeed}";
             LoadRes("sprite", resPath + "sprite");
             LoadRes("projectdata", resPath + "projectdata");
             LoadRes("prefab", resPath + "prefab");
+            LoadRes("settings", resPath + "settings");
         }
 
         private void LoadRes(string assetBundleName, string path)

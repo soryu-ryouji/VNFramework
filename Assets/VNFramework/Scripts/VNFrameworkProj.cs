@@ -5,7 +5,6 @@ namespace VNFramework
         protected override void Init()
         {
             this.RegisterUtility(new GameDataStorage());
-
             this.RegisterModel(new GameSaveModel());
             this.RegisterModel(new ProjectModel());
             this.RegisterModel(new ConfigModel());
@@ -13,6 +12,7 @@ namespace VNFramework
             this.RegisterModel(new ChapterModel());
             this.RegisterModel(new MermaidModel());
             this.RegisterModel(new DialogModel());
+            this.RegisterModel(new I18nModel());
         }
     }
 }

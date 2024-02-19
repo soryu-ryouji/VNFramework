@@ -31,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6848176096155261645}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -86,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1127754352271636919}
   - component: {fileID: 2026475953220884744}
+  - component: {fileID: 3568153866344601410}
   - component: {fileID: 3617328310681539486}
   m_Layer: 5
   m_Name: Text
@@ -107,7 +107,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5904602472949195873}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -122,6 +121,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1086867617193310168}
   m_CullTransparentMesh: 1
+--- !u!114 &3568153866344601410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086867617193310168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07a0f07d4555b874daa569ad82123035, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inflateTextKey: title.menu.load
 --- !u!114 &3617328310681539486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,8 +156,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: LOAD
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
-  m_sharedMaterial: {fileID: 7664040161603255665, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 49294d2d587c4274db50e579e2716f1f, type: 2}
+  m_sharedMaterial: {fileID: 21291203167983366, guid: 49294d2d587c4274db50e579e2716f1f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -245,7 +257,6 @@ RectTransform:
   m_Children:
   - {fileID: 7343397868221550490}
   m_Father: {fileID: 7343397867452244641}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -392,7 +403,6 @@ RectTransform:
   - {fileID: 7343397867758617003}
   - {fileID: 7343397868075365776}
   m_Father: {fileID: 6848176096155261645}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -430,7 +440,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6848176096155261645}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -509,7 +518,6 @@ RectTransform:
   m_Children:
   - {fileID: 7343397869229502245}
   m_Father: {fileID: 7343397867452244641}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -632,6 +640,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7343397867901699965}
   - component: {fileID: 7343397867901699955}
+  - component: {fileID: 3045208011941209705}
   - component: {fileID: 7343397867901699954}
   m_Layer: 5
   m_Name: Text
@@ -653,7 +662,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7343397868990651831}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -668,6 +676,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7343397867901699964}
   m_CullTransparentMesh: 1
+--- !u!114 &3045208011941209705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7343397867901699964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07a0f07d4555b874daa569ad82123035, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inflateTextKey: title.menu.start
 --- !u!114 &7343397867901699954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -690,8 +711,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: START
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
-  m_sharedMaterial: {fileID: 7664040161603255665, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 49294d2d587c4274db50e579e2716f1f, type: 2}
+  m_sharedMaterial: {fileID: 21291203167983366, guid: 49294d2d587c4274db50e579e2716f1f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -790,7 +811,6 @@ RectTransform:
   - {fileID: 2678669736471533421}
   - {fileID: 7343397867452244641}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -843,7 +863,6 @@ RectTransform:
   m_Children:
   - {fileID: 7343397868265639365}
   m_Father: {fileID: 7343397867452244641}
-  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -966,6 +985,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7343397868221550490}
   - component: {fileID: 7343397868221550488}
+  - component: {fileID: 1931708540898968997}
   - component: {fileID: 7343397868221550491}
   m_Layer: 5
   m_Name: Text
@@ -987,7 +1007,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7343397867250611593}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1002,6 +1021,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7343397868221550565}
   m_CullTransparentMesh: 1
+--- !u!114 &1931708540898968997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7343397868221550565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07a0f07d4555b874daa569ad82123035, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inflateTextKey: title.menu.chapter
 --- !u!114 &7343397868221550491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1024,8 +1056,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: CHAPTER
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
-  m_sharedMaterial: {fileID: 7664040161603255665, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 49294d2d587c4274db50e579e2716f1f, type: 2}
+  m_sharedMaterial: {fileID: 21291203167983366, guid: 49294d2d587c4274db50e579e2716f1f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1101,6 +1133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7343397868265639365}
   - component: {fileID: 7343397868265639419}
+  - component: {fileID: 835721106796436271}
   - component: {fileID: 7343397868265639418}
   m_Layer: 5
   m_Name: Text
@@ -1122,7 +1155,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7343397868075365776}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1137,6 +1169,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7343397868265639364}
   m_CullTransparentMesh: 1
+--- !u!114 &835721106796436271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7343397868265639364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07a0f07d4555b874daa569ad82123035, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inflateTextKey: title.menu.exit
 --- !u!114 &7343397868265639418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1159,8 +1204,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: EXIT
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
-  m_sharedMaterial: {fileID: 7664040161603255665, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 49294d2d587c4274db50e579e2716f1f, type: 2}
+  m_sharedMaterial: {fileID: 21291203167983366, guid: 49294d2d587c4274db50e579e2716f1f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1260,7 +1305,6 @@ RectTransform:
   m_Children:
   - {fileID: 7343397867901699965}
   m_Father: {fileID: 7343397867452244641}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1383,6 +1427,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7343397869229502245}
   - component: {fileID: 7343397869229502171}
+  - component: {fileID: 8825823685204583953}
   - component: {fileID: 7343397869229502170}
   m_Layer: 5
   m_Name: Text
@@ -1404,7 +1449,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7343397867758617003}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1419,6 +1463,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7343397869229502244}
   m_CullTransparentMesh: 1
+--- !u!114 &8825823685204583953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7343397869229502244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07a0f07d4555b874daa569ad82123035, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inflateTextKey: title.menu.config
 --- !u!114 &7343397869229502170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1441,8 +1498,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: SYSTEM
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
-  m_sharedMaterial: {fileID: 7664040161603255665, guid: ecc918dd089e9164cb9e32ae7d1c5f9c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 49294d2d587c4274db50e579e2716f1f, type: 2}
+  m_sharedMaterial: {fileID: 21291203167983366, guid: 49294d2d587c4274db50e579e2716f1f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1542,7 +1599,6 @@ RectTransform:
   m_Children:
   - {fileID: 1127754352271636919}
   m_Father: {fileID: 7343397867452244641}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
