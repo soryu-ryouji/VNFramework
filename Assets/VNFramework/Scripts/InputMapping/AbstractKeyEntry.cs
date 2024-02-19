@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace VNFramework
 {
@@ -8,10 +9,14 @@ namespace VNFramework
     {
         public TMP_Text label;
 
+        public Image background;
+        public Color selectedColor;
+        public Color defaultColor;
+
         private InputMappingController controller;
         private AbstractKey key;
 
-        // private bool selected => controller != null && key == controller.currentAbstractKey;
+        private bool selected => controller != null && key == controller.CurrentAbstractKey;
 
         private void UpdateText()
         {
@@ -20,7 +25,7 @@ namespace VNFramework
 
         public void Refresh()
         {
-            // background.color = selected ? selectedColor : defaultColor;
+            background.color = selected ? selectedColor : defaultColor;
         }
 
         public void Init(InputMappingController controller, AbstractKey key)
@@ -39,7 +44,7 @@ namespace VNFramework
 
         public void Select()
         {
-            // controller.currentAbstractKey = key;
+            controller.CurrentAbstractKey = key;
         }
 
         public IArchitecture GetArchitecture()

@@ -217,6 +217,14 @@ language : {systemConfigModel.Language}"
             return ret;
         }
 
+        public TextAsset LoadDefaultKeyboard()
+        {
+            var ret = _abDic["settings"].LoadAsset<TextAsset>("Keyboard");
+            if (ret == null) Debug.Log($"<color=red>Default Keyboard Not Found</color>");
+
+            return ret;
+        }
+
         public GameObject LoadPrefab(string prefabName)
         {
             GameObject obj = _abDic["prefab"].LoadAsset<GameObject>(prefabName);

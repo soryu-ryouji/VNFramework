@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace VNFramework
 {
-    public class RecordPopupController
+    public class RecordPopupController : MonoBehaviour
     {
         [SerializeField] private RecordPopupLabel label;
 

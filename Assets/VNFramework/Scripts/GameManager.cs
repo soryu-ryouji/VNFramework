@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -60,8 +61,10 @@ namespace VNFramework
             this.GetModel<MermaidModel>().InitModel();
             this.GetModel<I18nModel>().InitModel();
 
+
             ViewController.Instance.ShowTitleView();
 
+            this.AddComponent<InputMapper>().Init();
             Debug.Log("<color=green>Init Game Success</color>");
         }
 

@@ -1,18 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace VNFramework
 {
-    [RequireComponent(typeof(Text))]
+    [RequireComponent(typeof(TMP_Text))]
     public class RecordPopupLabel : MonoBehaviour
     {
         public InputMappingEntry entry;
 
-        private Text label;
+        private TMP_Text label;
 
         private void Awake()
         {
-            label = GetComponent<Text>();
+            label = GetComponent<TMP_Text>();
         }
 
         private void Update()

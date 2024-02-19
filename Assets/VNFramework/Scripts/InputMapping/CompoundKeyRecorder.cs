@@ -7,18 +7,18 @@ namespace VNFramework
 {
     using KeyStatus = Dictionary<AbstractKey, bool>;
 
-    public class CompoundKeyRecorder : MonoBehaviour, IPointerClickHandler
+    public class CompoundKeyRecorder : MonoBehaviour, IPointerClickHandler, ICanGetModel
     {
         public RecordPopupController popupController;
 
         private InputMapper inputMapper;
         private InputMappingController controller;
-        private readonly HashSet<KeyCode> prefixKeys = new HashSet<KeyCode>(CompoundKey.PrefixKeys);
+        private readonly HashSet<KeyCode> prefixKeys = new(CompoundKey.PrefixKeys);
         private KeyStatus keyEnabled;
 
-        private void Awake()
+        private void Start()
         {
-            inputMapper = VNutils.FindNovaController().InputMapper;
+            inputMapper = VNutils.FindGameController().InputMapper;
         }
 
         private void OnEnable()
@@ -43,10 +43,10 @@ namespace VNFramework
                 else
                 {
                     int duplicatedIndex = -1;
-                    for (int i = 0; i < controller.currentCompoundKeys.Count; ++i)
+                    for (int i = 0; i < controller.CurrentCompoundKeys.Count; ++i)
                     {
                         // Assuming there can be at most one duplicated key
-                        if (i != entry.index && controller.currentCompoundKeys[i].Equals(entry.key))
+                        if (i != entry.index && controller.CurrentCompoundKeys[i].Equals(entry.key))
                         {
                             duplicatedIndex = i;
                             break;
@@ -163,6 +163,11 @@ namespace VNFramework
         public void OnPointerClick(PointerEventData eventData)
         {
             gameObject.SetActive(false);
+        }
+
+        public IArchitecture GetArchitecture()
+        {
+            return VNFrameworkProj.Interface;
         }
     }
 }

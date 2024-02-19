@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Assertions;
-using UnityEngine.EventSystems;
-using UnityObject = UnityEngine.Object;
 
 namespace VNFramework
 {
@@ -22,9 +19,9 @@ namespace VNFramework
             return transform.Cast<Transform>().ToList();
         }
 
-        public static GameController FindNovaController()
+        public static GameController FindGameController()
         {
-            var go = GameObject.FindWithTag("NovaController");
+            var go = GameObject.FindWithTag("GameController");
 
             if (!go.TryGetComponent<GameController>(out var controller))
             {

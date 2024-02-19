@@ -34,7 +34,7 @@ namespace VNFramework
         public InputMappingEntry Refresh()
         {
             ClearContent();
-            var cnt = controller.currentCompoundKeys.Count;
+            var cnt = controller.CurrentCompoundKeys.Count;
             InputMappingEntry entry = null;
             for (var i = 0; i < cnt; i++)
             {

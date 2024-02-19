@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace VNFramework
 {
-    public class InputMappingController : MonoBehaviour
+    public class InputMappingController : MonoBehaviour, ICanGetModel
     {
         public AbstractKeyList abstractKeyList;
         public InputMappingList inputMappingList;
@@ -22,15 +22,14 @@ namespace VNFramework
                 return;
             }
 
-            _inputMapper = VNutils.FindNovaController().InputMapper;
-            _inputMapper.Init();
+            _inputMapper = VNutils.FindGameController().InputMapper;
 
             inited = true;
 
             RefreshData();
         }
 
-        private InputMapper _inputMapper;
+        private InputMapper  _inputMapper;
 
         private InputMapper inputMapper
         {
@@ -50,7 +49,7 @@ namespace VNFramework
 
         private AbstractKey _currentAbstractKey;
 
-        public AbstractKey currentAbstractKey
+        public AbstractKey CurrentAbstractKey
         {
             get => _currentAbstractKey;
             set
@@ -66,17 +65,17 @@ namespace VNFramework
             }
         }
 
-        public List<CompoundKey> currentCompoundKeys => keyboardData[currentAbstractKey];
+        public List<CompoundKey> CurrentCompoundKeys => keyboardData[CurrentAbstractKey];
 
         public void DeleteCompoundKey(int index)
         {
-            currentCompoundKeys.RemoveAt(index);
+            CurrentCompoundKeys.RemoveAt(index);
             inputMappingList.Refresh();
         }
 
         public void AddCompoundKey()
         {
-            currentCompoundKeys.Add(new CompoundKey());
+            CurrentCompoundKeys.Add(new CompoundKey());
             var lastEntry = inputMappingList.Refresh();
             StartModifyCompoundKey(lastEntry);
         }
@@ -114,8 +113,8 @@ namespace VNFramework
 
         public void RestoreCurrentKeyMapping()
         {
-            keyboardData[currentAbstractKey] =
-                inputMapper.keyboard.Data[currentAbstractKey].Select(key => new CompoundKey(key)).ToList();
+            keyboardData[CurrentAbstractKey] =
+                inputMapper.keyboard.Data[CurrentAbstractKey].Select(key => new CompoundKey(key)).ToList();
             ResolveDuplicate();
             inputMappingList.Refresh();
         }
@@ -128,7 +127,7 @@ namespace VNFramework
 
         public void ResetCurrentKeyMappingDefault()
         {
-            keyboardData[currentAbstractKey] = inputMapper.GetDefaultCompoundKeys(currentAbstractKey);
+            keyboardData[CurrentAbstractKey] = inputMapper.GetDefaultCompoundKeys(CurrentAbstractKey);
             ResolveDuplicate();
             inputMappingList.Refresh();
         }
@@ -144,18 +143,23 @@ namespace VNFramework
         {
             foreach (var ak in keyboardData.Keys.ToList())
             {
-                if (ak == currentAbstractKey)
+                if (ak == CurrentAbstractKey)
                 {
                     continue;
                 }
 
-                if ((inputMapper.keyGroups[ak] & inputMapper.keyGroups[currentAbstractKey]) == 0)
+                if ((inputMapper.keyGroups[ak] & inputMapper.keyGroups[CurrentAbstractKey]) == 0)
                 {
                     continue;
                 }
 
-                keyboardData[ak] = keyboardData[ak].Where(key => !currentCompoundKeys.Contains(key)).ToList();
+                keyboardData[ak] = keyboardData[ak].Where(key => !CurrentCompoundKeys.Contains(key)).ToList();
             }
+        }
+
+        public IArchitecture GetArchitecture()
+        {
+            return VNFrameworkProj.Interface;
         }
     }
 }

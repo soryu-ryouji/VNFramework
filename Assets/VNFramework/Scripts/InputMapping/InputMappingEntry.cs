@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace VNFramework
 {
     public class InputMappingEntry : MonoBehaviour
     {
-        public Text label;
+        public TMP_Text label;
         public Color defaultColor;
         public Color activeColor;
 
@@ -33,7 +34,7 @@ namespace VNFramework
         {
             this.controller = controller;
             this.index = index;
-            key = controller.currentCompoundKeys[index];
+            key = controller.CurrentCompoundKeys[index];
             RefreshDisplay();
         }
 

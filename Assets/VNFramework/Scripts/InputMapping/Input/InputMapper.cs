@@ -10,25 +10,24 @@ namespace VNFramework
     using AbstractKeyGroups = Dictionary<AbstractKey, AbstractKeyGroup>;
     using AbstractKeyTags = Dictionary<AbstractKey, bool>;
 
-    public class InputMapper : MonoBehaviour
+    public class InputMapper : MonoBehaviour, ICanGetUtility
     {
         public static string InputFilesDirectory => Path.Combine(Application.persistentDataPath, "Input");
 
         private static string KeyboardMappingFilePath => Path.Combine(InputFilesDirectory, "keyboard.json");
 
-        public TextAsset defaultKeyboardMapping;
+        private TextAsset defaultKeyboardMapping;
 
-        private KeyStatus keyStatus = new KeyStatus();
-        private KeyStatus keyStatusLastFrame = new KeyStatus();
-        private KeyStatus keyEnabled = new KeyStatus();
-        private readonly KeyStatus keyDownWhenEnabled = new KeyStatus();
-        private readonly KeyStatus keyDownToBeCleared = new KeyStatus();
+        private KeyStatus keyStatus = new();
+        private KeyStatus keyStatusLastFrame = new();
+        private KeyStatus keyEnabled = new();
+        private readonly KeyStatus keyDownWhenEnabled = new();
+        private readonly KeyStatus keyDownToBeCleared = new();
 
-        public readonly AbstractKeyboard keyboard = new AbstractKeyboard();
-        public readonly AbstractKeyGroups keyGroups = new AbstractKeyGroups();
-        public readonly AbstractKeyTags keyIsEditor = new AbstractKeyTags();
-
-        private readonly AbstractKeyboard defaultKeyboard = new AbstractKeyboard();
+        public readonly AbstractKeyboard defaultKeyboard = new();
+        public readonly AbstractKeyboard keyboard = new();
+        public readonly AbstractKeyGroups keyGroups = new();
+        public readonly AbstractKeyTags keyIsEditor = new();
 
         #region Enable
 
@@ -145,6 +144,8 @@ namespace VNFramework
                 return;
             }
 
+            defaultKeyboardMapping = this.GetUtility<GameDataStorage>().LoadDefaultKeyboard();
+
             LoadKeyboard();
 
             foreach (AbstractKey key in Enum.GetValues(typeof(AbstractKey)))
@@ -157,11 +158,8 @@ namespace VNFramework
             }
 
             inited = true;
-        }
 
-        private void Awake()
-        {
-            Init();
+            Debug.Log("<color=green>Input Mapper: Init Success</color>");
         }
 
         private void OnDestroy()
@@ -190,9 +188,7 @@ namespace VNFramework
 
         private void SwapKeyStatus()
         {
-            var tmp = keyStatusLastFrame;
-            keyStatusLastFrame = keyStatus;
-            keyStatus = tmp;
+            (keyStatus, keyStatusLastFrame) = (keyStatusLastFrame, keyStatus);
         }
 
         private void Update()
@@ -224,6 +220,11 @@ namespace VNFramework
                     keyDownToBeCleared[key] = true;
                 }
             }
+        }
+
+        public IArchitecture GetArchitecture()
+        {
+            return VNFrameworkProj.Interface;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace VNFramework
         public AbstractKeyEntry entryPrefab;
         public InputMappingController controller;
 
-        private readonly List<AbstractKeyEntry> entries = new List<AbstractKeyEntry>();
+        private readonly List<AbstractKeyEntry> entries = new();
 
         private void ClearContent()
         {
