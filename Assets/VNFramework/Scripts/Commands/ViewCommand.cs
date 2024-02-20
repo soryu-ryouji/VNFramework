@@ -131,6 +131,7 @@ namespace VNFramework
     {
         protected override void OnExecute()
         {
+            Debug.Log("Open Full Dialog View Event");
             this.SendEvent<OpenFullDialogViewEvent>();
         }
     }

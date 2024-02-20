@@ -324,6 +324,7 @@ GameObject:
   - component: {fileID: 851891499}
   - component: {fileID: 851891500}
   - component: {fileID: 851891501}
+  - component: {fileID: 851891502}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -383,6 +384,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultKeyboardMapping: {fileID: 4900000, guid: 96196b253268e6e42aff7e3007b51a0e, type: 3}
+--- !u!114 &851891502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851891497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67b45057f3c359544a3919a6def7e8e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1077914107
 GameObject:
   m_ObjectHideFlags: 0

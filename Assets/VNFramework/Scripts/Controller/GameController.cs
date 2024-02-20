@@ -5,6 +5,7 @@ namespace VNFramework
     public class GameController : MonoBehaviour
     {
         public InputMapper InputMapper => this.FindComponent<InputMapper>();
+        public AudioController AudioController => this.FindComponent<AudioController>();
 
         private T FindComponent<T>(string childPath = "") where T : MonoBehaviour
         {

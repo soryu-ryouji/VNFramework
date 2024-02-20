@@ -18,28 +18,28 @@ namespace VNFramework
             if (_playerName == AsmObj.bgm)
             {
                 Debug.Log("Play BGM: " + _audioName);
-                AudioController.Instance.PlayAudio(_audioName, AsmObj.bgm);
+                VNutils.FindGameController().AudioController.PlayAudio(_audioName, AsmObj.bgm);
                 this.GetModel<PerformanceModel>().BgmName = _audioName;
             }
 
             else if (_playerName == AsmObj.bgs)
             {
                 Debug.Log("Play BGS: " + _audioName);
-                AudioController.Instance.PlayAudio(_audioName, AsmObj.bgs);
+                VNutils.FindGameController().AudioController.PlayAudio(_audioName, AsmObj.bgs);
                 this.GetModel<PerformanceModel>().BgsName = _audioName;
             }
 
             else if (_playerName == AsmObj.chs)
             {
                 Debug.Log("Play CHS: " + _audioName);
-                AudioController.Instance.PlayAudio(_audioName, AsmObj.chs);
+                VNutils.FindGameController().AudioController.PlayAudio(_audioName, AsmObj.chs);
                 this.GetModel<PerformanceModel>().ChsName = _audioName;
             }
 
             else if (_playerName == AsmObj.gms)
             {
                 // Debug.Log("Play GMS: " + _audioName);
-                AudioController.Instance.PlayAudio(_audioName, AsmObj.gms);
+                VNutils.FindGameController().AudioController.PlayAudio(_audioName, AsmObj.gms);
                 this.GetModel<PerformanceModel>().GmsName = _audioName;
             }
         }
@@ -56,10 +56,10 @@ namespace VNFramework
 
         protected override void OnExecute()
         {
-            if (_playerName == AsmObj.bgm) AudioController.Instance.StopAudio(AsmObj.bgm);
-            else if (_playerName == AsmObj.bgs) AudioController.Instance.StopAudio(AsmObj.bgs);
-            else if (_playerName == AsmObj.chs) AudioController.Instance.StopAudio(AsmObj.chs);
-            else if (_playerName == AsmObj.gms) AudioController.Instance.StopAudio(AsmObj.gms);
+            if (_playerName == AsmObj.bgm) VNutils.FindGameController().AudioController.StopAudio(AsmObj.bgm);
+            else if (_playerName == AsmObj.bgs) VNutils.FindGameController().AudioController.StopAudio(AsmObj.bgs);
+            else if (_playerName == AsmObj.chs) VNutils.FindGameController().AudioController.StopAudio(AsmObj.chs);
+            else if (_playerName == AsmObj.gms) VNutils.FindGameController().AudioController.StopAudio(AsmObj.gms);
         }
     }
 }

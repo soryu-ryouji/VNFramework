@@ -14,9 +14,17 @@ namespace VNFramework
 
         private DialogModel _dialogModel;
 
-        private void Start()
+        public void Init()
         {
-            InitDialogView();
+            Debug.Log("<color=green>Dialogue View Controller : InitDialog View</color>");
+            _normDialogTextBoxHandler = transform.Find("NormView/DialogBox").GetComponent<TextBoxHandler>();
+            _normNameTextBoxHandler = transform.Find("NormView/NameBox").GetComponent<TextBoxHandler>();
+            _fullDialogTextBoxHandler = transform.Find("FullView/DialogBox").GetComponent<TextBoxHandler>();
+
+            _fullDialogTextBoxHandler.Hide();
+            _normDialogTextBoxHandler.Hide();
+            _normNameTextBoxHandler.Hide();
+
             RegisterEvent();
             _dialogModel = this.GetModel<DialogModel>();
             var projectModel = this.GetModel<ProjectModel>();
@@ -25,22 +33,12 @@ namespace VNFramework
             _normDialogTextBoxHandler.img.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.NormDialogueBoxPic);
             _fullDialogTextBoxHandler.img.sprite = this.GetUtility<GameDataStorage>().LoadSprite(projectModel.FullDialogueBoxPic);
 
-            ShowNormView();
-        }
-
-        private void InitDialogView()
-        {
-            _normDialogTextBoxHandler = transform.Find("NormView/DialogBox").GetComponent<TextBoxHandler>();
-            _normNameTextBoxHandler = transform.Find("NormView/NameBox").GetComponent<TextBoxHandler>();
-            _fullDialogTextBoxHandler = transform.Find("FullView/DialogBox").GetComponent<TextBoxHandler>();
-
-            _fullDialogTextBoxHandler.Hide();
-            _normDialogTextBoxHandler.Hide();
-            _normNameTextBoxHandler.Hide();
+            ShowFullView();
         }
 
         private void RegisterEvent()
         {
+            Debug.Log("<color=green>Dialogue View Controller : Register Event</color>");
             this.RegisterEvent<ShowDialogPanelEvent>(_ => ShowView()).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<HideDialogPanelEvent>(_ => HideView()).UnRegisterWhenGameObjectDestroyed(gameObject);
             this.RegisterEvent<ToggleDialogPanelEvent>(_ => ToggleView()).UnRegisterWhenGameObjectDestroyed(gameObject);
@@ -93,6 +91,7 @@ namespace VNFramework
             _normNameTextBoxHandler.Hide();
             _fullDialogTextBoxHandler.Show();
 
+            _currentDialogTextBox = _fullDialogTextBoxHandler.textBox;
             _dialogModel.CurrentName = "";
 
             ChangeNameBox();

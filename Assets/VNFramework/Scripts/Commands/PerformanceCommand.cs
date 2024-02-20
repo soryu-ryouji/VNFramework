@@ -138,6 +138,7 @@ namespace VNFramework
 
         protected override void OnExecute()
         {
+            Debug.Log($"Dialogue Command : {_asm.ToString()}");
             if (_asm.Action == "append") this.SendCommand(new AppendDialogueCommand(_asm.Parameters[0]));
             else if (_asm.Action == "clear") this.SendCommand<ClearDialogueCommand>();
             else if (_asm.Action == "newline") this.SendCommand<AppendNewlineToDialogueCommand>();

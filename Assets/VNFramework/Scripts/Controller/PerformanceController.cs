@@ -11,16 +11,19 @@ namespace VNFramework
         private DialogModel _dialogModel;
         private DialogueViewController _dialogueViewController;
 
-        public void InitPerformanceController()
+        public void InitController()
         {
+            Debug.Log("<color=green>Init Performance Controller</color>");
             _performanceModel = this.GetModel<PerformanceModel>();
             _mermaidModel = this.GetModel<MermaidModel>();
             _dialogModel = this.GetModel<DialogModel>();
 
-            this.RegisterEvent<LoadNextPerformanceEvent>(_ => NextPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<InitPerformanceEvent>(_ => InitPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
+            _dialogueViewController = transform.Find("DialogView").GetComponent<DialogueViewController>();
+            _dialogueViewController.Init();
 
             InitPerformance();
+            this.RegisterEvent<LoadNextPerformanceEvent>(_ => NextPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
+            this.RegisterEvent<InitPerformanceEvent>(_ => InitPerformance()).UnRegisterWhenGameObjectDestroyed(gameObject);
         }
 
         private void InitPerformance()
@@ -42,8 +45,6 @@ namespace VNFramework
             this.SendCommand(new InitPerformanceEnvironmentCommand(performanceState));
 
             Debug.Log("<color=green>Init Performance</color>");
-
-            NextPerformance();
         }
 
         private void NextPerformance()

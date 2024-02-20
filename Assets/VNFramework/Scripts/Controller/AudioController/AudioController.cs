@@ -5,20 +5,6 @@ namespace VNFramework
 {
     public class AudioController : MonoBehaviour, IController
     {
-        private static AudioController instance;
-        public static AudioController Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new GameObject(typeof(AudioController).Name).AddComponent<AudioController>();
-                    instance.InitController();
-                }
-                return instance;
-            }
-        }
-
         private AudioHandler _bgmController;
         private AudioHandler _bgsController;
         private AudioHandler _chsController;
@@ -27,7 +13,7 @@ namespace VNFramework
         private PerformanceModel _performModel;
         private ConfigModel _configModel;
 
-        private void InitController()
+        public void InitController()
         {
             Debug.Log("<color=green>AudioController: Init</color>");
             _bgmController = CreateAudioHandler("Bgm");
@@ -39,7 +25,7 @@ namespace VNFramework
             this.RegisterEvent<ConfigChangedEvent>(_ => UpdateConfig());
         }
 
-        private void UpdateConfig()
+        public void UpdateConfig()
         {
             if (_bgmController.Volume != _configModel.BgmVolume) _bgmController.SetVolume(_configModel.BgmVolume);
             if (_bgsController.Volume != _configModel.BgsVolume) _bgsController.SetVolume(_configModel.BgsVolume);

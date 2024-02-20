@@ -60,6 +60,7 @@ namespace VNFramework
             this.GetModel<ChapterModel>().InitModel();
             this.GetModel<MermaidModel>().InitModel();
             this.GetModel<I18nModel>().InitModel();
+            this.GetComponent<AudioController>().InitController();
 
             this.GetComponent<InputMapper>().Init();
 

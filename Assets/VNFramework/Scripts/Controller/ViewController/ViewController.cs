@@ -147,7 +147,7 @@ public class ViewController : MonoBehaviour, IController
         Transform ui = GameObject.Find("UI").transform;
         _performanceView = Instantiate(_performanceViewPrefab, ui);
         _performanceView.GetComponent<PerformanceViewController>().InitPerformanceView();
-        _performanceView.GetComponent<PerformanceController>().InitPerformanceController();
+        _performanceView.GetComponent<PerformanceController>().InitController();
     }
 
     public void HidePerformanceView()
