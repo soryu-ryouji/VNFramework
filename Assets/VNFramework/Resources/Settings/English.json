@@ -17,6 +17,7 @@
   "config.general.stopVoiceWhenClick": "Stop Voice when click",
   "config.general.dialogbox" : "Dialog Box",
   "config.general.textspeed" : "Text Speed",
+  "config.general.textpreview": "“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.”",
   "config.volume.volume" : "Volume",
   "config.volume.bgm" : "BGM",
   "config.volume.bgs" : "BGS",

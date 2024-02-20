@@ -25,6 +25,8 @@ namespace VNFramework
         public Slider _chsVolume;
         private Slider _gmsVolume;
 
+        private Slider _textSpeed;
+
         // private Button _highBtn;
         // private Button _mediumBtn;
         // private Button _lowBtn;
@@ -49,11 +51,14 @@ namespace VNFramework
             _chineseBtn = generalPanel.transform.Find("LeftPanel/Display/Options/Language/Chinese").GetComponent<Toggle>();
             _englishBtn = generalPanel.transform.Find("LeftPanel/Display/Options/Language/English").GetComponent<Toggle>();
             _fullScreenBtn = generalPanel.transform.Find("LeftPanel/Display/Options/FullScreen").GetComponent<Toggle>();
+            _textSpeed = generalPanel.transform.Find("RightPanel/DialogBox/Options/TextSpeed/Slider").GetComponent<Slider>();
+            dialogueTextBox = generalPanel.transform.Find("RightPanel/DialogBox/Options/TextPreviewPanel/Text").GetComponent<TMP_Text>();
 
             _bgmVolume = volumePanel.transform.Find("LeftPanel/Volume/Options/BgmVolume/Slider").GetComponent<Slider>();
             _bgsVolume = volumePanel.transform.Find("LeftPanel/Volume/Options/BgsVolume/Slider").GetComponent<Slider>();
             _chsVolume = volumePanel.transform.Find("LeftPanel/Volume/Options/ChsVolume/Slider").GetComponent<Slider>();
             _gmsVolume = volumePanel.transform.Find("LeftPanel/Volume/Options/GmsVolume/Slider").GetComponent<Slider>();
+
 
             _chineseBtn.onValueChanged.AddListener(_ => SwitchLanguage("Chinese"));
             _englishBtn.onValueChanged.AddListener(_ => SwitchLanguage("English"));
@@ -67,6 +72,13 @@ namespace VNFramework
             _bgsVolume.value = _configModel.BgsVolume;
             _chsVolume.value = _configModel.ChsVolume;
             _gmsVolume.value = _configModel.GmsVolume;
+            _textSpeed.value = _configModel.TextSpeed * 10;
+            _textSpeed.onValueChanged.AddListener(vaule => {
+                var speed = vaule / 10;
+                _characterDisplayDuration = speed;
+                _configModel.TextSpeed = speed;
+                if (!IsDialogueTyping()) StartCharacterAnimation();
+            });
 
             _bgmVolume.onValueChanged.AddListener(value => _configModel.BgmVolume = value);
             _bgsVolume.onValueChanged.AddListener(value => _configModel.BgsVolume = value);
@@ -161,12 +173,9 @@ namespace VNFramework
 
         public bool needAnimation = true;
         private bool _isAnimating = false;
-        private Coroutine _animationCoroutine;
-
         private float _characterDisplayDuration = 0.1f;
-
         public TMP_Text dialogueTextBox;
-        private string _currentDialogue = "这是一段测试文本";
+        private string _currentText;
         private int _currentDialogueIndex;
 
         private bool IsDialogueTyping()
@@ -174,76 +183,11 @@ namespace VNFramework
             return _isAnimating;
         }
 
-        private void OnCharacterDisplayDurationChanged(float durationTime)
-        {
-            _characterDisplayDuration = durationTime;
-        }
-
-        private void OnDialogueChanged(Hashtable hash)
-        {
-            var action = (string)hash["action"];
-            if (action == "append")
-            {
-                _currentDialogue += (string)hash["dialogue"];
-
-                ChangeDisplay();
-            }
-            else if (action == "clear")
-            {
-                _currentDialogue = "";
-                _currentDialogueIndex = 0;
-                dialogueTextBox.text = "";
-            }
-            else if (action == "newline")
-            {
-                _currentDialogue += "<br>";
-                ChangeDisplay();
-            }
-            else if (action == "text_speed")
-            {
-                _characterDisplayDuration = (float)hash["value"];
-            }
-        }
-
-        private void ChangeDisplay()
-        {
-            if (!needAnimation)
-            {
-                dialogueTextBox.text = _currentDialogue;
-                return;
-            }
-
-            // 需要动画
-            if (_isAnimating)
-            {
-                StopCharacterAnimation();
-            }
-
-            StartCharacterAnimation();
-        }
-
         public void StartCharacterAnimation()
         {
+            _currentText = this.GetModel<I18nModel>().__(dialogueTextBox.GetComponent<I18nText>().inflateTextKey);
             _isAnimating = true;
-            _animationCoroutine = StartCoroutine(CharacterAnimation());
-        }
-
-        private void StopCharacterAnimation()
-        {
-            if (!_isAnimating)
-            {
-                return;
-            }
-
-            if (_animationCoroutine != null)
-            {
-                StopCoroutine(_animationCoroutine);
-                _animationCoroutine = null;
-            }
-
-            _isAnimating = false;
-            dialogueTextBox.text = _currentDialogue;
-            _currentDialogueIndex = _currentDialogue.Length;
+            StartCoroutine(CharacterAnimation());
         }
 
         private IEnumerator CharacterAnimation()
@@ -251,9 +195,9 @@ namespace VNFramework
             _currentDialogueIndex = 0;
             dialogueTextBox.text = "";
 
-            while (_currentDialogueIndex < _currentDialogue.Length)
+            while (_currentDialogueIndex < _currentText.Length)
             {
-                dialogueTextBox.text += _currentDialogue[_currentDialogueIndex];
+                dialogueTextBox.text += _currentText[_currentDialogueIndex];
                 _currentDialogueIndex++;
                 yield return new WaitForSeconds(_characterDisplayDuration);
             }

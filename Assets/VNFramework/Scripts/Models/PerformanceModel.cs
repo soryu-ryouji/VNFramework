@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VNFramework
 {
-    class PerformanceModel : AbstractModel
+    class PerformanceModel : AbstractModel, ICanGetModel
     {
         private string _performingMermaidName;
         private int _performingIndex;
@@ -166,6 +166,27 @@ namespace VNFramework
             {
                 _chRight = value;
             }
+        }
+
+        public void Init()
+        {
+            PerformingIndex = 0;
+            _dialogue = "";
+            IsOpenChooseView = false;
+            IsAutoExecuteCommand = false;
+            _performingBgmVolume = 1;
+            _performingBgsVolume = 1;
+            _performingChsVolume = 1;
+            _performingGmsVolume = 1;
+            _bgpName = "";
+            _chLeft = "";
+            _chMid = "";
+            _chRight = "";
+
+            _bgmName = "";
+            _bgsName = "";
+            _chsName = "";
+            _gmsName = "";
         }
 
         protected override void OnInit()

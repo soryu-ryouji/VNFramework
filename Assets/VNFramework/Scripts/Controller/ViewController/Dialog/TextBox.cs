@@ -61,6 +61,7 @@ namespace VNFramework
             }
 
             _textBox.text = _currentText;
+            Debug.Log($"currnet Text: {_currentText}");
             _currentTextIndex = _currentText.Length;
 
             IsAnimating = false;

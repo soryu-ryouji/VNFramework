@@ -29,6 +29,7 @@ namespace VNFramework
         private void InitPerformance()
         {
             _dialogModel.InitModel();
+            _performanceModel.Init();
 
             var nodeName = _performanceModel.PerformingMermaidName;
             var fileName = _mermaidModel.GetFileName(nodeName);

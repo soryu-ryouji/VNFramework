@@ -22,6 +22,7 @@ namespace VNFramework
             _gmsController = CreateAudioHandler("Gms");
 
             _configModel = this.GetModel<ConfigModel>();
+            UpdateConfig();
             this.RegisterEvent<ConfigChangedEvent>(_ => UpdateConfig());
         }
 

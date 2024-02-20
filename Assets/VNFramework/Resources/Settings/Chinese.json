@@ -17,6 +17,7 @@
   "config.general.stopVoiceWhenClick": "点击停止语音",
   "config.general.dialogbox" : "文本框",
   "config.general.textspeed" : "文字速度",
+  "config.general.textpreview": "“天地玄黄，宇宙洪荒。日月盈昃，辰宿列张。寒来暑往，秋收冬藏。”",
   "config.volume.volume" : "音量",
   "config.volume.bgm" : "背景音乐",
   "config.volume.bgs" : "背景音效",
