@@ -1,5 +1,26 @@
+# VNScript
 
-# Intermediate Language
+```mermaid
+graph TD
+VNScript["A VNscript Line"]
+VNScript --> IL_1
+VNScript --> IL_2
+VNScript --> IL_3
+
+IL_1 --> ASM_1
+IL_1 --> ASM_2
+IL_1 --> ASM_3
+
+IL_2 --> ASM_4
+IL_2 --> ASM_5
+IL_2 --> ASM_6
+
+IL_3 --> ASM_7
+IL_3 --> ASM_8
+IL_3 --> ASM_9
+```
+
+## Intermediate Language
 
 一条VNScript对应一条或多条ILCommand
 
@@ -39,7 +60,7 @@ VNScript中的空白将默认解释为 `[ clear_dialogue ]` 与 `[ clear_name ]`
 ILScript会被转换为Asm Command，程序为每一个 Asm Command 生成一个 Hash table，然后交给 Performance Controller 执行。
 
 
-### Assembly Command
+## Assembly Command
 
 Asm Command 是剧本最小的执行单元，命令的基本格式为 **对象 操作 参数（可选）**
 
